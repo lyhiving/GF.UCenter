@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FCE33A61-93FC-4077-B362-BEB2D5E6D8B0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UCenter.Common</RootNamespace>
+    <AssemblyName>UCenter.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CompositionContainerFactory.cs" />
+    <Compile Include="Database\ColumnAttribute.cs" />
+    <Compile Include="Database\ColumnInfo.cs" />
+    <Compile Include="Database\DatabaseContext.cs" />
+    <Compile Include="Database\DatabaseTableNameAttribute.cs" />
+    <Compile Include="Database\Entities\AccountEntity.cs" />
+    <Compile Include="Database\Entities\BaseEntity.cs" />
+    <Compile Include="Database\IDatabaseClient.cs" />
+    <Compile Include="Database\IDatabaseRequest.cs" />
+    <Compile Include="Database\IDatabaseRequestFactory.cs" />
+    <Compile Include="Database\MySQL\MySQLDatabaseClient.cs" />
+    <Compile Include="Database\MySQL\MySQLDatabaseRequest.cs" />
+    <Compile Include="Database\MySQL\MySQLDatabaseRequestFactory.cs" />
+    <Compile Include="Database\MySQL\MySQLQueryTranslator.cs" />
+    <Compile Include="Database\TableModels\AccountTableModel.cs" />
+    <Compile Include="DisposableObjectSlim.cs" />
+    <Compile Include="EncryptHashManager.cs" />
+    <Compile Include="Exceptions\DatabaseException.cs" />
+    <Compile Include="Exceptions\AccountExistsException.cs" />
+    <Compile Include="Expressions\Evaluator.cs" />
+    <Compile Include="Expressions\QueryCommand.cs" />
+    <Compile Include="Expressions\QueryParameter.cs" />
+    <Compile Include="Expressions\QueryTranslator.cs" />
+    <Compile Include="Extensions\DisposableExtensions.cs" />
+    <Compile Include="Extensions\PropertyExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Handler\AccountHandler.cs" />
+    <Compile Include="Database\TableModels\DatabaseTableModel.cs" />
+    <Compile Include="Models\Info\AccountLoginInfo.cs" />
+    <Compile Include="Models\Info\AccountRegisterInfo.cs" />
+    <Compile Include="Models\Info\AppLoginInfo.cs" />
+    <Compile Include="Models\Info\AppVerifyAccountRequest.cs" />
+    <Compile Include="Models\Sex.cs" />
+    <Compile Include="Settings\AppConfigurationValueProvider.cs" />
+    <Compile Include="Settings\ISettingsValueProvider.cs" />
+    <Compile Include="Models\AppData.cs" />
+    <Compile Include="Models\AppLoginRequest.cs" />
+    <Compile Include="Models\AppLoginResponse.cs" />
+    <Compile Include="Models\AppReadDataResponse.cs" />
+    <Compile Include="Models\AppVerifyAccountRequest.cs" />
+    <Compile Include="Models\AppVerifyAccountResponse.cs" />
+    <Compile Include="Models\AppWriteDataRequest.cs" />
+    <Compile Include="Models\AppWriteDataResponse.cs" />
+    <Compile Include="Models\AccountLoginRequest.cs" />
+    <Compile Include="Models\AccountLoginResponse.cs" />
+    <Compile Include="Models\AccountRegisterRequest.cs" />
+    <Compile Include="Models\AccountRegisterResponse.cs" />
+    <Compile Include="Models\AppReadDataRequest.cs" />
+    <Compile Include="Models\UCenterResult.cs" />
+    <Compile Include="Models\VerifyAccountData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SettingsDefaultValueProvider.cs" />
+    <Compile Include="Settings\SettingsInitializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
