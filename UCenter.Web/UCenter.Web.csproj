@@ -169,6 +169,8 @@
     <None Include="Properties\PublishProfiles\LocalPublish.pubxml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\ucenterhk.pubxml" />
+    <None Include="Properties\PublishProfiles\ucenterwestus.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />
