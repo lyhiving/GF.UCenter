@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
-using Microsoft.Practices.Unity;
 using UCenter.Common;
-using UCenter.Common.Handler;
+using UCenter.Common.Filters;
 using UCenter.Web;
 using UCenter.Web.ApiControllers;
 
@@ -34,11 +33,7 @@ namespace UCenter.Test
             this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             this.configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AppController)));
             this.configuration.MapHttpAttributeRoutes();
-
             ApplicationManager.InitializeApplication(configuration, exportProvider);
-            //var container = new UnityContainer();
-            //container.RegisterType<IAccountHandler, AccountHandler>(new HierarchicalLifetimeManager());
-            //this.configuration.DependencyResolver = new UnityResolver(container);
 
             this.server = new HttpSelfHostServer(configuration);
             this.server.OpenAsync().Wait();

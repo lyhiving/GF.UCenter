@@ -18,5 +18,7 @@ namespace UCenter.Common.Database
         public bool IsKey { get; set; } = false;
 
         public int Length { get; set; } = 0;
+
+        public bool Nullable { get; set; } = true;
     }
 }

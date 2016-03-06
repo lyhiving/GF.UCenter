@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCenter.Common.Database;
+using UCenter.Common.Database.Entities;
 using UCenter.Common.Database.MySQL;
 using UCenter.Common.Expressions;
 using UCenter.Common.Models;
@@ -26,6 +27,9 @@ namespace UCenter.Test
                 Name = "name1",
                 Value = 111
             };
+
+            await tableModel.DeleteAsync(CancellationToken.None);
+            await tableModel.CreateIfNotExists(CancellationToken.None);
 
             await tableModel.InsertOrUpdateAsync(entity, CancellationToken.None);
 
@@ -70,6 +74,29 @@ namespace UCenter.Test
             Assert.AreEqual(queryCommand.Parameters.Count, 2);
             Assert.AreEqual(queryCommand.Parameters.First(p => p.Name == "@p0").Value, id);
             Assert.AreEqual(queryCommand.Parameters.First(p => p.Name == "@p1").Value, "name");
+        }
+
+        [TestMethod]
+        public async Task DatabaseModelTest_CreateTableTest()
+        {
+            var tableModel = ExportProvider.GetExportedValue<DatabaseTableModel<AccountEntity>>();
+            await tableModel.DeleteAsync(CancellationToken.None);
+            await tableModel.CreateIfNotExists(CancellationToken.None);
+        }
+
+        [TestMethod]
+        public void ValidationInfoTest()
+        {
+            AccountRegisterInfo info = new AccountRegisterInfo();
+            info.AccountName = "testaccount111";
+            info.Password = "123456";
+
+            Assert.IsFalse(info.Validate());
+            Assert.IsTrue(info.Errors.Any(e => e.MemberNames.Contains("Password")));
+
+            info.Password = "ABC**(!@2Saaa";
+            Assert.IsFalse(info.Validate());
+            Assert.IsFalse(info.Errors.Any(e => e.MemberNames.Contains("Password")));
         }
     }
 }

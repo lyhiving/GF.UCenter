@@ -13,9 +13,9 @@ namespace UCenter.SDK
 {
     public class UCenterHttpClient
     {
-        public async Task<TResponse> PostAsync<TResponse>(string url, ObjectContent content)
+        public async Task<TResponse> SendAsync<TResponse>(string url, ObjectContent content)
+            where TResponse : UCenterResponse
         {
-
             TResponse result = default(TResponse);
             try
             {
@@ -23,16 +23,37 @@ namespace UCenter.SDK
                 {
                     var request = CreateHttpRequest(url, content);
                     var response = await httpClient.SendAsync(request);
-                    Debug.WriteLine("===========Debug========");
-                    Debug.WriteLine(response.Content.ReadAsStringAsync());
-
                     result = await ParseResponseAsync<TResponse>(response);
+                }
+
+                if (result != null && result.Status == UCenterResponseStatus.Success)
+                {
+                    return result;
                 }
             }
             catch (Exception ex)
             {
+                throw ex;
             }
+
             return result;
+        }
+
+        public async Task<TResult> SendAsyncWithException<TResponse, TResult>(string url, ObjectContent content) where TResponse : UCenterResponse
+        {
+            var response = await this.SendAsync<TResponse>(url, content);
+            if (response.Status == UCenterResponseStatus.Success)
+            {
+                return response.As<TResult>();
+            }
+            else
+            {
+                if (response.Error != null)
+                {
+                    throw new ApplicationException($"[{{response.Error.Code}}]:{{response.Error.Message}}");
+                }
+                throw new ApplicationException("Unknown exception");
+            }
         }
 
         public HttpClient CreateHttpClient()
@@ -68,7 +89,10 @@ namespace UCenter.SDK
         private async Task<TResponse> ParseResponseAsync<TResponse>(HttpResponseMessage response)
         {
             string content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TResponse>(content);
+            Debug.WriteLine("++++++++++++RESPONSE STRING+++++++++++");
+            Debug.WriteLine(content);
+            var result = JsonConvert.DeserializeObject<TResponse>(content);
+            return result;
         }
     }
 }

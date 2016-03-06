@@ -23,7 +23,7 @@ namespace UCenter.Test.SDK
         }
 
         [TestMethod]
-        public async Task SDK_AccountRegisterAsyncTest()
+        public async Task SDK_Account_Register_Test()
         {
             var info = new AccountRegisterInfo()
             {
@@ -34,24 +34,41 @@ namespace UCenter.Test.SDK
                 PhoneNum = GenerateRandomString(),
                 Sex = Sex.Female
             };
-            var result = await client.AccountRegisterAsync(info);
-            Assert.IsNotNull(result);
+            var accountEntity = await client.AccountRegisterAsync(info);
+            Assert.IsNotNull(accountEntity.AccountName);
+            Assert.IsNotNull(accountEntity.Name);
+            Assert.IsNotNull(accountEntity.Name);
         }
 
         [TestMethod]
-        public async Task SDK_AccountLoginAsyncTest()
+        public async Task SDK_Account_Login_Test()
         {
-            var info = new AccountLoginInfo()
+            string accountName = "TESTUSER0001";
+            string password = "123456";
+
+            var registerInfo = new AccountRegisterInfo()
             {
-                AccountName = "test1000",
-                Password = "123456"
+                AccountName = accountName,
+                Password = password,
+                Name = GenerateRandomString(),
+                IdentityNum = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                Sex = Sex.Female
             };
-            var result = await client.AccountLoginAsync(info);
-            Assert.IsNotNull(result);
+            // TODO: Fix error apicontroller can not be created twice
+            //var accountEntity = await client.AccountRegisterAsync(registerInfo);
+
+            var loginInfo = new AccountLoginInfo()
+            {
+                AccountName = accountName,
+                Password = password
+            };
+            var result = await client.AccountLoginAsync(loginInfo);
+            Assert.IsNotNull(result.Token);
         }
 
         [TestMethod]
-        public async Task SDK_AppLoginAsyncTest()
+        public async Task SDK_App_Login_Test()
         {
             var info = new AppLoginInfo()
             {
@@ -59,23 +76,24 @@ namespace UCenter.Test.SDK
                 AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1"
             };
             var result = await client.AppLoginAsync(info);
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Token);
         }
 
         [TestMethod]
         public async Task SDK_AppVerifyAsyncAccountAsyncTest()
         {
-            var info = new AppAccountVerificationInfo()
+            var info = new AccountAppVerificationInfo()
             {
-                AppId = "",
-                AppKey = "",
-                AccountId = 1,
-                AccountName = "",
-                AccountToken = "",
+                AppId = "texaspoker",
+                AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
+                AccountId = 24,
+                AccountName = "TESTUSER0001",
+                AccountToken = "295f9f2d-afc4-475b-b1bb-5c54306f69dd",
                 GetAppData = false,
             };
             var result = await client.AppVerifyAccountAsync(info);
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Token);
+            Assert.IsNotNull(result.LastLoginDateTime);
         }
 
         [TestMethod]

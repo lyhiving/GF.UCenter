@@ -21,6 +21,7 @@ namespace UCenter.Common.Database
         public readonly bool AutoIncrement;
         public readonly bool IsKey;
         public readonly int Length;
+        public readonly bool Nullable = true;
 
         public ColumnInfo(PropertyInfo property)
         {
@@ -35,6 +36,7 @@ namespace UCenter.Common.Database
                 this.AutoIncrement = this.Attribute.AutoIncrement;
                 this.IsKey = this.Attribute.IsKey;
                 this.Length = this.Attribute.Length;
+                this.Nullable = this.Attribute.Nullable;
             }
             else
             {

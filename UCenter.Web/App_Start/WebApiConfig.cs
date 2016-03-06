@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using UCenter.Common.Filters;
 
 namespace UCenter.Web
 {
@@ -17,10 +18,6 @@ namespace UCenter.Web
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            //var container = new UnityContainer();
-            //container.RegisterType<IHttpController, AccountController>(new HierarchicalLifetimeManager());
-            //container.RegisterType<IAccountHandler, AccountHandler>(new HierarchicalLifetimeManager());
-            //config.DependencyResolver = new UnityResolver(container);
         }
     }
 }

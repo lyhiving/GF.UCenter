@@ -11,9 +11,10 @@ namespace UCenter.Test
     [DatabaseTableName("test")]
     public class TestDatabaseEntity : BaseEntity
     {
-        [Column(IsKey = true)]
+        [Column(IsKey = true, Length = 100)]
         public string Id { get; set; }
 
+        [Column(Length = 100)]
         public string Name { get; set; }
 
         public int Value { get; set; }

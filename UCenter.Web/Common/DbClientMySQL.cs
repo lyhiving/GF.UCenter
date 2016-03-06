@@ -26,155 +26,155 @@ public class DbClientMySQL
     }
 
     //-------------------------------------------------------------------------
-    public async Task<AccountRegisterResponse> register(AccountRegisterRequest register_account_data)
-    {
-        string name = string.IsNullOrEmpty(register_account_data.name) ? "" : register_account_data.name;
-        name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(name));
+    //public async Task<AccountRegisterResponse> register(AccountRegisterRequest register_account_data)
+    //{
+    //    string name = string.IsNullOrEmpty(register_account_data.name) ? "" : register_account_data.name;
+    //    name = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(name));
 
-        string identity_num = string.IsNullOrEmpty(register_account_data.identity_num) ? "" : register_account_data.identity_num;
-        string phone_num = string.IsNullOrEmpty(register_account_data.phone_num) ? "" : register_account_data.phone_num;
+    //    string identity_num = string.IsNullOrEmpty(register_account_data.identity_num) ? "" : register_account_data.identity_num;
+    //    string phone_num = string.IsNullOrEmpty(register_account_data.phone_num) ? "" : register_account_data.phone_num;
 
-        string sql_str = string.Format("INSERT INTO Account SET AccountName='{0}', Password='{1}', Name='{2}', IdentityNum='{3}', PhoneNum='{4}', Sex='{5}';",
-            register_account_data.acc,
-            register_account_data.pwd,
-            name,
-            identity_num,
-            phone_num,
-            (int)register_account_data.sex_type);
+    //    string sql_str = string.Format("INSERT INTO Account SET AccountName='{0}', Password='{1}', Name='{2}', IdentityNum='{3}', PhoneNum='{4}', Sex='{5}';",
+    //        register_account_data.acc,
+    //        register_account_data.pwd,
+    //        name,
+    //        identity_num,
+    //        phone_num,
+    //        (int)register_account_data.sex_type);
 
-        MySqlConnection con = new MySqlConnection(ConStr);
-        con.Open();
+    //    MySqlConnection con = new MySqlConnection(ConStr);
+    //    con.Open();
 
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = sql_str;
+    //    MySqlCommand cmd = con.CreateCommand();
+    //    cmd.CommandText = sql_str;
 
-        MySQLRequest request = new MySQLRequest();
-        request.con = con;
-        request.cmd = cmd;
+    //    MySQLRequest request = new MySQLRequest();
+    //    request.con = con;
+    //    request.cmd = cmd;
 
-        AccountRegisterResponse result = new AccountRegisterResponse();
-        result.result = UCenterResult.Failed;
-        result.acc_name = request.acc_name;
+    //    AccountRegisterResponse result = new AccountRegisterResponse();
+    //    result.result = UCenterResult.Failed;
+    //    result.acc_name = request.acc_name;
 
-        try
-        {
-            await Task<int>.Factory.FromAsync(cmd.BeginExecuteNonQuery(), cmd.EndExecuteNonQuery);
+    //    try
+    //    {
+    //        await Task<int>.Factory.FromAsync(cmd.BeginExecuteNonQuery(), cmd.EndExecuteNonQuery);
 
-            sql_str = string.Format("SELECT AccountId From Account WHERE binary AccountName='{0}';", register_account_data.acc);
-            cmd.CommandText = sql_str;
-            MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
+    //        sql_str = string.Format("SELECT AccountId From Account WHERE binary AccountName='{0}';", register_account_data.acc);
+    //        cmd.CommandText = sql_str;
+    //        MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
 
-            var dt = new DataTable();
-            dt.Load(data);
-            data.Dispose();
+    //        var dt = new DataTable();
+    //        dt.Load(data);
+    //        data.Dispose();
 
-            DataRow[] rows = dt.Select();
-            if (rows.Length == 1)
-            {
-                result.result = UCenterResult.Success;
-                result.acc_id = (ulong)((long)rows[0]["AccountId"]);
+    //        DataRow[] rows = dt.Select();
+    //        if (rows.Length == 1)
+    //        {
+    //            result.result = UCenterResult.Success;
+    //            result.acc_id = (ulong)((long)rows[0]["AccountId"]);
 
-                //EbLog.Note("AccountId=" + result.acc_id);
-            }
-        }
-        catch (MySqlException ex)
-        {
-            //EbLog.Note(ex.ToString());
+    //            //EbLog.Note("AccountId=" + result.acc_id);
+    //        }
+    //    }
+    //    catch (MySqlException ex)
+    //    {
+    //        //EbLog.Note(ex.ToString());
 
-            switch (ex.Number)
-            {
-                case 1062:
-                    {
-                        result.result = UCenterResult.RegisterAccountExist;
-                        //EbLog.Note("用户名重复, AccountName=" + register_account_data.acc);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        finally
-        {
-            request.con.Close();
-            request.con.Dispose();
-            request.cmd.Dispose();
-        }
+    //        switch (ex.Number)
+    //        {
+    //            case 1062:
+    //                {
+    //                    result.result = UCenterResult.RegisterAccountExist;
+    //                    //EbLog.Note("用户名重复, AccountName=" + register_account_data.acc);
+    //                }
+    //                break;
+    //            default:
+    //                break;
+    //        }
+    //    }
+    //    finally
+    //    {
+    //        request.con.Close();
+    //        request.con.Dispose();
+    //        request.cmd.Dispose();
+    //    }
 
-        return result;
-    }
+    //    return result;
+    //}
 
-    //-------------------------------------------------------------------------
-    public async Task<AccountLoginResponse> login(string account_name, string password)
-    {
-        string sql_str = string.Format("SELECT * FROM Account WHERE binary AccountName='{0}' AND binary Password='{1}' ;",
-            account_name, password);
+    ////-------------------------------------------------------------------------
+    //public async Task<AccountLoginResponse> login(string account_name, string password)
+    //{
+    //    string sql_str = string.Format("SELECT * FROM Account WHERE binary AccountName='{0}' AND binary Password='{1}' ;",
+    //        account_name, password);
 
-        MySqlConnection con = new MySqlConnection(ConStr);
-        con.Open();
+    //    MySqlConnection con = new MySqlConnection(ConStr);
+    //    con.Open();
 
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = sql_str;
+    //    MySqlCommand cmd = con.CreateCommand();
+    //    cmd.CommandText = sql_str;
 
-        AccountLoginResponse result = new AccountLoginResponse();
-        result.result = UCenterResult.Failed;
-        result.acc_name = account_name;
+    //    AccountLoginResponse result = new AccountLoginResponse();
+    //    result.result = UCenterResult.Failed;
+    //    result.acc_name = account_name;
 
-        try
-        {
-            MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
-            var dt = new DataTable();
-            dt.Load(data);
-            data.Dispose();
+    //    try
+    //    {
+    //        MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
+    //        var dt = new DataTable();
+    //        dt.Load(data);
+    //        data.Dispose();
 
-            DataRow[] rows = dt.Select();
-            if (rows.Length == 1)
-            {
-                result.result = UCenterResult.Success;
-                result.acc_id = (ulong)((long)rows[0]["AccountId"]);
-                result.sex = rows[0]["Sex"].ToString();
-            }
-            else
-            {
-                result.result = UCenterResult.LoginAccountNotExist;
-                result.acc_id = 0;
-            }
-        }
-        catch (System.Exception ex)
-        {
-            //EbLog.Error("DbClientMySQL.login() Exception: " + ex);
-            result.result = UCenterResult.Failed;
-            result.acc_id = 0;
-            goto End;
-        }
+    //        DataRow[] rows = dt.Select();
+    //        if (rows.Length == 1)
+    //        {
+    //            result.result = UCenterResult.Success;
+    //            result.acc_id = (ulong)((long)rows[0]["AccountId"]);
+    //            Enum.TryParse<Sex>(rows[0]["Sex"].ToString(), out result.sex);
+    //        }
+    //        else
+    //        {
+    //            result.result = UCenterResult.LoginAccountNotExist;
+    //            result.acc_id = 0;
+    //        }
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        //EbLog.Error("DbClientMySQL.login() Exception: " + ex);
+    //        result.result = UCenterResult.Failed;
+    //        result.acc_id = 0;
+    //        goto End;
+    //    }
 
-        if (result.result == UCenterResult.Success)
-        {
-            string token = Guid.NewGuid().ToString();
-            sql_str = string.Format("UPDATE Account set Token='{0}', LastLoginDt='{1}' WHERE AccountId={2};",
-                token, DateTime.Now.ToString(), result.acc_id);
-            cmd.CommandText = sql_str;
+    //    if (result.result == UCenterResult.Success)
+    //    {
+    //        string token = Guid.NewGuid().ToString();
+    //        sql_str = string.Format("UPDATE Account set Token='{0}', LastLoginDt='{1}' WHERE AccountId={2};",
+    //            token, DateTime.Now.ToString(), result.acc_id);
+    //        cmd.CommandText = sql_str;
 
-            try
-            {
-                await Task<int>.Factory.FromAsync(cmd.BeginExecuteNonQuery(), cmd.EndExecuteNonQuery);
-                result.token = token;
-            }
-            catch (Exception ex)
-            {
-                //EbLog.Error("DbClientMySQL.login() Exception: " + ex);
-                result.result = UCenterResult.Failed;
-                result.token = "";
-                goto End;
-            }
-        }
+    //        try
+    //        {
+    //            await Task<int>.Factory.FromAsync(cmd.BeginExecuteNonQuery(), cmd.EndExecuteNonQuery);
+    //            result.token = token;
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            //EbLog.Error("DbClientMySQL.login() Exception: " + ex);
+    //            result.result = UCenterResult.Failed;
+    //            result.token = "";
+    //            goto End;
+    //        }
+    //    }
 
-        End:
-        con.Close();
-        con.Dispose();
-        cmd.Dispose();
+    //    End:
+    //    con.Close();
+    //    con.Dispose();
+    //    cmd.Dispose();
 
-        return result;
-    }
+    //    return result;
+    //}
 
     //-------------------------------------------------------------------------
     public async Task<bool> isValidApp(string app_id, string app_secret)

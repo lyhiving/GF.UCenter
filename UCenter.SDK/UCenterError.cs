@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UCenter.Common.Models
+namespace UCenter.SDK
 {
-    [Serializable]
-    public enum Sex
+    public class UCenterError
     {
-        Male,
-        Female,
-        Unknown
+        public int Code { get; set; }
+        public string Message { get; set; }
     }
 }

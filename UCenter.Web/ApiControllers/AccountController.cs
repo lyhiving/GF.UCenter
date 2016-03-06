@@ -8,23 +8,31 @@ using System.Threading.Tasks;
 using UCenter.Common.Models;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using UCenter.Common.Handler;
 using System.Threading;
+using UCenter.Common;
 using UCenter.Common.Database.Entities;
+using UCenter.Common.Exceptions;
+using UCenter.Common.Filters;
 
 namespace UCenter.Web.ApiControllers
 {
     [Export]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/account")]
-    public class AccountController : ApiController
+    [ValidateModel]
+    public class AccountController : ApiControllerBase
     {
-        private DbClientMySQL ClientMySQL = new DbClientMySQL();
-        private readonly AccountHandler handler;
+        private readonly DatabaseTableModel<AccountEntity> tableModel;
+        private readonly DatabaseTableModel<LoginRecordEntity> recordTableModel;
 
         [ImportingConstructor]
-        public AccountController(AccountHandler handler)
+        public AccountController(
+            DatabaseTableModel<AccountEntity> tableModel,
+            DatabaseTableModel<LoginRecordEntity> recordTableModel)
+            : base()
         {
-            this.handler = handler;
+            this.tableModel = tableModel;
+            this.recordTableModel = recordTableModel;
         }
 
         [HttpPost]
@@ -34,37 +42,89 @@ namespace UCenter.Web.ApiControllers
             string message = string.Format("客户端请求注册\nAcc={0}  Pwd={1}", info.AccountName, info.Password);
             //Logger.Info(info);
 
-            var dbEntity = new AccountEntity()
+            var accountEntity = new AccountEntity()
             {
-                AccountName = info.Name,
+                AccountName = info.AccountName,
                 Password = info.Password,
                 Name = info.Name,
                 IdentityNum = info.IdentityNum,
                 PhoneNum = info.PhoneNum,
-                Sex = Sex.Female
+                Sex = info.Sex
             };
 
-            var result = await this.handler.RegisterAsync(dbEntity, token);
-            return await Task.FromResult<IHttpActionResult>(null);
+            var remoteEntities = await this.tableModel.RetrieveEntitiesAsync(e => e.Name == accountEntity.Name || e.PhoneNum == accountEntity.PhoneNum, token);
+            if (remoteEntities.Count() > 0)
+            {
+                return CreateErrorResult(UCenterResult.RegisterAccountExist, "The account already exists.");
+            }
+
+            // encrypted the user password.
+            accountEntity.Password = EncryptHashManager.ComputeHash(accountEntity.Password);
+
+            var result = await this.tableModel.InsertEntityAsync(accountEntity, token);
+            return CreateSuccessResult(result);
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IHttpActionResult> AccountLogin(AccountLoginRequest login_request)
+        public async Task<IHttpActionResult> AccountLogin(AccountLoginInfo info, CancellationToken token)
         {
-            string info = string.Format("客户端请求登录\nAcc={0}  Pwd={1}", login_request.acc, login_request.pwd);
+            // string info = string.Format("客户端请求登录\nAcc={0}  Pwd={1}", request.AccountName, request.Password);
             //Logger.Info(info);
+            var accounts = await this.tableModel.RetrieveEntitiesAsync(e => e.AccountName == info.AccountName, token);
+            UCenterResult code;
+            if (accounts.Count != 1 || !EncryptHashManager.VerifyHash(info.Password, accounts.First().Password))
+            {
+                code = UCenterResult.LoginVerifyAccountNotExit;
+            }
+            else
+            {
+                code = UCenterResult.Success;
+            }
 
-            var result = await ClientMySQL.login(login_request.acc, login_request.pwd);
+            LoginRecordEntity record = new LoginRecordEntity()
+            {
+                AccountName = info.AccountName,
+                Code = code,
+                LoginTime = DateTime.UtcNow,
+                UserAgent = Request.Headers.UserAgent.ToString(),
+                ClientIp = this.GetClientIp(Request)
+            };
 
-            return Ok(result);
+            await this.recordTableModel.InsertEntityAsync(record, token);
+
+            if (code == UCenterResult.Success)
+            {
+                return CreateSuccessResult(accounts.First());
+            }
+            else
+            {
+                return CreateErrorResult(code, "Account name or password error.");
+            }
         }
 
         [HttpGet]
         [Route("test")]
-        public async Task<IHttpActionResult> Test()
+        public async Task<IHttpActionResult> Test(AccountLoginInfo info)
         {
-            return Ok(handler.GetTestData());
+            var accounts = new AccountEntity[]
+            {
+                new AccountEntity { AccountId = 1, AccountName = "Tomato Soup"  },
+                new AccountEntity { AccountId = 2, AccountName = "Yo-yo"  },
+                new AccountEntity { AccountId = 3, AccountName = "Hammer"}
+            };
+
+            LoginRecordEntity record = new LoginRecordEntity()
+            {
+                AccountName = "test",
+                Code = UCenterResult.Success,
+                LoginTime = DateTime.UtcNow,
+                UserAgent = Request.Headers.UserAgent.ToString(),
+                ClientIp = this.GetClientIp(Request)
+            };
+
+
+            return await Task.FromResult<IHttpActionResult>(CreateSuccessResult(accounts));
         }
     }
 }

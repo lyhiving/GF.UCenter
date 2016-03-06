@@ -41,9 +41,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,7 +61,9 @@
     <Compile Include="Database\DatabaseContext.cs" />
     <Compile Include="Database\DatabaseTableNameAttribute.cs" />
     <Compile Include="Database\Entities\AccountEntity.cs" />
+    <Compile Include="Database\Entities\AppEntity.cs" />
     <Compile Include="Database\Entities\BaseEntity.cs" />
+    <Compile Include="Database\Entities\LoginRecordEntity.cs" />
     <Compile Include="Database\IDatabaseClient.cs" />
     <Compile Include="Database\IDatabaseRequest.cs" />
     <Compile Include="Database\IDatabaseRequestFactory.cs" />
@@ -78,27 +83,21 @@
     <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Handler\AccountHandler.cs" />
     <Compile Include="Database\TableModels\DatabaseTableModel.cs" />
+    <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Models\Info\AccountLoginInfo.cs" />
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
     <Compile Include="Models\Info\AppLoginInfo.cs" />
-    <Compile Include="Models\Info\AppVerifyAccountRequest.cs" />
+    <Compile Include="Models\Info\AccountAppVerificationInfo.cs" />
+    <Compile Include="Models\Info\AppVerifyAccountResponse.cs" />
+    <Compile Include="Models\Info\ValidatableInfo.cs" />
     <Compile Include="Models\Sex.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />
     <Compile Include="Models\AppData.cs" />
-    <Compile Include="Models\AppLoginRequest.cs" />
-    <Compile Include="Models\AppLoginResponse.cs" />
     <Compile Include="Models\AppReadDataResponse.cs" />
-    <Compile Include="Models\AppVerifyAccountRequest.cs" />
-    <Compile Include="Models\AppVerifyAccountResponse.cs" />
     <Compile Include="Models\AppWriteDataRequest.cs" />
     <Compile Include="Models\AppWriteDataResponse.cs" />
-    <Compile Include="Models\AccountLoginRequest.cs" />
-    <Compile Include="Models\AccountLoginResponse.cs" />
-    <Compile Include="Models\AccountRegisterRequest.cs" />
-    <Compile Include="Models\AccountRegisterResponse.cs" />
     <Compile Include="Models\AppReadDataRequest.cs" />
     <Compile Include="Models\UCenterResult.cs" />
     <Compile Include="Models\VerifyAccountData.cs" />
@@ -109,7 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

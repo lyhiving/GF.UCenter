@@ -4,21 +4,13 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using UCenter.Common.Handler;
+using UCenter.Common.Filters;
 
 namespace UCenter.Web.Controllers
 {
     [Export]
     public class HomeController : Controller
     {
-        private AccountHandler handler;
-
-        [ImportingConstructor]
-        public HomeController(AccountHandler handler)
-        {
-            this.handler = handler;
-        }
-
         public ActionResult Index()
         {
             return View();

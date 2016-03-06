@@ -21,15 +21,15 @@ namespace UCenter.Common.Expressions
         {
             MySqlParameter parameter = new MySqlParameter(
                 this.Name,
-                this.GetMySqlDbType());
+                GetMySqlDbType(this.TypeCode));
             parameter.Value = this.Value;
 
             return parameter;
         }
 
-        private MySqlDbType GetMySqlDbType()
+        public static MySqlDbType GetMySqlDbType(TypeCode typeCode)
         {
-            switch (this.TypeCode)
+            switch (typeCode)
             {
                 case TypeCode.Boolean:
                     return MySqlDbType.Bit;
@@ -65,7 +65,7 @@ namespace UCenter.Common.Expressions
                 case TypeCode.Object:
                 case TypeCode.DBNull:
                 default:
-                    throw new Exception($"Type code not supported for mysql. {this.TypeCode}");
+                    throw new Exception($"Type code not supported for mysql. {typeCode}");
             }
         }
     }

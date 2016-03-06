@@ -6,6 +6,9 @@ using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 using UCenter.Common.Models;
+using UCenter.Common.Database.Entities;
+using AppReadDataResponse = UCenter.SDK.Response.AppReadDataResponse;
+using AppWriteDataResponse = UCenter.SDK.Response.AppWriteDataResponse;
 
 namespace UCenter.SDK
 {
@@ -21,52 +24,61 @@ namespace UCenter.SDK
         }
 
 
-        public async Task<AccountRegisterResponse> AccountRegisterAsync(AccountRegisterInfo info)
+        public async Task<AccountEntity> AccountRegisterAsync(AccountRegisterInfo info)
         {
-            string url = $"{this.host}/api/account/register";
-            var response = await httpClient.PostAsync<AccountRegisterResponse>(url, ToHttpContent(info));
+            string url = GenerateApiEndpoint("account", "register");
+            var response = await httpClient.SendAsyncWithException<UCenterResponse, AccountEntity>(url, ToHttpContent(info));
             return response;
         }
 
-        public async Task<AccountLoginResponse> AccountLoginAsync(AccountLoginInfo info)
+        public async Task<AccountEntity> AccountLoginAsync(AccountLoginInfo info)
         {
-            string url = $"{this.host}/api/account/login";
-            var response = await httpClient.PostAsync<AccountLoginResponse>(url, ToHttpContent(info));
+            string url = GenerateApiEndpoint("account", "login");
+            var response = await httpClient.SendAsyncWithException<UCenterResponse, AccountEntity>(url, ToHttpContent(info));
             return response;
         }
 
-        public async Task<AppLoginResponse> AppLoginAsync(AppLoginInfo info)
+        public async Task<AppEntity> AppLoginAsync(AppLoginInfo info)
         {
-            string url = $"{this.host}/api/app/login";
-            var response = await httpClient.PostAsync<AppLoginResponse>(url, ToHttpContent(info));
+            string url = GenerateApiEndpoint("app", "login");
+            var response = await httpClient.SendAsyncWithException<UCenterResponse, AppEntity>(url, ToHttpContent(info));
             return response;
         }
 
-        public async Task<AppVerifyAccountResponse> AppVerifyAccountAsync(AppAccountVerificationInfo info)
+        public async Task<AccountAppInfo> AppVerifyAccountAsync(AccountAppVerificationInfo info)
         {
-            string url = $"{this.host}/api/app/verifyaccount";
-            var appVerifyAccountRequest = new AppVerifyAccountRequest();
-            var response = await httpClient.PostAsync<AppVerifyAccountResponse>(url, ToHttpContent(appVerifyAccountRequest));
+            string url = GenerateApiEndpoint("app", "verifyaccount");
+            var response = await httpClient.SendAsyncWithException<UCenterResponse, AccountAppInfo>(url, ToHttpContent(info));
             return response;
-
         }
 
-        public async Task<AppWriteDataResponse> AppWriteDataAsync()
+        //public async Task<AppWriteDataResponse> AppWriteDataAsync()
+        //{
+        //    string url = $"{this.host}/api/app/writedata";
+
+        //    var appVerifyAccountRequest = new AppWriteDataRequest();
+        //    var response = await httpClient.SendAsyncWithException<AppWriteDataResponse>(url, ToHttpContent(appVerifyAccountRequest));
+        //    return response;
+
+        //}
+
+        //public async Task<AppReadDataResponse> AppReadDataAsync()
+        //{
+        //    string url = $"{this.host}/api/app/readdata";
+        //    var appVerifyAccountRequest = new AppReadDataResponse();
+        //    var response = await httpClient.PostAsync<AppReadDataResponse>(url, ToHttpContent(appVerifyAccountRequest));
+        //    return response;
+        //}
+
+        private string GenerateApiEndpoint(string controller, string route, string queryString = null)
         {
-            string url = $"{this.host}/api/app/writedata";
+            var url = $"{this.host}/api/{controller}/{route}";
+            if (!string.IsNullOrEmpty(queryString))
+            {
+                url = $"{url}/{queryString}";
+            }
 
-            var appVerifyAccountRequest = new AppWriteDataRequest();
-            var response = await httpClient.PostAsync<AppWriteDataResponse>(url, ToHttpContent(appVerifyAccountRequest));
-            return response;
-
-        }
-
-        public async Task<AppReadDataResponse> AppReadDataAsync()
-        {
-            string url = $"{this.host}/api/app/readdata";
-            var appVerifyAccountRequest = new AppReadDataResponse();
-            var response = await httpClient.PostAsync<AppReadDataResponse>(url, ToHttpContent(appVerifyAccountRequest));
-            return response;
+            return url;
         }
 
         private ObjectContent ToHttpContent<T>(T data)

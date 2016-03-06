@@ -185,8 +185,13 @@ namespace UCenter.Common.Database
                     {
                         convertExpression = Expression.Call(method, Expression.Convert(propertyExpression, column.Type));
                     }
-                    else {
-                        convertExpression = Expression.Convert(propertyExpression, property.Property.PropertyType, method);
+                    else if (property.Property.PropertyType.IsEnum)
+                    {
+                        convertExpression = Expression.Convert(Expression.Convert(propertyExpression, Enum.GetUnderlyingType(property.Property.PropertyType)), property.Property.PropertyType);
+                    }
+                    else
+                    {
+                        convertExpression = Expression.Convert(propertyExpression, property.Property.PropertyType);
                     }
 
                     var bindExpression = Expression.Assign(

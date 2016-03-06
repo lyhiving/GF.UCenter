@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 using UCenter.Common.Database.Entities;
 using UCenter.Common.Expressions;
 using UCenter.Common.Models;
@@ -196,12 +197,70 @@ namespace UCenter.Common.Database.MySQL
 
             public static IDatabaseRequest GenerateCreateTableRequest()
             {
-                throw new NotImplementedException();
+                var key = $"create-{TableName}";
+                string command = commandTexts.GetOrAdd(key, k =>
+                {
+                    List<string> lines = new List<string>();
+                    var typeMap = new Dictionary<MySqlDbType, string>
+                    {
+                        {MySqlDbType.Int16,"SMALLINT" },
+                        {MySqlDbType.Int24,"MEDIUMINT" },
+                        {MySqlDbType.Int32,"INT" },
+                        {MySqlDbType.Int64,"BIGINT" },
+                        {MySqlDbType.UInt16,"SMALLINT" },
+                        {MySqlDbType.UInt24,"MEDIUMINT" },
+                        {MySqlDbType.UInt32,"INT" },
+                        {MySqlDbType.UInt64,"BIGINT" },
+                        {MySqlDbType.Newdate,"DATE" },
+                        {MySqlDbType.VarString,"VARCHAR" },
+                        {MySqlDbType.NewDecimal,"DECIMAL" },
+                        {MySqlDbType.Enum,"INT" },
+                        {MySqlDbType.Set,"VARCHAR" },
+                        {MySqlDbType.String,"NVARCHAR" },
+                        {MySqlDbType.Guid,"VARCHAR(36)" },
+                        {MySqlDbType.Text,"NVARCHAR" }
+                    };
+                    lines.Add($"CREATE TABLE IF NOT EXISTS {TableName} (");
+                    lines.AddRange(Columns.Select(c =>
+                    {
+                        var type = QueryParameter.GetMySqlDbType(Type.GetTypeCode(c.DataType));
+                        string columnType = typeMap.ContainsKey(type) ? typeMap[type] : type.ToString().ToUpper();
+                        string line = $"{c.ColumnName} {columnType}";
+                        if (c.Length > 0)
+                        {
+                            line += $"({c.Length})";
+                        }
+
+                        if (!c.Nullable)
+                        {
+                            line += " NOT NULL";
+                        }
+
+                        if (c.AutoIncrement)
+                        {
+                            line += " AUTO_INCREMENT";
+                        }
+
+                        line += ",";
+                        return line;
+                    }));
+
+                    if (Columns.Any(c => c.IsKey))
+                    {
+                        lines.Add($"PRIMARY KEY ({Columns.Where(c => c.IsKey).JoinToString(",", c => c.ColumnName)})");
+                    }
+                    lines.Add($") Engine=InnoDB  DEFAULT CHARSET=utf8;");
+
+                    return lines.JoinToString(Environment.NewLine);
+                });
+
+                MySQLDatabaseRequest request = new MySQLDatabaseRequest(command);
+                return request;
             }
 
             public static IDatabaseRequest GenerateDeleteTableRequest()
             {
-                throw new NotImplementedException();
+                return new MySQLDatabaseRequest($"DROP TABLE IF EXISTS {TableName};");
             }
         }
     }
