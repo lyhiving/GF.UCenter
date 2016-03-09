@@ -70,6 +70,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CoushBaseContextTest.cs" />
     <Compile Include="DatabaseModelTest.cs" />
     <Compile Include="HashEncryptManagerTest.cs" />
     <Compile Include="SDK\UCenterClientTest.cs" />
