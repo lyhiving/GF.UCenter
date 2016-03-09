@@ -173,3 +173,7 @@ $RECYCLE.BIN/
 .DS_Store
 /.vs
 /packages
+/UCenter.Unity3DSDK/Library
+/UCenter.Unity3DSDK/Temp
+/UCenter.Unity3DSDK/*.csproj
+/UCenter.Unity3DSDK/*.sln
