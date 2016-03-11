@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Couchbase;
 using Couchbase.Configuration.Client;
+using Couchbase.Core;
+using Couchbase.Linq;
 using UCenter.Common.Database.Entities;
 
 namespace UCenter.Common.Database.Couch
@@ -15,6 +18,7 @@ namespace UCenter.Common.Database.Couch
     public class CouchBaseContext
     {
         private readonly ClientConfiguration configuration;
+        private readonly ConcurrentDictionary<Type, string> bucketNameMap = new ConcurrentDictionary<Type, string>();
 
         [ImportingConstructor]
         public CouchBaseContext()
@@ -35,11 +39,13 @@ namespace UCenter.Common.Database.Couch
             };
 
             InitBucktConfigs(this.configuration);
+
+            ClusterHelper.Initialize(this.configuration);
         }
 
         private void InitBucktConfigs(ClientConfiguration clientConfig)
         {
-            var configurations = this.GetType().Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(BaseEntity)))
+            var configurations = this.GetType().Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(IBaseEntity)))
                  .Select(t =>
                  {
                      // todo: config the following settings.
@@ -67,7 +73,42 @@ namespace UCenter.Common.Database.Couch
 
         internal Cluster CreateCluster()
         {
-            return new Cluster(this.configuration);
+            return ClusterHelper.Get();
+        }
+
+        public IBucket GetBucket<TEntity>() where TEntity : IBaseEntity
+        {
+            return ClusterHelper.GetBucket(this.GetBucketName<TEntity>());
+        }
+
+        public BucketContext GetBucketContext<TEntity>() where TEntity : IBaseEntity
+        {
+            return new BucketContext(this.GetBucket<TEntity>());
+        }
+
+        private string GetBucketName<TEntity>() where TEntity : IBaseEntity
+        {
+            return this.bucketNameMap.GetOrAdd(typeof(TEntity), t =>
+            {
+                var attr = t.GetCustomAttribute<DatabaseTableNameAttribute>();
+                return attr == null ? t.Name : attr.TableName;
+            });
+        }
+
+        public IBucket Accounts
+        {
+            get
+            {
+                return this.GetBucket<AccountEntity>();
+            }
+        }
+
+        public IBucket LoginRecords
+        {
+            get
+            {
+                return this.GetBucket<LoginRecordEntity>();
+            }
         }
     }
 }

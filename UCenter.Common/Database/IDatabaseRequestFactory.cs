@@ -11,21 +11,21 @@ namespace UCenter.Common.Database
 {
     public interface IDatabaseRequestFactory
     {
-        IDatabaseRequest GenerateCreateTableRequest<TEntity>() where TEntity : BaseEntity;
+        IDatabaseRequest GenerateCreateTableRequest<TEntity>() where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateDeleteTableRequest<TEntity>() where TEntity : BaseEntity;
+        IDatabaseRequest GenerateDeleteTableRequest<TEntity>() where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateInsertRequest<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        IDatabaseRequest GenerateInsertRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateDeleteRequest<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        IDatabaseRequest GenerateDeleteRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateUpdateRequest<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        IDatabaseRequest GenerateUpdateRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateReteriveRequest<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        IDatabaseRequest GenerateReteriveRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateInsertOrUpdateRequest<TEntity>(TEntity entity) where TEntity : BaseEntity;
+        IDatabaseRequest GenerateInsertOrUpdateRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity;
 
-        IDatabaseRequest GenerateQueryRequest<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : BaseEntity;
+        IDatabaseRequest GenerateQueryRequest<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : IBaseEntity;
 
         [Obsolete("Use common Reterive instead of this request.")]
         IDatabaseRequest CreateGetAccountRequest(string accountName);

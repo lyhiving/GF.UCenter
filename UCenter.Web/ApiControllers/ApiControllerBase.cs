@@ -1,16 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net.Http;
 using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.Http;
+using UCenter.Common.Database.Couch;
 using UCenter.Common.Models;
 
 namespace UCenter.Web.ApiControllers
 {
+    [Export]
     public class ApiControllerBase : ApiController
     {
+        protected readonly CouchBaseContext db;
+
+        [ImportingConstructor]
+        public ApiControllerBase(CouchBaseContext db)
+        {
+            this.db = db;
+        }
+
         protected string GetClientIp(HttpRequestMessage request)
         {
             request = request ?? Request;

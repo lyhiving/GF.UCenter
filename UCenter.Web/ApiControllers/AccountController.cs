@@ -13,6 +13,7 @@ using UCenter.Common;
 using UCenter.Common.Database.Entities;
 using UCenter.Common.Exceptions;
 using UCenter.Common.Filters;
+using UCenter.Common.Database.Couch;
 
 namespace UCenter.Web.ApiControllers
 {
@@ -22,17 +23,10 @@ namespace UCenter.Web.ApiControllers
     [ValidateModel]
     public class AccountController : ApiControllerBase
     {
-        private readonly DatabaseTableModel<AccountEntity> tableModel;
-        private readonly DatabaseTableModel<LoginRecordEntity> recordTableModel;
-
         [ImportingConstructor]
-        public AccountController(
-            DatabaseTableModel<AccountEntity> tableModel,
-            DatabaseTableModel<LoginRecordEntity> recordTableModel)
-            : base()
+        public AccountController(CouchBaseContext db)
+            : base(db)
         {
-            this.tableModel = tableModel;
-            this.recordTableModel = recordTableModel;
         }
 
         [HttpPost]
@@ -52,7 +46,9 @@ namespace UCenter.Web.ApiControllers
                 Sex = info.Sex
             };
 
-            var remoteEntities = await this.tableModel.RetrieveEntitiesAsync(e => e.Name == accountEntity.Name || e.PhoneNum == accountEntity.PhoneNum, token);
+            var remoteEntities = this.db.Accounts.QueryByType<AccountEntity>(a => a.AccountName == accountEntity.AccountName);
+
+            // var remoteEntities = await this.tableModel.RetrieveEntitiesAsync(e => e.Name == accountEntity.Name || e.PhoneNum == accountEntity.PhoneNum, token);
             if (remoteEntities.Count() > 0)
             {
                 return CreateErrorResult(UCenterResult.RegisterAccountExist, "The account already exists.");
@@ -61,7 +57,8 @@ namespace UCenter.Web.ApiControllers
             // encrypted the user password.
             accountEntity.Password = EncryptHashManager.ComputeHash(accountEntity.Password);
 
-            var result = await this.tableModel.InsertEntityAsync(accountEntity, token);
+            var result = await this.db.Accounts.InsertAsync(accountEntity.ToDocument());
+
             return CreateSuccessResult(result);
         }
 
@@ -71,9 +68,10 @@ namespace UCenter.Web.ApiControllers
         {
             // string info = string.Format("客户端请求登录\nAcc={0}  Pwd={1}", request.AccountName, request.Password);
             //Logger.Info(info);
-            var accounts = await this.tableModel.RetrieveEntitiesAsync(e => e.AccountName == info.AccountName, token);
+            var accounts = this.db.Accounts
+                .QueryByType<AccountEntity>(a => a.AccountName == info.AccountName);
             UCenterResult code;
-            if (accounts.Count != 1 || !EncryptHashManager.VerifyHash(info.Password, accounts.First().Password))
+            if (accounts.Count() != 1 || !EncryptHashManager.VerifyHash(info.Password, accounts.First().Password))
             {
                 code = UCenterResult.LoginVerifyAccountNotExit;
             }
@@ -91,7 +89,7 @@ namespace UCenter.Web.ApiControllers
                 ClientIp = this.GetClientIp(Request)
             };
 
-            await this.recordTableModel.InsertEntityAsync(record, token);
+            await this.db.LoginRecords.InsertAsync(record.ToDocument());
 
             if (code == UCenterResult.Success)
             {

@@ -9,7 +9,7 @@ using UCenter.Common.Database.Entities;
 namespace UCenter.Test
 {
     [DatabaseTableName("test")]
-    public class TestDatabaseEntity : BaseEntity
+    public class TestDatabaseEntity : BaseEntity<TestDatabaseEntity>
     {
         [Column(IsKey = true, Length = 100)]
         public string Id { get; set; }

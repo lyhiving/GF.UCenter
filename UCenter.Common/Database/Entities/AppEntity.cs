@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace UCenter.Common.Database.Entities
 {
-    [DatabaseTableName("app")]
-    public class AppEntity : BaseEntity
+    [DatabaseTableName("account")]
+    public class AppEntity : BaseEntity<AppEntity>
     {
         [Column(Length = 64, IsKey = true)]
         public string AppId { get; set; }

@@ -9,6 +9,7 @@ using UCenter.Common.Models;
 using System.ComponentModel.Composition;
 using System.Threading;
 using UCenter.Common.Database.Entities;
+using UCenter.Common.Database.Couch;
 
 namespace UCenter.Web.ApiControllers
 {
@@ -22,7 +23,8 @@ namespace UCenter.Web.ApiControllers
         private readonly DatabaseTableModel<AppEntity> appTableModel;
 
         [ImportingConstructor]
-        public AppController(DatabaseTableModel<AccountEntity> acTableModel, DatabaseTableModel<AppEntity> appTableModel)
+        public AppController(CouchBaseContext db, DatabaseTableModel<AccountEntity> acTableModel, DatabaseTableModel<AppEntity> appTableModel)
+            : base(db)
         {
             this.acTableModel = acTableModel;
             this.appTableModel = appTableModel;

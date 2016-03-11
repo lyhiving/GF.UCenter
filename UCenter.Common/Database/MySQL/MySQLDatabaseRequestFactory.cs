@@ -28,47 +28,47 @@ namespace UCenter.Common.Database.MySQL
             return new MySQLDatabaseRequest(sql_str);
         }
 
-        public IDatabaseRequest GenerateInsertRequest<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public IDatabaseRequest GenerateInsertRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateInsertRequest(entity);
         }
 
-        public IDatabaseRequest GenerateDeleteRequest<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public IDatabaseRequest GenerateDeleteRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateDeleteRequest(entity);
         }
 
-        public IDatabaseRequest GenerateUpdateRequest<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public IDatabaseRequest GenerateUpdateRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateUpdateRequest(entity);
         }
 
-        public IDatabaseRequest GenerateReteriveRequest<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public IDatabaseRequest GenerateReteriveRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateReteriveRequest(entity);
         }
 
-        public IDatabaseRequest GenerateInsertOrUpdateRequest<TEntity>(TEntity entity) where TEntity : BaseEntity
+        public IDatabaseRequest GenerateInsertOrUpdateRequest<TEntity>(TEntity entity) where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateInsertOrUpdateRequest(entity);
         }
 
-        public IDatabaseRequest GenerateCreateTableRequest<TEntity>() where TEntity : BaseEntity
+        public IDatabaseRequest GenerateCreateTableRequest<TEntity>() where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateCreateTableRequest();
         }
 
-        public IDatabaseRequest GenerateDeleteTableRequest<TEntity>() where TEntity : BaseEntity
+        public IDatabaseRequest GenerateDeleteTableRequest<TEntity>() where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateDeleteTableRequest();
         }
 
-        public IDatabaseRequest GenerateQueryRequest<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : BaseEntity
+        public IDatabaseRequest GenerateQueryRequest<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : IBaseEntity
         {
             return RequestFactory<TEntity>.GenerateQueryRequest(expression);
         }
 
-        private static class RequestFactory<TEntity> where TEntity : BaseEntity
+        private static class RequestFactory<TEntity> where TEntity : IBaseEntity
         {
             private const string MySQLSelectLastInsertIdCommand = "SELECT LAST_INSERT_ID()";
             private static readonly ConcurrentDictionary<string, string> commandTexts = new ConcurrentDictionary<string, string>();

@@ -7,8 +7,8 @@ using UCenter.Common.Models;
 
 namespace UCenter.Common.Database.Entities
 {
-    [DatabaseTableName("loginrecord")]
-    public class LoginRecordEntity : BaseEntity
+    [DatabaseTableName("account")]
+    public class LoginRecordEntity : BaseEntity<LoginRecordEntity>
     {
         [Column(IsKey = true, AutoIncrement = true, Nullable = false)]
         public long Id { get; set; }

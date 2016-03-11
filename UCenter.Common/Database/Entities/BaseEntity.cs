@@ -4,11 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Couchbase;
 
 namespace UCenter.Common.Database.Entities
 {
-    public class BaseEntity
+    public abstract class BaseEntity<TEntity> : IBaseEntity, IBaseEntity<TEntity> where TEntity : class, IBaseEntity
     {
+        public static readonly string DocumentType = typeof(TEntity).Name;
+        private readonly string type = DocumentType;
         private string id;
 
         public string Id
@@ -27,5 +30,34 @@ namespace UCenter.Common.Database.Entities
                 this.id = value;
             }
         }
+
+        public string Type
+        {
+            get
+            {
+                return this.type;
+            }
+        }
+
+        public IDocument<TEntity> ToDocument()
+        {
+            return new Document<TEntity>
+            {
+                Id = this.Id,
+                Content = this as TEntity
+            };
+        }
+    }
+
+    public interface IBaseEntity
+    {
+        string Id { get; }
+
+        string Type { get; }
+    }
+
+    public interface IBaseEntity<TEntity>
+    {
+        IDocument<TEntity> ToDocument();
     }
 }

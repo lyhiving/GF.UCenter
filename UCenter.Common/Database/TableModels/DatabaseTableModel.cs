@@ -14,7 +14,7 @@ using System.Collections.Concurrent;
 namespace UCenter.Common.Models
 {
     [Export]
-    public class DatabaseTableModel<TEntity> where TEntity : BaseEntity
+    public class DatabaseTableModel<TEntity> where TEntity : IBaseEntity
     {
         public static readonly string TableName = typeof(TEntity).GetCustomAttribute<DatabaseTableNameAttribute>().TableName;
 

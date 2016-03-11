@@ -11,7 +11,7 @@ namespace UCenter.Common.Database.Entities
     //[Serializable]
     //[DataContract]
     [DatabaseTableName("account")]
-    public class AccountEntity : BaseEntity
+    public class AccountEntity : BaseEntity<AccountEntity>
     {
         [Column(AutoIncrement = true, IsKey = true)]
         public long AccountId { get; set; }
