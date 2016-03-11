@@ -23,6 +23,9 @@ namespace UCenter.Common.Database.Entities
         [IgnoreDataMember]
         public string Password { get; set; }
 
+        [IgnoreDataMember]
+        public string SuperPassword { get; set; }
+
         [Column(Length = 512)]
         public string Token { get; set; }
 

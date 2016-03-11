@@ -19,56 +19,49 @@ namespace UCenter.Common.Database.Couch
     {
         private readonly ClientConfiguration configuration;
         private readonly ConcurrentDictionary<Type, string> bucketNameMap = new ConcurrentDictionary<Type, string>();
+        private Settings settings;
 
         [ImportingConstructor]
-        public CouchBaseContext()
+        public CouchBaseContext(Settings settings)
         {
+            this.settings = settings;
+
+            var servers = this.settings
+                .ServerUris
+                .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => new Uri(s))
+                .ToList();
+
             this.configuration = new ClientConfiguration
             {
-                // todo: config the following settings.
-                Servers = new List<Uri>
-                {
-                    new Uri("http://127.0.0.1:8091/pools")
-                },
-                UseSsl = false,
-                DefaultOperationLifespan = 1000,
-                EnableTcpKeepAlives = true,
-                TcpKeepAliveTime = 1000 * 60 * 60,
-                TcpKeepAliveInterval = 5000,
+                Servers = servers,
+                UseSsl = this.settings.UseSsl,
+                DefaultOperationLifespan = this.settings.DefaultOperationLifespan,
+                EnableTcpKeepAlives = this.settings.EnableTcpKeepAlives,
+                TcpKeepAliveTime = this.settings.TcpKeepAliveTime,
+                TcpKeepAliveInterval = this.settings.TcpKeepAliveInterval,
                 BucketConfigs = new Dictionary<string, BucketConfiguration>()
+                {
+                    {
+                        this.settings.BucketName,
+                        new BucketConfiguration
+                        {
+                            BucketName = this.settings.BucketName,
+                            UseSsl = this.settings.UseSsl,
+                            Password = "",
+                            DefaultOperationLifespan = this.settings.DefaultOperationLifespan,
+                            PoolConfiguration = new PoolConfiguration
+                            {
+                                MaxSize = this.settings.PoolMaxSize,
+                                MinSize = this.settings.PoolMinSize,
+                                SendTimeout = this.settings.PoolSendTimeout
+                            }
+                        }
+                    }
+                }
             };
 
-            InitBucktConfigs(this.configuration);
-
             ClusterHelper.Initialize(this.configuration);
-        }
-
-        private void InitBucktConfigs(ClientConfiguration clientConfig)
-        {
-            var configurations = this.GetType().Assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(IBaseEntity)))
-                 .Select(t =>
-                 {
-                     // todo: config the following settings.
-                     var tableName = t.GetCustomAttribute<DatabaseTableNameAttribute>().TableName;
-                     return new BucketConfiguration
-                     {
-                         BucketName = tableName,
-                         UseSsl = false,
-                         Password = "",
-                         DefaultOperationLifespan = 2000,
-                         PoolConfiguration = new PoolConfiguration
-                         {
-                             MaxSize = 10,
-                             MinSize = 5,
-                             SendTimeout = 12000
-                         }
-                     };
-                 });
-
-            foreach (var conf in configurations)
-            {
-                clientConfig.BucketConfigs.Add(conf.BucketName, conf);
-            }
         }
 
         internal Cluster CreateCluster()
@@ -78,21 +71,7 @@ namespace UCenter.Common.Database.Couch
 
         public IBucket GetBucket<TEntity>() where TEntity : IBaseEntity
         {
-            return ClusterHelper.GetBucket(this.GetBucketName<TEntity>());
-        }
-
-        public BucketContext GetBucketContext<TEntity>() where TEntity : IBaseEntity
-        {
-            return new BucketContext(this.GetBucket<TEntity>());
-        }
-
-        private string GetBucketName<TEntity>() where TEntity : IBaseEntity
-        {
-            return this.bucketNameMap.GetOrAdd(typeof(TEntity), t =>
-            {
-                var attr = t.GetCustomAttribute<DatabaseTableNameAttribute>();
-                return attr == null ? t.Name : attr.TableName;
-            });
+            return ClusterHelper.GetBucket(this.settings.BucketName);
         }
 
         public IBucket Accounts

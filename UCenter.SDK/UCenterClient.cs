@@ -27,28 +27,34 @@ namespace UCenter.SDK
         public async Task<AccountEntity> AccountRegisterAsync(AccountRegisterInfo info)
         {
             string url = GenerateApiEndpoint("account", "register");
-            var response = await httpClient.SendAsyncWithException<UCenterResponse, AccountEntity>(url, ToHttpContent(info));
+            var response = await httpClient.SendAsyncWithException<AccountRegisterInfo, AccountEntity>(HttpMethod.Post, url, info);
             return response;
         }
 
         public async Task<AccountEntity> AccountLoginAsync(AccountLoginInfo info)
         {
             string url = GenerateApiEndpoint("account", "login");
-            var response = await httpClient.SendAsyncWithException<UCenterResponse, AccountEntity>(url, ToHttpContent(info));
+            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountEntity>(HttpMethod.Post, url, info);
             return response;
+        }
+
+        public async Task<AccountEntity> AccountChangePassword(AccountChangePasswordInfo info)
+        {
+            string url = this.GenerateApiEndpoint("account", "changepassword");
+            return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountEntity>(HttpMethod.Post, url, info);
         }
 
         public async Task<AppEntity> AppLoginAsync(AppLoginInfo info)
         {
             string url = GenerateApiEndpoint("app", "login");
-            var response = await httpClient.SendAsyncWithException<UCenterResponse, AppEntity>(url, ToHttpContent(info));
+            var response = await httpClient.SendAsyncWithException<AppLoginInfo, AppEntity>(HttpMethod.Post, url, info);
             return response;
         }
 
         public async Task<AccountAppInfo> AppVerifyAccountAsync(AccountAppVerificationInfo info)
         {
             string url = GenerateApiEndpoint("app", "verifyaccount");
-            var response = await httpClient.SendAsyncWithException<UCenterResponse, AccountAppInfo>(url, ToHttpContent(info));
+            var response = await httpClient.SendAsyncWithException<AccountAppVerificationInfo, AccountAppInfo>(HttpMethod.Post, url, info);
             return response;
         }
 
@@ -75,15 +81,10 @@ namespace UCenter.SDK
             var url = $"{this.host}/api/{controller}/{route}";
             if (!string.IsNullOrEmpty(queryString))
             {
-                url = $"{url}/{queryString}";
+                url = $"{url}/?{queryString}";
             }
 
             return url;
-        }
-
-        private ObjectContent ToHttpContent<T>(T data)
-        {
-            return new ObjectContent<T>(data, new JsonMediaTypeFormatter());
         }
     }
 }

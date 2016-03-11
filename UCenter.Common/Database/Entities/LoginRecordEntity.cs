@@ -10,9 +10,6 @@ namespace UCenter.Common.Database.Entities
     [DatabaseTableName("account")]
     public class LoginRecordEntity : BaseEntity<LoginRecordEntity>
     {
-        [Column(IsKey = true, AutoIncrement = true, Nullable = false)]
-        public long Id { get; set; }
-
         [Column(Length = 32)]
         public string AccountName { get; set; }
 

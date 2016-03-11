@@ -108,6 +108,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Database\TableModels\DatabaseTableModel.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
+    <Compile Include="Models\Info\AccountChangePasswordInfo.cs" />
     <Compile Include="Models\Info\AccountLoginInfo.cs" />
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
     <Compile Include="Models\Info\AppLoginInfo.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Models\Info\AppVerifyAccountResponse.cs" />
     <Compile Include="Models\Info\ValidatableInfo.cs" />
     <Compile Include="Models\Sex.cs" />
+    <Compile Include="Models\UCenterConst.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />
     <Compile Include="Models\AppData.cs" />

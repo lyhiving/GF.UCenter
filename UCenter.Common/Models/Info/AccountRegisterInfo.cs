@@ -13,23 +13,16 @@ namespace UCenter.Common.Models
 
         /// <summary>
         /// Gets or sets the account name
-        /// it must be start with letter or _, and follow by letter, _ or number, end with latter or number.
-        /// and the length between 6 and 16
         /// </summary>
         [Required]
-        [RegularExpression(@"^[a-zA-Z_]\w{4,14}[a-zA-Z0-9]$")]
+        [RegularExpression(UCenterConst.AccountNameRule)]
         public string AccountName { get; set; }
 
         /// <summary>
         /// Gets or sets the password.
-        /// The passsword should be follow the following rules:
-        ///     At least one upper case letter
-        ///     At least one lower case letter
-        ///     At least one number, that is 0-9
-        ///     At least one special symbol, that is: !@#$%*()_+^&}{:;?.
         /// </summary>
         [Required]
-        [RegularExpression(@"^(?=^.{6,25}$)(?=(?:.*?\d){1})(?=.*[a-z])(?=(?:.*?[A-Z]){1})(?=(?:.*?[!@#$%*()_+^&}{:;?.]){1})(?!.*\s)[0-9a-zA-Z!@#$%*()_+^&]*$")]
+        [RegularExpression(UCenterConst.PasswordRule)]
         public string Password { get; set; }
 
         public string SuperPassword { get; set; }

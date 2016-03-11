@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.Http;
+using Couchbase;
 using UCenter.Common.Database.Couch;
 using UCenter.Common.Models;
 
@@ -65,6 +66,18 @@ namespace UCenter.Web.ApiControllers
                     message = message
                 }
             });
+        }
+
+        public IHttpActionResult CreateResponse<T>(IDocumentResult<T> result)
+        {
+            if (result.Success)
+            {
+                return CreateSuccessResult(result.Content);
+            }
+            else
+            {
+                return CreateErrorResult(UCenterResult.SystemError, result.Message);
+            }
         }
     }
 }

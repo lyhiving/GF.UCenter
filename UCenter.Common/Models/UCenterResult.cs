@@ -57,5 +57,7 @@ namespace UCenter.Common.Models
         /// 写入AppData失败
         /// </summary>
         LoginVerifyWriteAppDataFailed,
+
+        SystemError = 500,
     }
 }

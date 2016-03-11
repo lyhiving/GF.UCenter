@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,46 +14,40 @@ namespace UCenter.SDK
 {
     public class UCenterHttpClient
     {
-        public async Task<TResponse> SendAsync<TResponse>(string url, ObjectContent content)
-            where TResponse : UCenterResponse
+        public async Task<TResponse> SendAsync<TResponse, TContent>(HttpMethod method, string url, TContent content)
         {
-            TResponse result = default(TResponse);
-            try
+            using (var httpClient = CreateHttpClient())
             {
-                using (var httpClient = CreateHttpClient())
-                {
-                    var request = CreateHttpRequest(url, content);
-                    var response = await httpClient.SendAsync(request);
-                    result = await ParseResponseAsync<TResponse>(response);
-                }
+                var request = new HttpRequestMessage(method, new Uri(url));
+                request.Headers.Clear();
+                request.Headers.ExpectContinue = false;
+                request.Content = new ObjectContent<TContent>(content, new JsonMediaTypeFormatter());
 
-                if (result != null && result.Status == UCenterResponseStatus.Success)
-                {
-                    return result;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                var response = await httpClient.SendAsync(request);
 
-            return result;
+                response.EnsureSuccessStatusCode();
+
+                return await response.Content.ReadAsAsync<TResponse>();
+            }
         }
 
-        public async Task<TResult> SendAsyncWithException<TResponse, TResult>(string url, ObjectContent content) where TResponse : UCenterResponse
+        public async Task<TResult> SendAsyncWithException<TContent, TResult>(HttpMethod method, string url, TContent content)
         {
-            var response = await this.SendAsync<TResponse>(url, content);
+            var response = await this.SendAsync<UCenterResponse<TResult>, TContent>(method, url, content);
             if (response.Status == UCenterResponseStatus.Success)
             {
-                return response.As<TResult>();
+                return response.Content;
             }
             else
             {
                 if (response.Error != null)
                 {
-                    throw new ApplicationException($"[{{response.Error.Code}}]:{{response.Error.Message}}");
+                    throw new ApplicationException($"[{response.Error.Code}]:{response.Error.Message}");
                 }
-                throw new ApplicationException("Unknown exception");
+                else
+                {
+                    throw new ApplicationException("Unknown exception");
+                }
             }
         }
 
@@ -68,31 +63,6 @@ namespace UCenter.SDK
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
 
             return httpClient;
-        }
-
-        private HttpRequestMessage CreateHttpRequest(string url, ObjectContent content)
-        {
-            var method = HttpMethod.Post;
-            var uri = BuildUri(url);
-            var message = new HttpRequestMessage(method, uri);
-            message.Headers.Clear();
-            message.Headers.ExpectContinue = false;
-            message.Content = content;
-            return message;
-        }
-
-        private Uri BuildUri(string url)
-        {
-            return new Uri(url);
-        }
-
-        private async Task<TResponse> ParseResponseAsync<TResponse>(HttpResponseMessage response)
-        {
-            string content = await response.Content.ReadAsStringAsync();
-            Debug.WriteLine("++++++++++++RESPONSE STRING+++++++++++");
-            Debug.WriteLine(content);
-            var result = JsonConvert.DeserializeObject<TResponse>(content);
-            return result;
         }
     }
 }

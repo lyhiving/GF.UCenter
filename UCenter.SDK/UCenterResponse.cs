@@ -8,6 +8,17 @@ using Newtonsoft.Json.Linq;
 
 namespace UCenter.SDK
 {
+    public class UCenterResponse<T> : UCenterResponse
+    {
+        public T Content
+        {
+            get
+            {
+                return base.As<T>();
+            }
+        }
+    }
+
     [DataContract]
     public class UCenterResponse
     {
