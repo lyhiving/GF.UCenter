@@ -59,10 +59,16 @@ namespace UCenter.Common
             return SlowCompare(hash, expectedHash);
         }
 
-        private static byte[] GenerateSalt()
+        public static string GenerateToken()
+        {
+            var salt1 = GenerateSalt();
+            return ComputeHash(Convert.ToBase64String(salt1), GenerateSalt());
+        }
+
+        private static byte[] GenerateSalt(int minSize = MinSaltSize, int maxSize = MaxSaltSize)
         {
             Random random = new Random();
-            int saltSize = random.Next(MinSaltSize, MaxSaltSize);
+            int saltSize = random.Next(minSize, maxSize);
             var saltBytes = new byte[saltSize];
 
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();

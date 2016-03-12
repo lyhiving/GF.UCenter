@@ -39,10 +39,6 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Couchbase.Linq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\Linq2Couchbase.1.0.2\lib\net45\Couchbase.Linq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Couchbase.NetClient, Version=2.2.5.0, Culture=neutral, PublicKeyToken=05e9c6b5a9ec94c2, processorArchitecture=MSIL">
       <HintPath>..\packages\CouchbaseNetClient.2.2.5\lib\net45\Couchbase.NetClient.dll</HintPath>
       <Private>True</Private>
@@ -76,38 +72,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionContainerFactory.cs" />
-    <Compile Include="Database\ColumnAttribute.cs" />
-    <Compile Include="Database\ColumnInfo.cs" />
     <Compile Include="Database\Couch\CouchBaseContext.cs" />
-    <Compile Include="Database\Couch\CouchBaseBucketContext.cs" />
     <Compile Include="Database\Couch\CouchBucketExtensions.cs" />
-    <Compile Include="Database\DatabaseContext.cs" />
-    <Compile Include="Database\DatabaseTableNameAttribute.cs" />
+    <Compile Include="Database\Couch\CouchQueryTranslator.cs" />
     <Compile Include="Database\Entities\AccountEntity.cs" />
     <Compile Include="Database\Entities\AppEntity.cs" />
     <Compile Include="Database\Entities\BaseEntity.cs" />
     <Compile Include="Database\Entities\LoginRecordEntity.cs" />
-    <Compile Include="Database\IDatabaseClient.cs" />
-    <Compile Include="Database\IDatabaseRequest.cs" />
-    <Compile Include="Database\IDatabaseRequestFactory.cs" />
-    <Compile Include="Database\MySQL\MySQLDatabaseClient.cs" />
-    <Compile Include="Database\MySQL\MySQLDatabaseRequest.cs" />
-    <Compile Include="Database\MySQL\MySQLDatabaseRequestFactory.cs" />
-    <Compile Include="Database\MySQL\MySQLQueryTranslator.cs" />
-    <Compile Include="Database\TableModels\AccountTableModel.cs" />
     <Compile Include="DisposableObjectSlim.cs" />
     <Compile Include="EncryptHashManager.cs" />
-    <Compile Include="Exceptions\DatabaseException.cs" />
-    <Compile Include="Exceptions\AccountExistsException.cs" />
+    <Compile Include="Exceptions\CouchBaseException.cs" />
     <Compile Include="Expressions\Evaluator.cs" />
     <Compile Include="Expressions\QueryCommand.cs" />
     <Compile Include="Expressions\QueryParameter.cs" />
     <Compile Include="Expressions\QueryTranslator.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
-    <Compile Include="Extensions\PropertyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Database\TableModels\DatabaseTableModel.cs" />
-    <Compile Include="Filters\ValidateModelAttribute.cs" />
+    <Compile Include="Models\Responses\AccountChangePasswordResponse.cs" />
+    <Compile Include="Models\Responses\AccountLoginResponse.cs" />
+    <Compile Include="Models\Responses\AccountRegisterResponse.cs" />
+    <Compile Include="Models\Responses\AccountRequestResponse.cs" />
     <Compile Include="Models\Info\AccountChangePasswordInfo.cs" />
     <Compile Include="Models\Info\AccountLoginInfo.cs" />
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
@@ -135,9 +119,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CouchBase\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Couchbase;
 using Couchbase.Configuration.Client;
 using Couchbase.Core;
-using Couchbase.Linq;
 using UCenter.Common.Database.Entities;
 
 namespace UCenter.Common.Database.Couch
@@ -72,6 +71,14 @@ namespace UCenter.Common.Database.Couch
         public IBucket GetBucket<TEntity>() where TEntity : IBaseEntity
         {
             return ClusterHelper.GetBucket(this.settings.BucketName);
+        }
+
+        public IBucket Bucket
+        {
+            get
+            {
+                return ClusterHelper.GetBucket(this.settings.BucketName);
+            }
         }
 
         public IBucket Accounts

@@ -10,7 +10,6 @@ using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
 using UCenter.Common;
-using UCenter.Common.Filters;
 using UCenter.Web;
 using UCenter.Web.ApiControllers;
 
@@ -30,13 +29,13 @@ namespace UCenter.Test
             this.BaseAddress = $"http://{this.settings.ServerHost}:{this.settings.ServerPort }";
 
             this.configuration = new HttpSelfHostConfiguration(this.BaseAddress);
-            //this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            //this.configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AppController)));
-            //this.configuration.MapHttpAttributeRoutes();
-            //ApplicationManager.InitializeApplication(configuration, exportProvider);
+            this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            this.configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AppController)));
+            this.configuration.MapHttpAttributeRoutes();
+            ApplicationManager.InitializeApplication(configuration, exportProvider);
 
-            //this.server = new HttpSelfHostServer(configuration);
-            // this.server.OpenAsync().Wait();
+            this.server = new HttpSelfHostServer(configuration);
+            this.server.OpenAsync().Wait();
         }
 
         public string BaseAddress { get; private set; }

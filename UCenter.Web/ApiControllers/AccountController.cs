@@ -12,8 +12,9 @@ using System.Threading;
 using UCenter.Common;
 using UCenter.Common.Database.Entities;
 using UCenter.Common.Exceptions;
-using UCenter.Common.Filters;
 using UCenter.Common.Database.Couch;
+using Couchbase;
+using UCenter.Common.Database;
 
 namespace UCenter.Web.ApiControllers
 {
@@ -31,133 +32,110 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register(AccountRegisterInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info, CancellationToken token)
         {
             string message = string.Format("客户端请求注册\nAcc={0}  Pwd={1}", info.AccountName, info.Password);
             //Logger.Info(info);
-
-            var accountEntity = new AccountEntity()
+            try
             {
-                AccountName = info.AccountName,
-                Name = info.Name,
-                IdentityNum = info.IdentityNum,
-                PhoneNum = info.PhoneNum,
-                Sex = info.Sex
-            };
+                var account = await db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+                if (account != null)
+                {
+                    return CreateErrorResult(UCenterResult.AccountRegisterFailedAlreadyExist, "The account already exists.");
+                }
+                else
+                {
+                    account = new AccountEntity()
+                    {
+                        AccountName = info.AccountName,
+                        Name = info.Name,
+                        IdentityNum = info.IdentityNum,
+                        Password = EncryptHashManager.ComputeHash(info.Password),
+                        SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword),
+                        PhoneNum = info.PhoneNum,
+                        Sex = info.Sex
+                    };
 
-            var remoteEntities = this.db.Accounts.QueryByType<AccountEntity>(a => a.AccountName == accountEntity.AccountName);
-
-            // var remoteEntities = await this.tableModel.RetrieveEntitiesAsync(e => e.Name == accountEntity.Name || e.PhoneNum == accountEntity.PhoneNum, token);
-            if (remoteEntities.Count() > 0)
+                    await this.db.Accounts.InsertSlimAsync(account);
+                    return CreateSuccessResult(account.ToResponse<AccountRegisterResponse>());
+                }
+            }
+            catch (Exception ex)
             {
-                return CreateErrorResult(UCenterResult.RegisterAccountExist, "The account already exists.");
+
+                return CreateErrorResult(UCenterResult.Failed, ex.Message);
             }
 
-            // encrypted the user password.
-            accountEntity.Password = EncryptHashManager.ComputeHash(info.Password);
-            accountEntity.SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword);
-
-            var result = await this.db.Accounts.InsertAsync(accountEntity.ToDocument());
-
-            return CreateSuccessResult(result);
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IHttpActionResult> Login(AccountLoginInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info, CancellationToken token)
         {
             // string info = string.Format("客户端请求登录\nAcc={0}  Pwd={1}", request.AccountName, request.Password);
             //Logger.Info(info);
-            var accounts = this.db.Accounts
-                .QueryByType<AccountEntity>(a => a.AccountName == info.AccountName);
-            UCenterResult code;
 
-            if (accounts.Count() != 1)
+            var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+            if (account == null)
             {
-                code = UCenterResult.LoginVerifyAccountNotExit;
+                return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account does not exist");
             }
-            else if (!EncryptHashManager.VerifyHash(info.Password, accounts.First().Password))
+            else if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
             {
-                code = UCenterResult.LoginPwdError;
+                await this.RecordLogin(info.AccountName, UCenterResult.AccountLoginFailedPasswordError, "Password incorrect");
+                return CreateErrorResult(UCenterResult.AccountLoginFailedPasswordError, "Password incorrect");
             }
             else
             {
-                code = UCenterResult.Success;
-                await this.RecordLogin(accounts.First(), code, string.Empty);
-                return CreateSuccessResult(accounts.First());
+                account.LastLoginDateTime = DateTime.UtcNow;
+                account.Token = EncryptHashManager.GenerateToken();
+                await this.db.Accounts.UpsertSlimAsync(account);
+                await this.RecordLogin(info.AccountName, UCenterResult.Success);
+                // todo: update token and only return necesary properties.
+                return CreateSuccessResult(account.ToResponse<AccountLoginResponse>());
             }
-
-            return CreateErrorResult(code, "Account name or password error.");
         }
 
         [HttpPost]
         [Route("changepassword")]
-        public async Task<IHttpActionResult> ChangePassword(AccountChangePasswordInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> ChangePassword([FromBody]AccountChangePasswordInfo info, CancellationToken token)
         {
-            var accounts = this.db.Accounts
-                .QueryByType<AccountEntity>(a => a.AccountName == info.AccountName);
-            UCenterResult code;
-            if (accounts.Count() != 1)
+            var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+            if (account == null)
             {
-                code = UCenterResult.LoginAccountNotExist;
+                return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account not exists or password is wrong.");
             }
-            else if (!EncryptHashManager.VerifyHash(info.Password, accounts.First().SuperPassword))
+            else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
-                code = UCenterResult.LoginPwdError;
+                await this.RecordLogin(info.AccountName, UCenterResult.AccountLoginFailedPasswordError, "Change password with wrong super password.");
+                return CreateErrorResult(UCenterResult.AccountLoginFailedPasswordError, "Account not exists or password is wrong.");
             }
             else
             {
-                code = UCenterResult.Success;
-                LoginRecordEntity record = new LoginRecordEntity()
-                {
-                    AccountName = info.AccountName,
-                    Code = code,
-                    LoginTime = DateTime.UtcNow,
-                    UserAgent = Request.Headers.UserAgent.ToString(),
-                    ClientIp = this.GetClientIp(Request),
-                    Comments = "Change password."
-                };
-
-                await this.db.LoginRecords.InsertAsync(record.ToDocument());
-
-                accounts.First().Password = EncryptHashManager.ComputeHash(info.Password);
-
-                var result = await this.db.Accounts.UpsertAsync(accounts.First().ToDocument());
-                return this.CreateResponse(result);
+                account.Password = EncryptHashManager.ComputeHash(info.Password);
+                await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
+                await this.RecordLogin(info.AccountName, UCenterResult.Success, "Change password successfully.");
+                return CreateSuccessResult(account.ToResponse<AccountChangePasswordResponse>());
             }
-
-            return this.CreateErrorResult(code, "Change password error.");
         }
 
         [HttpGet]
         [Route("test")]
         public async Task<IHttpActionResult> Test(AccountLoginInfo info)
         {
-            var accounts = new AccountEntity[]
-            {
-                new AccountEntity { AccountId = 1, AccountName = "Tomato Soup"  },
-                new AccountEntity { AccountId = 2, AccountName = "Yo-yo"  },
-                new AccountEntity { AccountId = 3, AccountName = "Hammer"}
-            };
-
-            LoginRecordEntity record = new LoginRecordEntity()
-            {
-                AccountName = "test",
-                Code = UCenterResult.Success,
-                LoginTime = DateTime.UtcNow,
-                UserAgent = Request.Headers.UserAgent.ToString(),
-                ClientIp = this.GetClientIp(Request)
-            };
-
+            var accounts = await this.db.Accounts.QueryAsync<AccountEntity>(a => a.AccountName == "Ny7IBHtK");
+            //// var accounts = bucket.Query<AccountEntity>("select id, accountName,phoneNum from ucenter as c where c.accountName='Ny7IBHtK'");
+            //var context = new BucketContext(bucket);
+            //var accounts = from a in context.Query<TestAccountEntity>() select a;
 
             return await Task.FromResult<IHttpActionResult>(CreateSuccessResult(accounts));
         }
 
-        private async Task RecordLogin(AccountEntity account, UCenterResult code, string comments)
+        private async Task RecordLogin(string accountName, UCenterResult code, string comments = null)
         {
             LoginRecordEntity record = new LoginRecordEntity()
             {
-                AccountName = account.AccountName,
+                AccountName = accountName,
                 Code = code,
                 LoginTime = DateTime.UtcNow,
                 UserAgent = Request.Headers.UserAgent.ToString(),
@@ -165,7 +143,7 @@ namespace UCenter.Web.ApiControllers
                 Comments = comments
             };
 
-            await this.db.LoginRecords.InsertAsync(record.ToDocument());
+            await this.db.LoginRecords.InsertSlimAsync(record, throwIfFailed: false);
         }
     }
 }

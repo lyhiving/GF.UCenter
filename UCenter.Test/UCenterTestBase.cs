@@ -12,6 +12,7 @@ namespace UCenter.Test
     public class UCenterTestBase
     {
         private static readonly List<IDisposable> disposableList = new List<IDisposable>();
+        protected const string ValidPassword = "#pA554&3321#";
         private static Lazy<List<char>> CharsPool = new Lazy<List<char>>(() =>
         {
             List<char> chars = new List<char>();

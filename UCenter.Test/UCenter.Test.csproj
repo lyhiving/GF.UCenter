@@ -36,6 +36,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.3.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.3.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -71,14 +79,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CoushBaseContextTest.cs" />
-    <Compile Include="DatabaseModelTest.cs" />
     <Compile Include="HashEncryptManagerTest.cs" />
     <Compile Include="SDK\UCenterClientTest.cs" />
     <Compile Include="SDK\UCenterClientTestBase.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Clients\TenantEnvironment.cs" />
     <Compile Include="Clients\WebContext.cs" />
-    <Compile Include="TestDatabaseEntity.cs" />
     <Compile Include="UCenterTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

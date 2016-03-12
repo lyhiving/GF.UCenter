@@ -178,7 +178,7 @@ namespace UCenter.Common.Expressions
         }
 
 
-        private void Write(string text)
+        protected void Write(string text)
         {
             this.sb.Append(text);
         }
@@ -188,9 +188,14 @@ namespace UCenter.Common.Expressions
             this.Write(Convert.ToString(text));
         }
 
-        private void WriteWithParameter(TypeCode code, object value)
+        protected virtual void WriteWithParameter(TypeCode code, object value)
         {
-            string name = $"@p{this.parameterIndexer++}";
+            this.WriteWithParameter("@p", code, value);
+        }
+
+        protected void WriteWithParameter(string prefix, TypeCode code, object value)
+        {
+            string name = $"{prefix}{++this.parameterIndexer}";
             this.Write(name);
             this.parameters.Add(new QueryParameter() { Name = name, Value = value, TypeCode = code });
         }

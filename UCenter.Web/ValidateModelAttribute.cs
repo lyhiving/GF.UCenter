@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
-namespace UCenter.Common.Filters
+namespace UCenter.Web
 {
     [Export]
     public class ValidateModelAttribute : ActionFilterAttribute

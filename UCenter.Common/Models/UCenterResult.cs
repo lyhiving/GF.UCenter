@@ -26,27 +26,27 @@ namespace UCenter.Common.Models
         /// <summary>
         /// 注册，用户名重复
         /// </summary>
-        RegisterAccountExist = 100,
+        AccountRegisterFailedAlreadyExist = 100,
 
         /// <summary>
         /// 登陆，帐号不存在
         /// </summary>
-        LoginAccountNotExist = 200,
+        AccountLoginFailedNotExist = 200,
 
         /// <summary>
         /// 登陆，密码错误
         /// </summary>
-        LoginPwdError,
+        AccountLoginFailedPasswordError,
 
         /// <summary>
         /// App验证登录，帐号不存在
         /// </summary>
-        LoginVerifyAccountNotExit = 300,
+        AppLoginFailedNotExit = 300,
 
         /// <summary>
-        /// 非法App
+        /// App登陆失败，secret错误
         /// </summary>
-        LoginVerifyInvalidApp,
+        AppLoginFailedSecretError,
 
         /// <summary>
         /// 读取AppData失败

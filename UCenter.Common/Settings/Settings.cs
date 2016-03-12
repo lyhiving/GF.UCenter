@@ -11,12 +11,10 @@ namespace UCenter.Common
     [Export]
     public class Settings
     {
-        public string DatabaseConnectionString { get; set; }
-
-        [DefaultValue("ucenter")]
+        [DefaultValue("UCenter")]
         public string BucketName { get; set; }
 
-        [DefaultValue("http://127.0.0.1:8091/pools")]
+        [DefaultValue("http://localhost:8091")]
         public string ServerUris { get; set; }
 
         [DefaultValue(1000)]

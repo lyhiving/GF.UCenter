@@ -10,7 +10,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using UCenter.Common;
 using UCenter.Common.Database.Entities;
-using UCenter.Common.Filters;
 using UCenter.Common.Models;
 
 namespace UCenter.Web
@@ -26,7 +25,6 @@ namespace UCenter.Web
             configuration.Filters.Add(new ValidateModelAttribute());
             RegisterMefDepencency(configuration, exportProvider);
             InitializeSettings(exportProvider);
-            PrepareDatabase(exportProvider);
         }
 
         private static void InitializeSettings(ExportProvider exportProvider)
@@ -38,12 +36,6 @@ namespace UCenter.Web
         {
             MefDependencyResolver dependency = new MefDependencyResolver(exportProvider);
             configuration.DependencyResolver = dependency;
-        }
-
-        private static void PrepareDatabase(ExportProvider exportProvider)
-        {
-            // todo: prepare other tables.
-            exportProvider.GetExportedValue<DatabaseTableModel<LoginRecordEntity>>().CreateIfNotExists(CancellationToken.None);
         }
     }
 }

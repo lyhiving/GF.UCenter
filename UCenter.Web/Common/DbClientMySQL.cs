@@ -135,7 +135,7 @@ public class DbClientMySQL
     //        }
     //        else
     //        {
-    //            result.result = UCenterResult.LoginAccountNotExist;
+    //            result.result = UCenterResult.AccountLoginFailedNotExist;
     //            result.acc_id = 0;
     //        }
     //    }
@@ -248,7 +248,7 @@ public class DbClientMySQL
             }
             else
             {
-                result.result = UCenterResult.LoginAccountNotExist;
+                result.result = UCenterResult.AccountLoginFailedNotExist;
             }
         }
         catch (System.Exception ex)

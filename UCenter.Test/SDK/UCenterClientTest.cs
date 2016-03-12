@@ -23,48 +23,39 @@ namespace UCenter.Test.SDK
         }
 
         [TestMethod]
-        public async Task SDK_Account_Register_Test()
+        public async Task SDK_Account_Register_And_Login_Test()
         {
             var info = new AccountRegisterInfo()
             {
                 Name = GenerateRandomString(),
                 AccountName = GenerateRandomString(),
-                Password = GenerateRandomString(),
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
                 IdentityNum = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
                 Sex = Sex.Female
             };
-            var accountEntity = await client.AccountRegisterAsync(info);
-            Assert.IsNotNull(accountEntity.AccountName);
-            Assert.IsNotNull(accountEntity.Name);
-            Assert.IsNotNull(accountEntity.Name);
-        }
 
-        [TestMethod]
-        public async Task SDK_Account_Login_Test()
-        {
-            string accountName = "TESTUSER0001";
-            string password = "123456";
+            var registerResponse = await client.AccountRegisterAsync(info);
+            Assert.AreEqual(registerResponse.AccountName, info.AccountName);
+            Assert.AreEqual(registerResponse.IdentityNum, info.IdentityNum);
+            Assert.AreEqual(registerResponse.Name, info.Name);
+            Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
+            Assert.AreEqual(registerResponse.Sex, info.Sex);
 
-            var registerInfo = new AccountRegisterInfo()
+            var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
             {
-                AccountName = accountName,
-                Password = password,
-                Name = GenerateRandomString(),
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
-            // TODO: Fix error apicontroller can not be created twice
-            //var accountEntity = await client.AccountRegisterAsync(registerInfo);
+                AccountName = info.AccountName,
+                Password = info.Password
+            });
 
-            var loginInfo = new AccountLoginInfo()
-            {
-                AccountName = accountName,
-                Password = password
-            };
-            var result = await client.AccountLoginAsync(loginInfo);
-            Assert.IsNotNull(result.Token);
+            Assert.AreEqual(loginResponse.AccountName, info.AccountName);
+            Assert.AreEqual(loginResponse.IdentityNum, info.IdentityNum);
+            Assert.AreEqual(loginResponse.Name, info.Name);
+            Assert.AreEqual(loginResponse.PhoneNum, info.PhoneNum);
+            Assert.AreEqual(loginResponse.Sex, info.Sex);
+            Assert.IsNotNull(loginResponse.LastLoginDateTime);
+            Assert.IsNotNull(loginResponse.Token);
         }
 
         [TestMethod]
@@ -86,7 +77,7 @@ namespace UCenter.Test.SDK
             {
                 AppId = "texaspoker",
                 AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
-                AccountId = 24,
+                AccountId = "10",
                 AccountName = "TESTUSER0001",
                 AccountToken = "295f9f2d-afc4-475b-b1bb-5c54306f69dd",
                 GetAppData = false,

@@ -24,24 +24,24 @@ namespace UCenter.SDK
         }
 
 
-        public async Task<AccountEntity> AccountRegisterAsync(AccountRegisterInfo info)
+        public async Task<AccountRegisterResponse> AccountRegisterAsync(AccountRegisterInfo info)
         {
             string url = GenerateApiEndpoint("account", "register");
-            var response = await httpClient.SendAsyncWithException<AccountRegisterInfo, AccountEntity>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AccountRegisterInfo, AccountRegisterResponse>(HttpMethod.Post, url, info);
             return response;
         }
 
-        public async Task<AccountEntity> AccountLoginAsync(AccountLoginInfo info)
+        public async Task<AccountLoginResponse> AccountLoginAsync(AccountLoginInfo info)
         {
             string url = GenerateApiEndpoint("account", "login");
-            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountEntity>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountLoginResponse>(HttpMethod.Post, url, info);
             return response;
         }
 
-        public async Task<AccountEntity> AccountChangePassword(AccountChangePasswordInfo info)
+        public async Task<AccountChangePasswordResponse> AccountChangePassword(AccountChangePasswordInfo info)
         {
             string url = this.GenerateApiEndpoint("account", "changepassword");
-            return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountEntity>(HttpMethod.Post, url, info);
+            return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountChangePasswordResponse>(HttpMethod.Post, url, info);
         }
 
         public async Task<AppEntity> AppLoginAsync(AppLoginInfo info)

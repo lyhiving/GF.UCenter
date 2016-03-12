@@ -1,5 +1,4 @@
 ﻿using System.Web.Http;
-using UCenter.Common.Filters;
 
 namespace UCenter.Web
 {

@@ -22,7 +22,7 @@ namespace UCenter.Common
                         var property = properties.Where(p => p.Name == pair.Name).FirstOrDefault();
                         if (property != null)
                         {
-                            property.SetValue(settings, pair.Value);
+                            property.SetValue(settings, Convert.ChangeType(pair.Value, property.PropertyType));
                         }
                     });
             }

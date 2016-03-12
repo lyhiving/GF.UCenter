@@ -4,7 +4,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using UCenter.Common.Filters;
 
 namespace UCenter.Web.Controllers
 {

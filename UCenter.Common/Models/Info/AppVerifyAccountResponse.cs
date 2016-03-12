@@ -10,7 +10,7 @@ namespace UCenter.Common.Models
     public class AccountAppInfo
     {
         public string AppId;
-        public long AccountId;
+        public string AccountId;
         public string AccountName;
         public string Token;
         public DateTime LastLoginDateTime;

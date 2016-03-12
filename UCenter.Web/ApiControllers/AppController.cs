@@ -10,6 +10,7 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using UCenter.Common.Database.Entities;
 using UCenter.Common.Database.Couch;
+using UCenter.Common;
 
 namespace UCenter.Web.ApiControllers
 {
@@ -19,15 +20,11 @@ namespace UCenter.Web.ApiControllers
     public class AppController : ApiControllerBase
     {
         private DbClientMySQL ClientMySQL = new DbClientMySQL();
-        private readonly DatabaseTableModel<AccountEntity> acTableModel;
-        private readonly DatabaseTableModel<AppEntity> appTableModel;
 
         [ImportingConstructor]
-        public AppController(CouchBaseContext db, DatabaseTableModel<AccountEntity> acTableModel, DatabaseTableModel<AppEntity> appTableModel)
+        public AppController(CouchBaseContext db)
             : base(db)
         {
-            this.acTableModel = acTableModel;
-            this.appTableModel = appTableModel;
         }
 
         [HttpPost]
@@ -35,19 +32,19 @@ namespace UCenter.Web.ApiControllers
         public async Task<IHttpActionResult> Login(AppLoginInfo info, CancellationToken token)
         {
             string message = string.Format("App请求登录\nAppId={0}", info.AppId);
-            //Logger.Info(info);
 
-            var apps = await appTableModel.RetrieveEntitiesAsync(e => e.AppId == info.AppId && e.AppSecret == info.AppSecret, token);
-            if (apps.Count != 1)
+            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>( a => a.AppId == info.AppId && a.AppSecret == info.AppSecret);
+
+            if (app == null)
             {
-                return null;
+                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist.");
             }
 
-            var appEntity = apps.First();
-            appEntity.Token = Guid.NewGuid().ToString();
-            await appTableModel.UpdateEntityAsync(appEntity, token);
+            app.Token = EncryptHashManager.GenerateToken();
+            await this.db.Bucket.UpsertSlimAsync(app);
 
-            return CreateSuccessResult(appEntity);
+            //todo: need login record?
+            return CreateSuccessResult(app);
         }
 
         [HttpPost]
@@ -67,44 +64,26 @@ namespace UCenter.Web.ApiControllers
             //    return result;
             //}
 
-            var apps = await appTableModel.RetrieveEntitiesAsync(e => e.AppId == info.AppId, token);
-            if (apps.Count != 1)
+            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId);
+            if (app == null)
             {
-                CreateErrorResult(UCenterResult.Failed, "App auth fail");
+                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
             }
-
-            string message = string.Format("App请求验证帐号\nAppId={0} AccId={1} AccName={2}",
-                info.AppId, info.AccountId, info.AccountName);
-            //Logger.Info(info);
-
-            // 获取用户Token信息
-            var accounts = await acTableModel.RetrieveEntitiesAsync(e => e.AccountId == info.AccountId, token);
-            if (accounts.Count != 1)
+            else
             {
-                CreateErrorResult(UCenterResult.Failed, "Can not find user");
+                var account = await db.Bucket.GetSlimAsync<AccountEntity>(info.AccountId);
+                if (account == null)
+                {
+                    return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account does not exist");
+                }
+                else
+                {
+                    result.Token = account.Token;
+                    result.LastLoginDateTime = account.LastLoginDateTime;
+
+                    return CreateSuccessResult(result);
+                }
             }
-
-            result.Token = accounts.First().Token;
-            result.LastLoginDateTime = accounts.First().LastLoginDateTime;
-
-
-            //// 获取AppData
-            //if (login_verify_request.get_appdata)
-            //{
-            //    var read_appdata_request = new AppReadDataRequest();
-            //    read_appdata_request.app_id = login_verify_request.app_id;
-            //    read_appdata_request.acc_id = login_verify_request.acc_id;
-
-            //    var read_appdata_response = await ClientMySQL.appReadData(read_appdata_request);
-            //    if (read_appdata_response.result != UCenterResult.Success)
-            //    {
-            //        return Ok(result);
-            //    }
-
-            //    result.app_data = read_appdata_response.app_data;
-            //}
-
-            return CreateSuccessResult(result);
         }
 
         [HttpPost]
