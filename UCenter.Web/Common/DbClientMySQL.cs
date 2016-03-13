@@ -176,200 +176,192 @@ public class DbClientMySQL
     //    return result;
     //}
 
-    //-------------------------------------------------------------------------
-    public async Task<bool> isValidApp(string app_id, string app_secret)
-    {
-        string sql_str = string.Format("SELECT * FROM AppMgr WHERE binary AppId='{0}' AND binary AppSecret='{1}' ;",
-            app_id, app_secret);
+    ////-------------------------------------------------------------------------
+    //public async Task<bool> isValidApp(string app_id, string app_secret)
+    //{
+    //    string sql_str = string.Format("SELECT * FROM AppMgr WHERE binary AppId='{0}' AND binary AppSecret='{1}' ;",
+    //        app_id, app_secret);
 
-        MySqlConnection con = new MySqlConnection(ConStr);
-        con.Open();
+    //    MySqlConnection con = new MySqlConnection(ConStr);
+    //    con.Open();
 
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = sql_str;
+    //    MySqlCommand cmd = con.CreateCommand();
+    //    cmd.CommandText = sql_str;
 
-        try
-        {
-            MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
-            var dt = new DataTable();
-            dt.Load(data);
-            data.Dispose();
+    //    try
+    //    {
+    //        MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
+    //        var dt = new DataTable();
+    //        dt.Load(data);
+    //        data.Dispose();
 
-            DataRow[] rows = dt.Select();
-            if (rows.Length == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        catch (System.Exception ex)
-        {
-            //EbLog.Error("DbClientMySQL.isValidApp() Exception: " + ex);
-        }
+    //        DataRow[] rows = dt.Select();
+    //        if (rows.Length == 1)
+    //        {
+    //            return true;
+    //        }
+    //        else
+    //        {
+    //            return false;
+    //        }
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        //EbLog.Error("DbClientMySQL.isValidApp() Exception: " + ex);
+    //    }
 
-        con.Close();
-        con.Dispose();
-        cmd.Dispose();
+    //    con.Close();
+    //    con.Dispose();
+    //    cmd.Dispose();
 
-        return false;
-    }
+    //    return false;
+    //}
 
-    //-------------------------------------------------------------------------
-    public async Task<VerifyAccountData> getAccountVerifyData(ulong acc_id)
-    {
-        string sql_str = string.Format("SELECT * FROM Account WHERE binary AccountId='{0}';", acc_id);
+    ////-------------------------------------------------------------------------
+    //public async Task<VerifyAccountData> getAccountVerifyData(ulong acc_id)
+    //{
+    //    string sql_str = string.Format("SELECT * FROM Account WHERE binary AccountId='{0}';", acc_id);
 
-        MySqlConnection con = new MySqlConnection(ConStr);
-        con.Open();
+    //    MySqlConnection con = new MySqlConnection(ConStr);
+    //    con.Open();
 
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = sql_str;
+    //    MySqlCommand cmd = con.CreateCommand();
+    //    cmd.CommandText = sql_str;
 
-        VerifyAccountData result = new VerifyAccountData();
-        result.result = UCenterResult.Failed;
-        result.acc_id = acc_id;
+    //    VerifyAccountData result = new VerifyAccountData();
+    //    result.result = UCenterResult.Failed;
+    //    result.acc_id = acc_id;
 
-        try
-        {
-            MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
-            var dt = new DataTable();
-            dt.Load(data);
-            data.Dispose();
+    //    try
+    //    {
+    //        MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
+    //        var dt = new DataTable();
+    //        dt.Load(data);
+    //        data.Dispose();
 
-            DataRow[] rows = dt.Select();
-            if (rows.Length == 1)
-            {
-                result.result = UCenterResult.Success;
-                result.token = (string)rows[0]["Token"];
-                result.last_login_dt = (DateTime)rows[0]["LastLoginDt"];
-            }
-            else
-            {
-                result.result = UCenterResult.AccountLoginFailedNotExist;
-            }
-        }
-        catch (System.Exception ex)
-        {
-            //EbLog.Error("DbClientMySQL.login() getAccountVerifyData: " + ex);
-            goto End;
-        }
+    //        DataRow[] rows = dt.Select();
+    //        if (rows.Length == 1)
+    //        {
+    //            result.result = UCenterResult.Success;
+    //            result.token = (string)rows[0]["Token"];
+    //            result.last_login_dt = (DateTime)rows[0]["LastLoginDt"];
+    //        }
+    //        else
+    //        {
+    //            result.result = UCenterResult.AccountLoginFailedNotExist;
+    //        }
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        //EbLog.Error("DbClientMySQL.login() getAccountVerifyData: " + ex);
+    //        goto End;
+    //    }
 
-        End:
-        con.Close();
-        con.Dispose();
-        cmd.Dispose();
+    //    End:
+    //    con.Close();
+    //    con.Dispose();
+    //    cmd.Dispose();
 
-        return result;
-    }
+    //    return result;
+    //}
 
-    //---------------------------------------------------------------------
-    public async Task<AppWriteDataResponse> appWriteData(AppWriteDataRequest write_appdata_request)
-    {
-        AppWriteDataResponse result = new AppWriteDataResponse();
-        result.result = UCenterResult.LoginVerifyWriteAppDataFailed;
-        result.app_id = write_appdata_request.app_id;
+    ////---------------------------------------------------------------------
+    //public async Task<AppWriteDataResponse> appWriteData(AppWriteDataRequest write_appdata_request)
+    //{
+    //    AppWriteDataResponse result = new AppWriteDataResponse();
+    //    result.result = UCenterResult.LoginVerifyWriteAppDataFailed;
+    //    result.app_id = write_appdata_request.app_id;
 
-        //bool is_valid_app = await isValidApp(write_appdata_request.app_id, write_appdata_request.app_secret);
-        //if (!is_valid_app) return result;
+    //    //bool is_valid_app = await isValidApp(write_appdata_request.app_id, write_appdata_request.app_secret);
+    //    //if (!is_valid_app) return result;
 
-        if (write_appdata_request.app_data.appdata1 == null) write_appdata_request.app_data.appdata1 = "";
-        if (write_appdata_request.app_data.appdata2 == null) write_appdata_request.app_data.appdata2 = "";
-        if (write_appdata_request.app_data.appdata3 == null) write_appdata_request.app_data.appdata3 = "";
+    //    if (write_appdata_request.app_data.Data == null) write_appdata_request.app_data.Data = "";
 
-        string sql_str = string.Format("INSERT INTO app_{0} SET AccountId='{1}', AppData1='{2}', AppData2='{3}', AppData3='{4}';",
-            write_appdata_request.app_id,
-            write_appdata_request.app_data.acc_id,
-            write_appdata_request.app_data.appdata1,
-            write_appdata_request.app_data.appdata2,
-            write_appdata_request.app_data.appdata3);
+    //    string sql_str = string.Format("INSERT INTO app_{0} SET AccountId='{1}', AppData1='{2}', AppData2='{3}', AppData3='{4}';",
+    //        write_appdata_request.app_id,
+    //        write_appdata_request.app_data.AccountId,
+    //        write_appdata_request.app_data.Data);
 
-        MySqlConnection con = new MySqlConnection(ConStr);
-        con.Open();
+    //    MySqlConnection con = new MySqlConnection(ConStr);
+    //    con.Open();
 
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = sql_str;
+    //    MySqlCommand cmd = con.CreateCommand();
+    //    cmd.CommandText = sql_str;
 
-        MySQLRequest request = new MySQLRequest();
-        request.con = con;
-        request.cmd = cmd;
+    //    MySQLRequest request = new MySQLRequest();
+    //    request.con = con;
+    //    request.cmd = cmd;
 
-        try
-        {
-            await Task<int>.Factory.FromAsync(cmd.BeginExecuteNonQuery(), cmd.EndExecuteNonQuery);
-            result.result = UCenterResult.Success;
-            result.app_data = write_appdata_request.app_data;
-        }
-        catch (MySqlException ex)
-        {
-            //EbLog.Note(ex.ToString());
+    //    try
+    //    {
+    //        await Task<int>.Factory.FromAsync(cmd.BeginExecuteNonQuery(), cmd.EndExecuteNonQuery);
+    //        result.result = UCenterResult.Success;
+    //        result.app_data = write_appdata_request.app_data;
+    //    }
+    //    catch (MySqlException ex)
+    //    {
+    //        //EbLog.Note(ex.ToString());
 
-            result.result = UCenterResult.LoginVerifyWriteAppDataFailed;
-        }
-        finally
-        {
-            request.con.Close();
-            request.con.Dispose();
-            request.cmd.Dispose();
-        }
+    //        result.result = UCenterResult.LoginVerifyWriteAppDataFailed;
+    //    }
+    //    finally
+    //    {
+    //        request.con.Close();
+    //        request.con.Dispose();
+    //        request.cmd.Dispose();
+    //    }
 
-        return result;
-    }
+    //    return result;
+    //}
 
-    //---------------------------------------------------------------------
-    public async Task<AppReadDataResponse> appReadData(AppReadDataRequest read_appdata_request)
-    {
-        AppReadDataResponse result = new AppReadDataResponse();
-        result.result = UCenterResult.LoginVerifyReadAppDataFailed;
-        result.app_id = read_appdata_request.app_id;
-        result.acc_id = read_appdata_request.acc_id;
+    ////---------------------------------------------------------------------
+    //public async Task<AppReadDataResponse> appReadData(AppReadDataRequest read_appdata_request)
+    //{
+    //    AppReadDataResponse result = new AppReadDataResponse();
+    //    result.result = UCenterResult.LoginVerifyReadAppDataFailed;
+    //    result.app_id = read_appdata_request.app_id;
+    //    result.acc_id = read_appdata_request.acc_id;
 
-        //bool is_valid_app = await isValidApp(read_appdata_request.app_id, read_appdata_request.app_secret);
-        //if (!is_valid_app)
-        //{
-        //    return result;
-        //}
+    //    //bool is_valid_app = await isValidApp(read_appdata_request.app_id, read_appdata_request.app_secret);
+    //    //if (!is_valid_app)
+    //    //{
+    //    //    return result;
+    //    //}
 
-        string sql_str = string.Format("SELECT * FROM app_{0} WHERE binary AccountId='{1}';",
-            read_appdata_request.app_id, read_appdata_request.acc_id);
+    //    string sql_str = string.Format("SELECT * FROM app_{0} WHERE binary AccountId='{1}';",
+    //        read_appdata_request.app_id, read_appdata_request.acc_id);
 
-        MySqlConnection con = new MySqlConnection(ConStr);
-        con.Open();
+    //    MySqlConnection con = new MySqlConnection(ConStr);
+    //    con.Open();
 
-        MySqlCommand cmd = con.CreateCommand();
-        cmd.CommandText = sql_str;
+    //    MySqlCommand cmd = con.CreateCommand();
+    //    cmd.CommandText = sql_str;
 
-        try
-        {
-            MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
-            var dt = new DataTable();
-            dt.Load(data);
-            data.Dispose();
+    //    try
+    //    {
+    //        MySqlDataReader data = await Task<MySqlDataReader>.Factory.FromAsync(cmd.BeginExecuteReader(), cmd.EndExecuteReader);
+    //        var dt = new DataTable();
+    //        dt.Load(data);
+    //        data.Dispose();
 
-            DataRow[] rows = dt.Select();
-            if (rows.Length == 1)
-            {
-                result.result = UCenterResult.Success;
-                result.app_data = new AppData();
-                result.app_data.acc_id = result.acc_id;
-                result.app_data.appdata1 = (string)rows[0]["AppData1"];
-                result.app_data.appdata2 = (string)rows[0]["AppData2"];
-                result.app_data.appdata3 = (string)rows[0]["AppData3"];
-            }
-        }
-        catch (System.Exception ex)
-        {
-            //EbLog.Error(ex.ToString());
-            goto End;
-        }
+    //        DataRow[] rows = dt.Select();
+    //        if (rows.Length == 1)
+    //        {
+    //            result.result = UCenterResult.Success;
+    //            result.app_data = new AppDataEntity();
+    //        }
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        //EbLog.Error(ex.ToString());
+    //        goto End;
+    //    }
 
-        End:
-        con.Close();
-        con.Dispose();
-        cmd.Dispose();
+    //    End:
+    //    con.Close();
+    //    con.Dispose();
+    //    cmd.Dispose();
 
-        return result;
-    }
+    //    return result;
+    //}
 }

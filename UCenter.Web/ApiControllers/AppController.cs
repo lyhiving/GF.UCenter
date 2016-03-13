@@ -19,8 +19,6 @@ namespace UCenter.Web.ApiControllers
     [RoutePrefix("api/app")]
     public class AppController : ApiControllerBase
     {
-        private DbClientMySQL ClientMySQL = new DbClientMySQL();
-
         [ImportingConstructor]
         public AppController(CouchBaseContext db)
             : base(db)
@@ -33,7 +31,7 @@ namespace UCenter.Web.ApiControllers
         {
             string message = string.Format("App请求登录\nAppId={0}", info.AppId);
 
-            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>( a => a.AppId == info.AppId && a.AppSecret == info.AppSecret);
+            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId && a.AppSecret == info.AppSecret);
 
             if (app == null)
             {
@@ -49,67 +47,95 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("verifyaccount")]
-        public async Task<IHttpActionResult> AppVerifyAccount(AccountAppVerificationInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> AppVerifyAccount(AccountVerificationInfo info, CancellationToken token)
         {
-            var result = new AccountAppInfo();
-            result.AppId = info.AppId;
-            result.AccountId = info.AccountId;
-            result.AccountName = info.AccountName;
+            var result = new AppVerifyAccountResponse();
 
-            // 验证App合法性
-            //bool is_valid_app = await ClientMySQL.isValidApp(login_verify_request.app_id, login_verify_request.app_secret);
-            //if (!is_valid_app)
-            //{
-            //    result.result = UCenterResult.LoginVerifyInvalidApp;
-            //    return result;
-            //}
-
-            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId);
-            if (app == null)
+            var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
+            if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
             {
                 return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
+
             }
-            else
+            else if (appAuthResult == UCenterResult.AppLoginFailedSecretError)
             {
-                var account = await db.Bucket.GetSlimAsync<AccountEntity>(info.AccountId);
-                if (account == null)
-                {
-                    return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account does not exist");
-                }
-                else
-                {
-                    result.Token = account.Token;
-                    result.LastLoginDateTime = account.LastLoginDateTime;
-
-                    return CreateSuccessResult(result);
-                }
+                return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
             }
-        }
 
-        [HttpPost]
-        [Route("writedata")]
-        public async Task<IHttpActionResult> AppWriteData(AppWriteDataRequest write_appdata_request)
-        {
-            string info = string.Format("App请求写入AppData\nAppId={0}",
-                write_appdata_request.app_id);
-            //Logger.Info(info);
+            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+            if (account == null)
+            {
+                return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account does not exist");
+            }
 
-            var result = await ClientMySQL.appWriteData(write_appdata_request);
+            result.AccountId = account.Id;
+            result.AccountName = account.AccountName;
+            result.AccountToken = account.Token;
+            result.LastLoginDateTime = account.LastLoginDateTime;
+            result.LastVerifyDateTime = DateTime.UtcNow;
 
-            return Ok(result);
+            return CreateSuccessResult(result);
         }
 
         [HttpPost]
         [Route("readdata")]
-        public async Task<IHttpActionResult> AppReadData(AppReadDataRequest read_appdata_request)
+        public async Task<IHttpActionResult> AppReadData(AppDataInfo info)
         {
-            string info = string.Format("App请求读取AppData\nAppId={0}",
-                read_appdata_request.app_id);
+            string message = string.Format("App请求读取AppData\nAppId={0}", info.AppId);
             //Logger.Info(info);
 
-            var result = await ClientMySQL.appReadData(read_appdata_request);
+            var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
+            if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
+            {
+                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
+            }
+            if (appAuthResult == UCenterResult.AppLoginFailedSecretError)
+            {
+                return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
+            }
 
-            return Ok(result);
+            var result = db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+
+            return CreateSuccessResult(result);
+        }
+
+        [HttpPost]
+        [Route("writedata")]
+        public async Task<IHttpActionResult> AppWriteData(AppDataInfo info)
+        {
+            string message = string.Format("App请求写入AppData\nAppId={0}", info.AppId);
+            //Logger.Info(info);
+
+            var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
+            if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
+            {
+                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
+            }
+            if (appAuthResult == UCenterResult.AppLoginFailedSecretError)
+            {
+                return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
+            }
+
+            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            appData.Data = info.Data;
+            await db.Bucket.UpsertSlimAsync<AppDataEntity>(appData);
+
+            return CreateSuccessResult(appData);
+        }
+
+        private async Task<UCenterResult> AuthApp(string appId, string appSecret)
+        {
+            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == appId);
+            if (app == null)
+            {
+                return UCenterResult.AppLoginFailedNotExit;
+            }
+            if (appSecret != app.AppSecret)
+            {
+                return UCenterResult.AppLoginFailedSecretError;
+            }
+
+            return UCenterResult.Success;
         }
     }
 }

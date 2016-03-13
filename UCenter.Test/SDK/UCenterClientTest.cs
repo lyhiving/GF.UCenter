@@ -64,37 +64,62 @@ namespace UCenter.Test.SDK
             var info = new AppLoginInfo()
             {
                 AppId = "texaspoker",
-                AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1"
+                AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
+                Type = "AppEntity"
             };
             var result = await client.AppLoginAsync(info);
+            Assert.AreEqual(info.AppId, result.AppId);
+            Assert.AreEqual(info.AppSecret, result.AppSecret);
             Assert.IsNotNull(result.Token);
         }
 
         [TestMethod]
-        public async Task SDK_AppVerifyAsyncAccountAsyncTest()
+        public async Task SDK_App_VerifyAccount_Test()
         {
-            var info = new AccountAppVerificationInfo()
+
+            var registerInfo = new AccountRegisterInfo()
+            {
+                Name = GenerateRandomString(),
+                AccountName = GenerateRandomString(),
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
+                IdentityNum = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                Sex = Sex.Female
+            };
+
+            await client.AccountRegisterAsync(registerInfo);
+
+            var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
+            {
+                AccountName = registerInfo.AccountName,
+                Password = registerInfo.Password
+            });
+
+            var accountVerificationInfo = new AccountVerificationInfo()
             {
                 AppId = "texaspoker",
                 AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
-                AccountId = "10",
-                AccountName = "TESTUSER0001",
-                AccountToken = "295f9f2d-afc4-475b-b1bb-5c54306f69dd",
-                GetAppData = false,
+                AccountName = loginResponse.AccountName,
+                AccountToken = loginResponse.Token
             };
-            var result = await client.AppVerifyAccountAsync(info);
-            Assert.IsNotNull(result.Token);
+            var result = await client.AppVerifyAccountAsync(accountVerificationInfo);
+
+            Assert.IsNotNull(result.AccountId);
+            Assert.IsNotNull(result.AccountName);
+            Assert.IsNotNull(result.AccountToken);
             Assert.IsNotNull(result.LastLoginDateTime);
+            Assert.IsNotNull(result.LastVerifyDateTime);
         }
 
         [TestMethod]
-        public async Task SDK_AppWriteDataAsyncTest()
+        public async Task SDK_App_WriteData_Test()
         {
 
         }
 
         [TestMethod]
-        public async Task SDK_AppReadDataAsyncTest()
+        public async Task SDK_App_ReadData_Test()
         {
 
         }

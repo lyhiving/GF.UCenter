@@ -9,7 +9,7 @@ namespace UCenter.SDK.Response
         public UCenterResult result;
         public string app_id;
         public ulong acc_id;
-        public AppData app_data;
+        public AppDataEntity app_data;
     }
 
 }

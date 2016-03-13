@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UCenter.Common.Database.Entities;
 
 namespace UCenter.Common.Models
 {
     [Serializable]
-    public class AccountAppVerificationInfo
+    public class AppDataEntity : BaseEntity<AppDataEntity>
     {
-        public string AppId;
-        public string AppSecret;
         public string AccountId;
-        public string AccountName;
-        public string AccountToken;
-        public bool GetAppData;
+        public string AppId;
+        public string Data;
     }
 }

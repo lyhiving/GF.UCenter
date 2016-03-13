@@ -51,10 +51,10 @@ namespace UCenter.SDK
             return response;
         }
 
-        public async Task<AccountAppInfo> AppVerifyAccountAsync(AccountAppVerificationInfo info)
+        public async Task<AppVerifyAccountResponse> AppVerifyAccountAsync(AccountVerificationInfo info)
         {
             string url = GenerateApiEndpoint("app", "verifyaccount");
-            var response = await httpClient.SendAsyncWithException<AccountAppVerificationInfo, AccountAppInfo>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AccountVerificationInfo, AppVerifyAccountResponse>(HttpMethod.Post, url, info);
             return response;
         }
 

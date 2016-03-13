@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace UCenter.Common.Models
 {
     [Serializable]
-    public class AppData
+    public class AccountVerificationInfo
     {
-        public ulong acc_id;
-        public string appdata1;
-        public string appdata2;
-        public string appdata3;
+        public string AppId;
+        public string AppSecret;
+        public string AccountName;
+        public string AccountToken;
     }
 }

@@ -11,5 +11,6 @@ namespace UCenter.Common.Models
     {
         public string AppId;
         public string AppSecret;
+        public string Type;
     }
 }

@@ -11,10 +11,10 @@ namespace UCenter.Common
     [Export]
     public class Settings
     {
-        [DefaultValue("UCenter")]
+        [DefaultValue("ucenter")]
         public string BucketName { get; set; }
 
-        [DefaultValue("http://localhost:8091")]
+        [DefaultValue("http://127.0.0.1:8091")]
         public string ServerUris { get; set; }
 
         [DefaultValue(1000)]
