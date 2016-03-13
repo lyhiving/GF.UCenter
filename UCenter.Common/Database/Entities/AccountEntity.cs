@@ -5,10 +5,12 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using UCenter.Common.Attributes;
 using UCenter.Common.Models;
 
 namespace UCenter.Common.Database.Entities
 {
+    [DocumentType("Account")]
     public class AccountEntity : BaseEntity<AccountEntity>
     {
         public string AccountName { get; set; }
@@ -28,6 +30,8 @@ namespace UCenter.Common.Database.Entities
         public string IdentityNum { get; set; }
 
         public string PhoneNum { get; set; }
+
+        public string Email { get; set; }
 
         public TResponse ToResponse<TResponse>() where TResponse : AccountRequestResponse
         {

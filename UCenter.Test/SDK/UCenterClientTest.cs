@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCenter.Common.Models;
@@ -43,6 +44,8 @@ namespace UCenter.Test.SDK
             Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
             Assert.AreEqual(registerResponse.Sex, info.Sex);
 
+            Thread.Sleep(1);
+
             var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = info.AccountName,
@@ -65,7 +68,6 @@ namespace UCenter.Test.SDK
             {
                 AppId = "texaspoker",
                 AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
-                Type = "AppEntity"
             };
             var result = await client.AppLoginAsync(info);
             Assert.AreEqual(info.AppId, result.AppId);
@@ -76,7 +78,6 @@ namespace UCenter.Test.SDK
         [TestMethod]
         public async Task SDK_App_VerifyAccount_Test()
         {
-
             var registerInfo = new AccountRegisterInfo()
             {
                 Name = GenerateRandomString(),
@@ -113,14 +114,36 @@ namespace UCenter.Test.SDK
         }
 
         [TestMethod]
-        public async Task SDK_App_WriteData_Test()
+        public async Task SDK_App_ReadData_And_WriteData_Test()
         {
+            //var registerInfo = new AccountRegisterInfo()
+            //{
+            //    Name = GenerateRandomString(),
+            //    AccountName = GenerateRandomString(),
+            //    Password = ValidPassword,
+            //    SuperPassword = ValidPassword,
+            //    IdentityNum = GenerateRandomString(),
+            //    PhoneNum = GenerateRandomString(),
+            //    Sex = Sex.Female
+            //};
 
-        }
+            //await client.AccountRegisterAsync(registerInfo);
 
-        [TestMethod]
-        public async Task SDK_App_ReadData_Test()
-        {
+            string data = @"{ 'id': 1, 'name': 'abc'}";
+            var appData = new AppDataInfo()
+            {
+                AppId = "texaspoker",
+                AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
+                AccountName = "acc",
+                Data = data
+            };
+
+            await client.AppWriteDataAsync(appData);
+            var result = await client.AppReadDataAsync(appData);
+
+            Assert.AreEqual(appData.AppId, result.AppId);
+            Assert.AreEqual(appData.AccountName, result.AccountName);
+            Assert.AreEqual(appData.Data, result.Data);
 
         }
     }

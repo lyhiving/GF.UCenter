@@ -5,16 +5,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Couchbase;
+using UCenter.Common.Attributes;
 
 namespace UCenter.Common.Database.Entities
 {
     public abstract class BaseEntity<TEntity> : IBaseEntity, IBaseEntity<TEntity> where TEntity : class, IBaseEntity
     {
-        public static readonly string DocumentType = typeof(TEntity).Name;
+        public static readonly string DocumentType = typeof(TEntity).GetCustomAttribute<DocumentTypeAttribute>().Type;
         private readonly string type = DocumentType;
         private string id;
 
-        public string Id
+        public virtual string Id
         {
             get
             {

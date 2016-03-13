@@ -60,6 +60,10 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -71,11 +75,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\DocumentTypeAttribute.cs" />
+    <Compile Include="Attributes\ITraceIdentifier.cs" />
+    <Compile Include="Attributes\TraceExceptionFilterAttribute.cs" />
     <Compile Include="CompositionContainerFactory.cs" />
     <Compile Include="Database\Couch\CouchBaseContext.cs" />
     <Compile Include="Database\Couch\CouchBucketExtensions.cs" />
     <Compile Include="Database\Couch\CouchQueryTranslator.cs" />
     <Compile Include="Database\Entities\AccountEntity.cs" />
+    <Compile Include="Database\Entities\AccountResourceEntity.cs" />
     <Compile Include="Database\Entities\AppEntity.cs" />
     <Compile Include="Database\Entities\BaseEntity.cs" />
     <Compile Include="Database\Entities\LoginRecordEntity.cs" />
@@ -90,6 +98,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Database\Entities\AppDataEntity.cs" />
     <Compile Include="Models\Info\AppDataInfo.cs" />
+    <Compile Include="Models\AccountResourceType.cs" />
     <Compile Include="Models\Responses\AccountChangePasswordResponse.cs" />
     <Compile Include="Models\Responses\AccountLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountRegisterResponse.cs" />
@@ -99,6 +108,7 @@
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
     <Compile Include="Models\Info\AppLoginInfo.cs" />
     <Compile Include="Models\Info\AccountVerificationInfo.cs" />
+    <Compile Include="Models\Responses\AppDataResponse.cs" />
     <Compile Include="Models\Responses\AppVerifyAccountResponse.cs" />
     <Compile Include="Models\Info\ValidatableInfo.cs" />
     <Compile Include="Models\Sex.cs" />
@@ -111,6 +121,7 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsDefaultValueProvider.cs" />
     <Compile Include="Settings\SettingsInitializer.cs" />
+    <Compile Include="Utils\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

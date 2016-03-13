@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace UCenter.Common.Models
 {
-    [Serializable]
-    public class AppLoginInfo
+    public enum AccountResourceType
     {
-        public string AppId;
-        public string AppSecret;
+        None,
+        AccountName,
+        Phone,
+        Email
     }
 }

@@ -14,6 +14,7 @@ using UCenter.Common.Database.Entities;
 using UCenter.Common.Exceptions;
 using UCenter.Common.Database.Couch;
 using Couchbase;
+using UCenter.Common.Attributes;
 using UCenter.Common.Database;
 
 namespace UCenter.Web.ApiControllers
@@ -22,6 +23,7 @@ namespace UCenter.Web.ApiControllers
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/account")]
     [ValidateModel]
+    [TraceExceptionFilter("AccountController")]
     public class AccountController : ApiControllerBase
     {
         [ImportingConstructor]
@@ -36,6 +38,9 @@ namespace UCenter.Web.ApiControllers
         {
             string message = string.Format("客户端请求注册\nAcc={0}  Pwd={1}", info.AccountName, info.Password);
             //Logger.Info(info);
+
+            var removeTempsIfError = new List<AccountResourceEntity>();
+            var error = false;
             try
             {
                 var account = await db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
@@ -43,29 +48,64 @@ namespace UCenter.Web.ApiControllers
                 {
                     return CreateErrorResult(UCenterResult.AccountRegisterFailedAlreadyExist, "The account already exists.");
                 }
-                else
-                {
-                    account = new AccountEntity()
-                    {
-                        AccountName = info.AccountName,
-                        Name = info.Name,
-                        IdentityNum = info.IdentityNum,
-                        Password = EncryptHashManager.ComputeHash(info.Password),
-                        SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword),
-                        PhoneNum = info.PhoneNum,
-                        Sex = info.Sex
-                    };
 
-                    await this.db.Accounts.InsertSlimAsync(account);
-                    return CreateSuccessResult(account.ToResponse<AccountRegisterResponse>());
+                account = new AccountEntity()
+                {
+                    AccountName = info.AccountName,
+                    Name = info.Name,
+                    IdentityNum = info.IdentityNum,
+                    Password = EncryptHashManager.ComputeHash(info.Password),
+                    SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword),
+                    PhoneNum = info.PhoneNum,
+                    Sex = info.Sex
+                };
+
+                if (!string.IsNullOrEmpty(account.AccountName))
+                {
+                    var namePointer = new AccountResourceEntity(account, AccountResourceType.AccountName);
+                    await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(namePointer);
+                    removeTempsIfError.Add(namePointer);
                 }
+                if (!string.IsNullOrEmpty(account.PhoneNum))
+                {
+                    var phonePointer = new AccountResourceEntity(account, AccountResourceType.Phone);
+                    await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(phonePointer);
+                    removeTempsIfError.Add(phonePointer);
+                }
+                else if (!string.IsNullOrEmpty(account.Email))
+                {
+                    var emailPointer = new AccountResourceEntity(account, AccountResourceType.Email);
+                    await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(emailPointer);
+                    removeTempsIfError.Add(emailPointer);
+                }
+
+                await this.db.Accounts.InsertSlimAsync(account);
+                return CreateSuccessResult(account.ToResponse<AccountRegisterResponse>());
             }
             catch (Exception ex)
             {
+                error = true;
+                if (ex is CouchBaseException)
+                {
+                    var status = (ex as CouchBaseException).Result as IDocumentResult<AccountResourceEntity>;
+                    if (status != null)
+                    {
+                        return CreateErrorResult(UCenterResult.AccountRegisterFailedAlreadyExist, "The account already exists.");
+                    }
+                }
 
                 return CreateErrorResult(UCenterResult.Failed, ex.Message);
             }
-
+            finally
+            {
+                if (error)
+                {
+                    foreach (var item in removeTempsIfError)
+                    {
+                        this.db.Bucket.Remove<AccountResourceEntity>(item.ToDocument());
+                    }
+                }
+            }
         }
 
         [HttpPost]

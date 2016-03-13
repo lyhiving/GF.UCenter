@@ -7,16 +7,19 @@ using System.Web.Http;
 using System.Threading.Tasks;
 using UCenter.Common.Models;
 using System.ComponentModel.Composition;
+using System.ServiceModel.Security;
 using System.Threading;
 using UCenter.Common.Database.Entities;
 using UCenter.Common.Database.Couch;
 using UCenter.Common;
+using UCenter.Common.Attributes;
 
 namespace UCenter.Web.ApiControllers
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/app")]
+    [TraceExceptionFilter("AppController")]
     public class AppController : ApiControllerBase
     {
         [ImportingConstructor]
@@ -94,7 +97,7 @@ namespace UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
             }
 
-            var result = db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountName == info.AccountName);
 
             return CreateSuccessResult(result);
         }
@@ -116,8 +119,17 @@ namespace UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
             }
 
-            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
-            appData.Data = info.Data;
+            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountName == info.AccountName);
+            if (appData == null)
+            {
+                appData = new AppDataEntity()
+                {
+                    AppId = info.AppId,
+                    AccountName = info.AccountName,
+                    Data = info.Data
+                };
+            }
+
             await db.Bucket.UpsertSlimAsync<AppDataEntity>(appData);
 
             return CreateSuccessResult(appData);

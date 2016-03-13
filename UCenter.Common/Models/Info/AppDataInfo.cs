@@ -12,7 +12,7 @@ namespace UCenter.Common.Models
     {
         public string AppId;
         public string AppSecret;
-        public string AccountId;
+        public string AccountName;
         public string Data;
     }
 }

@@ -31,6 +31,27 @@ namespace UCenter.Common.Database.Couch
                 .Select(s => new Uri(s))
                 .ToList();
 
+            var bucketConfigs = new Dictionary<string, BucketConfiguration>();
+            var configs = new string[] { this.settings.BucketName, this.settings.TempBucketName }
+                .Select(b => new BucketConfiguration
+                {
+                    BucketName = b,
+                    UseSsl = this.settings.UseSsl,
+                    Password = "",
+                    DefaultOperationLifespan = this.settings.DefaultOperationLifespan,
+                    PoolConfiguration = new PoolConfiguration
+                    {
+                        MaxSize = this.settings.PoolMaxSize,
+                        MinSize = this.settings.PoolMinSize,
+                        SendTimeout = this.settings.PoolSendTimeout
+                    }
+                });
+
+            foreach (var config in configs)
+            {
+                bucketConfigs.Add(config.BucketName, config);
+            }
+
             this.configuration = new ClientConfiguration
             {
                 Servers = servers,
@@ -39,25 +60,7 @@ namespace UCenter.Common.Database.Couch
                 EnableTcpKeepAlives = this.settings.EnableTcpKeepAlives,
                 TcpKeepAliveTime = this.settings.TcpKeepAliveTime,
                 TcpKeepAliveInterval = this.settings.TcpKeepAliveInterval,
-                BucketConfigs = new Dictionary<string, BucketConfiguration>()
-                {
-                    {
-                        this.settings.BucketName,
-                        new BucketConfiguration
-                        {
-                            BucketName = this.settings.BucketName,
-                            UseSsl = this.settings.UseSsl,
-                            Password = "",
-                            DefaultOperationLifespan = this.settings.DefaultOperationLifespan,
-                            PoolConfiguration = new PoolConfiguration
-                            {
-                                MaxSize = this.settings.PoolMaxSize,
-                                MinSize = this.settings.PoolMinSize,
-                                SendTimeout = this.settings.PoolSendTimeout
-                            }
-                        }
-                    }
-                }
+                BucketConfigs = bucketConfigs
             };
 
             ClusterHelper.Initialize(this.configuration);
@@ -78,6 +81,22 @@ namespace UCenter.Common.Database.Couch
             get
             {
                 return ClusterHelper.GetBucket(this.settings.BucketName);
+            }
+        }
+
+        public IBucket TempBucket
+        {
+            get
+            {
+                return ClusterHelper.GetBucket(this.settings.TempBucketName);
+            }
+        }
+
+        public Cluster Cluster
+        {
+            get
+            {
+                return this.CreateCluster();
             }
         }
 

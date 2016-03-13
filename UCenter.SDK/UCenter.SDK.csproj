@@ -50,8 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Response\AppReadDataResponse.cs" />
-    <Compile Include="Response\AppWriteDataResponse.cs" />
     <Compile Include="UCenterClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UCenterError.cs" />

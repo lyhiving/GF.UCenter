@@ -7,8 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UCenter.Common.Models;
 using UCenter.Common.Database.Entities;
-using AppReadDataResponse = UCenter.SDK.Response.AppReadDataResponse;
-using AppWriteDataResponse = UCenter.SDK.Response.AppWriteDataResponse;
 
 namespace UCenter.SDK
 {
@@ -58,23 +56,19 @@ namespace UCenter.SDK
             return response;
         }
 
-        //public async Task<AppWriteDataResponse> AppWriteDataAsync()
-        //{
-        //    string url = $"{this.host}/api/app/writedata";
+        public async Task<AppDataResponse> AppReadDataAsync(AppDataInfo info)
+        {
+            string url = GenerateApiEndpoint("app", "readdata");
+            var response = await httpClient.SendAsyncWithException<AppDataInfo, AppDataResponse>(HttpMethod.Post, url, info);
+            return response;
+        }
 
-        //    var appVerifyAccountRequest = new AppWriteDataRequest();
-        //    var response = await httpClient.SendAsyncWithException<AppWriteDataResponse>(url, ToHttpContent(appVerifyAccountRequest));
-        //    return response;
-
-        //}
-
-        //public async Task<AppReadDataResponse> AppReadDataAsync()
-        //{
-        //    string url = $"{this.host}/api/app/readdata";
-        //    var appVerifyAccountRequest = new AppReadDataResponse();
-        //    var response = await httpClient.PostAsync<AppReadDataResponse>(url, ToHttpContent(appVerifyAccountRequest));
-        //    return response;
-        //}
+        public async Task<AppDataResponse> AppWriteDataAsync(AppDataInfo info)
+        {
+            string url = GenerateApiEndpoint("app", "writedata");
+            var response = await httpClient.SendAsyncWithException<AppDataInfo, AppDataResponse>(HttpMethod.Post, url, info);
+            return response;
+        }
 
         private string GenerateApiEndpoint(string controller, string route, string queryString = null)
         {
