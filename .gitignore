@@ -292,3 +292,10 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+/UCenter.Unity3DSDK/Library/
+/UCenter.Unity3DSDK/Temp/
+/UCenter.Unity3DSDK/UCenter.Unity3DSDK.CSharp.Editor.csproj
+/UCenter.Unity3DSDK/UCenter.Unity3DSDK.CSharp.Plugins.csproj
+/UCenter.Unity3DSDK/UCenter.Unity3DSDK.CSharp.csproj
+/UCenter.Unity3DSDK/UCenter.Unity3DSDK.sln
