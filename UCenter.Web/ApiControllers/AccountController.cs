@@ -14,6 +14,7 @@ using UCenter.Common.Database.Entities;
 using UCenter.Common.Exceptions;
 using UCenter.Common.Database.Couch;
 using Couchbase;
+using NLog;
 using UCenter.Common.Attributes;
 using UCenter.Common.Database;
 
@@ -26,6 +27,8 @@ namespace UCenter.Web.ApiControllers
     [TraceExceptionFilter("AccountController")]
     public class AccountController : ApiControllerBase
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         [ImportingConstructor]
         public AccountController(CouchBaseContext db)
             : base(db)
@@ -36,8 +39,7 @@ namespace UCenter.Web.ApiControllers
         [Route("register")]
         public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info, CancellationToken token)
         {
-            string message = string.Format("客户端请求注册\nAcc={0}  Pwd={1}", info.AccountName, info.Password);
-            //Logger.Info(info);
+            logger.Info("客户端请求注册\nAccoundName={0}", info.AccountName);
 
             var removeTempsIfError = new List<AccountResourceEntity>();
             var error = false;
@@ -112,8 +114,7 @@ namespace UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info, CancellationToken token)
         {
-            // string info = string.Format("客户端请求登录\nAcc={0}  Pwd={1}", request.AccountName, request.Password);
-            //Logger.Info(info);
+            logger.Info("客户端请求登录\nAccountName={0}", info.AccountName);
 
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
@@ -163,6 +164,7 @@ namespace UCenter.Web.ApiControllers
         [Route("test")]
         public async Task<IHttpActionResult> Test(AccountLoginInfo info)
         {
+            logger.Info("in account controller, test method");
             var accounts = await this.db.Accounts.QueryAsync<AccountEntity>(a => a.AccountName == "Ny7IBHtK");
             //// var accounts = bucket.Query<AccountEntity>("select id, accountName,phoneNum from ucenter as c where c.accountName='Ny7IBHtK'");
             //var context = new BucketContext(bucket);

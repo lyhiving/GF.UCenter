@@ -9,6 +9,7 @@ using UCenter.Common.Models;
 using System.ComponentModel.Composition;
 using System.ServiceModel.Security;
 using System.Threading;
+using NLog;
 using UCenter.Common.Database.Entities;
 using UCenter.Common.Database.Couch;
 using UCenter.Common;
@@ -22,6 +23,8 @@ namespace UCenter.Web.ApiControllers
     [TraceExceptionFilter("AppController")]
     public class AppController : ApiControllerBase
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         [ImportingConstructor]
         public AppController(CouchBaseContext db)
             : base(db)
@@ -32,7 +35,7 @@ namespace UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login(AppLoginInfo info, CancellationToken token)
         {
-            string message = string.Format("App请求登录\nAppId={0}", info.AppId);
+            logger.Info("App请求登录\nAppId={0}", info.AppId);
 
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId && a.AppSecret == info.AppSecret);
 
@@ -84,8 +87,7 @@ namespace UCenter.Web.ApiControllers
         [Route("readdata")]
         public async Task<IHttpActionResult> AppReadData(AppDataInfo info)
         {
-            string message = string.Format("App请求读取AppData\nAppId={0}", info.AppId);
-            //Logger.Info(info);
+            logger.Info("App请求读取AppData\nAppId={0}", info.AppId);
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
@@ -106,8 +108,7 @@ namespace UCenter.Web.ApiControllers
         [Route("writedata")]
         public async Task<IHttpActionResult> AppWriteData(AppDataInfo info)
         {
-            string message = string.Format("App请求写入AppData\nAppId={0}", info.AppId);
-            //Logger.Info(info);
+            logger.Info("App请求写入AppData\nAppId={0}", info.AppId);
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterResult.AppLoginFailedNotExit)

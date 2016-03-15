@@ -9,25 +9,111 @@ using System.Web;
 using System.Web.Mvc;
 using Demo;
 using Newtonsoft.Json.Linq;
+using NLog;
+using pingpp;
 
 namespace UCenter.Web.Controllers
 {
     public class PaymentController : Controller
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
+        public ActionResult Charge()
+        {
+            logger.Info("Charge");
+            Pingpp.SetApiKey("sk_test_n5S804PuLGOSTuD4KOTGiDC8");
+            const string appId = "app_H4yDu5COi1O4SWvz";
+
+            //获取 post 的 data 
+            var jObject = JObject.Parse(ReadStream(Request.InputStream));
+            var amount = jObject.SelectToken("amount");
+            var channel = jObject.SelectToken("channel");
+            var orderNo = jObject.SelectToken("order_no");
+
+            var extra = new Dictionary<string, object>();
+            if (channel.ToString().Equals("alipay_wap"))
+            {
+                extra.Add("success_url", "http://www.yourdomain.com/success");
+                extra.Add("cancel_url", "http://www.yourdomain.com/cancel");
+            }
+            else if (channel.ToString().Equals("wx_pub"))
+            {
+                extra.Add("open_id", "asdfasdfsadfasdf");
+            }
+            else if (channel.ToString().Equals("upacp_wap"))
+            {
+                extra.Add("result_url", "http://www.yourdomain.com/result");
+            }
+            else if (channel.ToString().Equals("upmp_wap"))
+            {
+                extra.Add("result_url", "http://www.yourdomain.com/result?code=");
+            }
+            else if (channel.ToString().Equals("bfb_wap"))
+            {
+                extra.Add("result_url", "http://www.yourdomain.com/result");
+                extra.Add("bfb_login", true);
+            }
+            else if (channel.ToString().Equals("wx_pub_qr"))
+            {
+                extra.Add("product_id", "asdfsadfadsf");
+            }
+            else if (channel.ToString().Equals("yeepay_wap"))
+            {
+                extra.Add("product_category", "1");
+                extra.Add("identity_id", "sadfsdaf");
+                extra.Add("identity_type", 1);
+                extra.Add("terminal_type", 1);
+                extra.Add("terminal_id", "sadfsadf");
+                extra.Add("user_ua", "sadfsdaf");
+                extra.Add("result_url", "http://www.yourdomain.com/result");
+            }
+            else if (channel.ToString().Equals("jdpay_wap"))
+            {
+                extra.Add("success_url", "http://www.yourdomain.com/success");
+                extra.Add("fail_url", "http://www.yourdomain.com/fail");
+                extra.Add("token", "fjdilkkydoqlpiunchdysiqkanczxude");//32 位字符串，京东支付成功后会返回
+            }
+
+            var param = new Dictionary<string, object>
+                {
+                    {"order_no", orderNo},
+                    {"amount", amount},
+                    {"channel", channel},
+                    {"currency", "cny"},
+                    {"subject", "test"},
+                    {"body", "tests"},
+                    {"client_ip", "127.0.0.1"},
+                    {"app", new Dictionary<string, string> { { "id", appId } }},
+                    {"extra", extra}
+                };
+
+            try
+            {
+                var charge = pingpp.Models.Charge.create(param);
+                Response.Write(charge);
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+
+            return View();
+        }
+        
         public ActionResult WebHook()
         {
+            logger.Info("WebHook called, ready to receive events");
 
             //获取 post 的 event对象 
             string inputData = ReadStream(Request.InputStream);
 
+            logger.Info("接收到消息\n" + inputData);
+
             //获取 header 中的签名
             string sig = Request.Headers.Get("x-pingplusplus-signature");
 
-            //string sig = "BX5sToHUzPSJvAfXqhtJicsuPjt3yvq804PguzLnMruCSvZ4C7xYS4trdg1blJPh26eeK/P2QfCCHpWKedsRS3bPKkjAvugnMKs+3Zs1k+PshAiZsET4sWPGNnf1E89Kh7/2XMa1mgbXtHt7zPNC4kamTqUL/QmEVI8LJNq7C9P3LR03kK2szJDhPzkWPgRyY2YpD2eq1aCJm0bkX9mBWTZdSYFhKt3vuM1Qjp5PWXk0tN5h9dNFqpisihK7XboB81poER2SmnZ8PIslzWu2iULM7VWxmEDA70JKBJFweqLCFBHRszA8Nt3AXF0z5qe61oH1oSUmtPwNhdQQ2G5X3g==";
-            string dataPath = @"../../data.txt";
-
             //公钥路径（请检查你的公钥 .pem 文件存放路径）
-            string path = @"D:\workspace\csharpProject\demo\WebApplication1\WebApplication1\key.pem";
+            string path = @"C:\openssl\bin\rsa_public_key.pem";
 
             //验证签名
             string result = VerifySignedHash(inputData, sig, path);

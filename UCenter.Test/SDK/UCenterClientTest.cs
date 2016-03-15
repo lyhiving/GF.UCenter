@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -44,7 +45,7 @@ namespace UCenter.Test.SDK
             Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
             Assert.AreEqual(registerResponse.Sex, info.Sex);
 
-            Thread.Sleep(1);
+            await Task.Delay(1000);
 
             var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
             {
@@ -91,6 +92,8 @@ namespace UCenter.Test.SDK
 
             await client.AccountRegisterAsync(registerInfo);
 
+            await Task.Delay(1000);
+
             var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = registerInfo.AccountName,
@@ -116,25 +119,33 @@ namespace UCenter.Test.SDK
         [TestMethod]
         public async Task SDK_App_ReadData_And_WriteData_Test()
         {
-            //var registerInfo = new AccountRegisterInfo()
-            //{
-            //    Name = GenerateRandomString(),
-            //    AccountName = GenerateRandomString(),
-            //    Password = ValidPassword,
-            //    SuperPassword = ValidPassword,
-            //    IdentityNum = GenerateRandomString(),
-            //    PhoneNum = GenerateRandomString(),
-            //    Sex = Sex.Female
-            //};
+            var registerInfo = new AccountRegisterInfo()
+            {
+                Name = GenerateRandomString(),
+                AccountName = GenerateRandomString(),
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
+                IdentityNum = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                Sex = Sex.Female
+            };
 
-            //await client.AccountRegisterAsync(registerInfo);
+            await client.AccountRegisterAsync(registerInfo);
+
+            await Task.Delay(1000);
+
+            var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
+            {
+                AccountName = registerInfo.AccountName,
+                Password = registerInfo.Password
+            });
 
             string data = @"{ 'id': 1, 'name': 'abc'}";
             var appData = new AppDataInfo()
             {
                 AppId = "texaspoker",
                 AppSecret = "767c71c5-1bc5-4323-9e46-03a6a55c6ab1",
-                AccountName = "acc",
+                AccountName = loginResponse.AccountName,
                 Data = data
             };
 
