@@ -98,6 +98,7 @@
     <Compile Include="Expressions\QueryParameter.cs" />
     <Compile Include="Expressions\QueryTranslator.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
+    <Compile Include="Extensions\RSACryptoServiceProviderExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Database\Entities\AppDataEntity.cs" />
     <Compile Include="Models\Info\AppDataInfo.cs" />

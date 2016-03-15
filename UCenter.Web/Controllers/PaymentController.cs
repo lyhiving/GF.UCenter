@@ -7,10 +7,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Demo;
 using Newtonsoft.Json.Linq;
 using NLog;
 using pingpp;
+using UCenter.Common;
 
 namespace UCenter.Web.Controllers
 {
@@ -99,7 +99,7 @@ namespace UCenter.Web.Controllers
 
             return View();
         }
-        
+
         public ActionResult WebHook()
         {
             logger.Info("WebHook called, ready to receive events");

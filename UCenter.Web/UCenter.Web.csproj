@@ -158,6 +158,7 @@
     <Compile Include="ApiControllers\ApiControllerBase.cs" />
     <Compile Include="ApiControllers\AppController.cs" />
     <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="ApiControllers\PaymentApiController.cs" />
     <Compile Include="ApplicationManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
