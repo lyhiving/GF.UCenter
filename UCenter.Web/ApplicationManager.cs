@@ -9,7 +9,6 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using UCenter.Common;
-using UCenter.Common.Database.Entities;
 using UCenter.Common.Models;
 
 namespace UCenter.Web

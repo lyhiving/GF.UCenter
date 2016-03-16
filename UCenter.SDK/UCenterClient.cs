@@ -6,7 +6,6 @@ using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 using UCenter.Common.Models;
-using UCenter.Common.Database.Entities;
 
 namespace UCenter.SDK
 {
@@ -41,10 +40,10 @@ namespace UCenter.SDK
             return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountChangePasswordResponse>(HttpMethod.Post, url, info);
         }
 
-        public async Task<AppEntity> AppLoginAsync(AppLoginInfo info)
+        public async Task<AppResponse> AppLoginAsync(AppLoginInfo info)
         {
             string url = GenerateApiEndpoint("app", "login");
-            var response = await httpClient.SendAsyncWithException<AppLoginInfo, AppEntity>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AppLoginInfo, AppResponse>(HttpMethod.Post, url, info);
             return response;
         }
 

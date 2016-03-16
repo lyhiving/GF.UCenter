@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UCenter.Common.Attributes;
-using UCenter.Common.Database.Entities;
+using UCenter.CouchBase.Attributes;
 
-namespace UCenter.Common.Models
+namespace UCenter.CouchBase.Entities
 {
     [Serializable]
     [DocumentType("AppData")]

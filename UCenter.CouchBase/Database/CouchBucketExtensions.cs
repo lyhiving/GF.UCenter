@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Couchbase.Core;
 using Couchbase.N1QL;
-using UCenter.Common;
-using UCenter.Common.Database.Entities;
-using UCenter.Common.Exceptions;
-using UCenter.Common.Models;
+using UCenter.CouchBase.Entities;
+using UCenter.CouchBase.Exceptions;
 
-namespace UCenter.Common.Database.Couch
+namespace UCenter.CouchBase.Database
 {
     public static class CouchBucketExtensions
     {

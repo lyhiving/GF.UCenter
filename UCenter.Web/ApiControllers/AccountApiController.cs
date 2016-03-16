@@ -10,13 +10,12 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Threading;
 using UCenter.Common;
-using UCenter.Common.Database.Entities;
-using UCenter.Common.Exceptions;
-using UCenter.Common.Database.Couch;
 using Couchbase;
 using NLog;
 using UCenter.Common.Attributes;
-using UCenter.Common.Database;
+using UCenter.CouchBase.Database;
+using UCenter.CouchBase.Entities;
+using UCenter.CouchBase.Exceptions;
 
 namespace UCenter.Web.ApiControllers
 {
@@ -82,7 +81,7 @@ namespace UCenter.Web.ApiControllers
                 }
 
                 await this.db.Accounts.InsertSlimAsync(account);
-                return CreateSuccessResult(account.ToResponse<AccountRegisterResponse>());
+                return CreateSuccessResult(ToResponse<AccountRegisterResponse>(account));
             }
             catch (Exception ex)
             {
@@ -133,7 +132,7 @@ namespace UCenter.Web.ApiControllers
                 await this.db.Accounts.UpsertSlimAsync(account);
                 await this.RecordLogin(info.AccountName, UCenterResult.Success);
                 // todo: update token and only return necesary properties.
-                return CreateSuccessResult(account.ToResponse<AccountLoginResponse>());
+                return CreateSuccessResult(ToResponse<AccountLoginResponse>(account));
             }
         }
 
@@ -156,7 +155,7 @@ namespace UCenter.Web.ApiControllers
                 account.Password = EncryptHashManager.ComputeHash(info.Password);
                 await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
                 await this.RecordLogin(info.AccountName, UCenterResult.Success, "Change password successfully.");
-                return CreateSuccessResult(account.ToResponse<AccountChangePasswordResponse>());
+                return CreateSuccessResult(ToResponse<AccountChangePasswordResponse>(account));
             }
         }
 
@@ -186,6 +185,29 @@ namespace UCenter.Web.ApiControllers
             };
 
             await this.db.LoginRecords.InsertSlimAsync(record, throwIfFailed: false);
+        }
+
+        // todo: clean up this later
+        public TResponse ToResponse<TResponse>(AccountEntity entity) where TResponse : AccountRequestResponse
+        {
+            var res = new AccountResponse()
+            {
+                AccountName = entity.AccountName,
+                Password = entity.Password,
+                SuperPassword = entity.Password,
+                Token = entity.Token,
+                LastLoginDateTime = entity.LastLoginDateTime,
+                Name = entity.Name,
+                Sex = entity.Sex,
+                IdentityNum = entity.IdentityNum,
+                PhoneNum = entity.PhoneNum,
+                Email = entity.Email
+            };
+
+            var response = Activator.CreateInstance<TResponse>();
+            response.ApplyEntity(res);
+
+            return response;
         }
     }
 }

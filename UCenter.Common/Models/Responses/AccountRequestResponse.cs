@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using UCenter.Common.Database.Entities;
 using UCenter.Common.Models;
 
 namespace UCenter.Common.Models
@@ -19,7 +18,7 @@ namespace UCenter.Common.Models
 
         public string PhoneNum { get; set; }
 
-        public virtual void ApplyEntity(AccountEntity account)
+        public virtual void ApplyEntity(AccountResponse account)
         {
             this.AccountName = account.AccountName;
             this.Name = account.Name;

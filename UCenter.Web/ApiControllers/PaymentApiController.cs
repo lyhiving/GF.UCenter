@@ -8,11 +8,11 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using pingpp;
 using System.ComponentModel.Composition;
-using UCenter.Common.Database.Couch;
 using System.Web.Http;
 using System.Threading.Tasks;
 using UCenter.Common;
 using UCenter.Common.Models;
+using UCenter.CouchBase.Database;
 
 namespace UCenter.Web.ApiControllers
 {

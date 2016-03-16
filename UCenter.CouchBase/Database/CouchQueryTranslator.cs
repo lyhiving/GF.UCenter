@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using UCenter.Common.Expressions;
 using UCenter.Common;
+using UCenter.CouchBase.Expressions;
 
-namespace UCenter.Common.Database.Couch
+namespace UCenter.CouchBase.Database
 {
     internal class CouchQueryTranslator : QueryTranslator
     {

@@ -5,8 +5,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCenter.Common.Database.Couch;
-using UCenter.Common.Database.Entities;
 
 namespace UCenter.Test
 {

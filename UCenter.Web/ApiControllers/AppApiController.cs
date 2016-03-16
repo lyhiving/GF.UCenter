@@ -10,10 +10,10 @@ using System.ComponentModel.Composition;
 using System.ServiceModel.Security;
 using System.Threading;
 using NLog;
-using UCenter.Common.Database.Entities;
-using UCenter.Common.Database.Couch;
 using UCenter.Common;
 using UCenter.Common.Attributes;
+using UCenter.CouchBase.Database;
+using UCenter.CouchBase.Entities;
 
 namespace UCenter.Web.ApiControllers
 {

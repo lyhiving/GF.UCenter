@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UCenter.Common.Attributes;
+﻿using UCenter.CouchBase.Attributes;
 
-namespace UCenter.Common.Database.Entities
+namespace UCenter.CouchBase.Entities
 {
     [DocumentType("App")]
     public class AppEntity : BaseEntity<AppEntity>

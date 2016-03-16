@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using UCenter.Common.Attributes;
-using UCenter.Common.Models;
 
-namespace UCenter.Common.Database.Entities
+namespace UCenter.Common.Models
 {
-    [DocumentType("Account")]
-    public class AccountEntity : BaseEntity<AccountEntity>
+    public class AccountResponse
     {
         public string AccountName { get; set; }
 
@@ -33,12 +28,5 @@ namespace UCenter.Common.Database.Entities
 
         public string Email { get; set; }
 
-        public TResponse ToResponse<TResponse>() where TResponse : AccountRequestResponse
-        {
-            var response = Activator.CreateInstance<TResponse>();
-            response.ApplyEntity(this);
-
-            return response;
-        }
     }
 }

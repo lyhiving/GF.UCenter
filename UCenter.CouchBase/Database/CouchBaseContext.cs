@@ -3,15 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Couchbase;
 using Couchbase.Configuration.Client;
 using Couchbase.Core;
-using UCenter.Common.Database.Entities;
+using UCenter.Common;
+using UCenter.CouchBase.Entities;
 
-namespace UCenter.Common.Database.Couch
+namespace UCenter.CouchBase.Database
 {
     [Export]
     public class CouchBaseContext

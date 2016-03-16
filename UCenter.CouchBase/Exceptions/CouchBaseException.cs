@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Couchbase;
-using Couchbase.N1QL;
 
-namespace UCenter.Common.Exceptions
+namespace UCenter.CouchBase.Exceptions
 {
     public class CouchBaseException : Exception
     {

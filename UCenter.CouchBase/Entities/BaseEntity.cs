@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Couchbase;
-using UCenter.Common.Attributes;
+using UCenter.CouchBase.Attributes;
 
-namespace UCenter.Common.Database.Entities
+namespace UCenter.CouchBase.Entities
 {
     public abstract class BaseEntity<TEntity> : IBaseEntity, IBaseEntity<TEntity> where TEntity : class, IBaseEntity
     {

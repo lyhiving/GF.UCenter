@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace UCenter.Common.Expressions
+namespace UCenter.CouchBase.Expressions
 {
     internal class QueryCommand
     {
