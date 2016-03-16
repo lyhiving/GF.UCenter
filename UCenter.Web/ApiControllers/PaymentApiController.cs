@@ -38,7 +38,7 @@ namespace UCenter.Web.ApiControllers
         }
 
         [Route("charge")]
-        public async Task<IHttpActionResult> Charge()
+        public async Task<IHttpActionResult> Charge([FromBody]ChargeInfo info)
         {
             try
             {
@@ -46,18 +46,9 @@ namespace UCenter.Web.ApiControllers
                 Pingpp.SetApiKey("sk_test_n5S804PuLGOSTuD4KOTGiDC8");
                 const string appId = "app_H4yDu5COi1O4SWvz";
 
-
-                var body = await Request.Content.ReadAsStringAsync();
-                logger.Info("to print body");
-                logger.Info(body);
-
-                //获取 post 的 data 
-                //var jObject = JObject.Parse(ReadStream(Current.Request.InputStream));
-                var jObject = JObject.Parse(Request.Content.ReadAsStringAsync().Result);
-
-                var amount = jObject.SelectToken("amount");
-                var channel = jObject.SelectToken("channel");
-                var orderNo = jObject.SelectToken("order_no");
+                var amount = info.Amount;
+                var channel = info.Channel;
+                var orderNo = info.OrderNo;
 
                 logger.Info($"amount={amount}");
                 logger.Info($"channel={channel}");
@@ -122,9 +113,6 @@ namespace UCenter.Web.ApiControllers
 
 
                 var charge = pingpp.Models.Charge.create(param);
-                logger.Info("=============");
-                logger.Info(charge.Body);
-                logger.Info("=============");
                 return CreateSuccessResult(charge);
             }
             catch (Exception ex)
@@ -140,8 +128,7 @@ namespace UCenter.Web.ApiControllers
         {
             logger.Info("WebHook called, ready to receive events");
 
-            //获取 post 的 event对象 
-            //string inputData = ReadStream(Request.InputStream);
+            //获取 post 的 event对象                                
             string inputData = Request.Content.ReadAsStringAsync().Result;
 
             logger.Info("接收到消息\n" + inputData);
@@ -153,7 +140,6 @@ namespace UCenter.Web.ApiControllers
             {
                 sig = headerValues.FirstOrDefault();
             }
-            //string sig = Request.Headers.Get("x-pingplusplus-signature");
 
             //公钥路径（请检查你的公钥 .pem 文件存放路径）
             string path = @"C:\openssl\bin\rsa_public_key.pem";
@@ -163,6 +149,7 @@ namespace UCenter.Web.ApiControllers
 
             var jObject = JObject.Parse(inputData);
             var type = jObject.SelectToken("type");
+            logger.Info($"type={type}");
             if (type.ToString() == "charge.succeeded" || type.ToString() == "refund.succeeded")
             {
                 // TODO what you need do
@@ -172,18 +159,9 @@ namespace UCenter.Web.ApiControllers
             {
                 // TODO what you need do
                 //Response.StatusCode = 500;
-                return CreateErrorResult(UCenterResult.Failed, "Failed to generate charge");
             }
 
-            return CreateSuccessResult("Success generate charge");
-        }
-
-        private static string ReadStream(Stream stream)
-        {
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return reader.ReadToEnd();
-            }
+            return CreateSuccessResult("Success received order info");
         }
 
         public static string VerifySignedHash(string str_DataToVerify, string str_SignedData, string str_publicKeyFilePath)

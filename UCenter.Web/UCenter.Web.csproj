@@ -156,8 +156,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\ApiControllerBase.cs" />
-    <Compile Include="ApiControllers\AppController.cs" />
-    <Compile Include="ApiControllers\AccountController.cs" />
+    <Compile Include="ApiControllers\AppApiController.cs" />
+    <Compile Include="ApiControllers\AccountApiController.cs" />
     <Compile Include="ApiControllers\PaymentApiController.cs" />
     <Compile Include="ApplicationManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -166,7 +166,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\MEFControllerFactory.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -223,8 +222,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.2.0.min.map" />
-    <Content Include="Views\Payment\WebHook.cshtml" />
-    <Content Include="Views\Payment\Charge.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UCenter.Common\UCenter.Common.csproj">

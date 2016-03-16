@@ -30,7 +30,7 @@ namespace UCenter.Test
 
             this.configuration = new HttpSelfHostConfiguration(this.BaseAddress);
             this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            this.configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AppController)));
+            this.configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AppApiController)));
             this.configuration.MapHttpAttributeRoutes();
             ApplicationManager.InitializeApplication(configuration, exportProvider);
 

@@ -157,5 +157,20 @@ namespace UCenter.Test.SDK
             Assert.AreEqual(appData.Data, result.Data);
 
         }
+
+        [TestMethod]
+        public async Task SDK_Create_Charge_Test()
+        {
+            var chargeInfo = new ChargeInfo()
+            {
+                OrderNo = DateTime.Now.ToString("yyyyMMddHHmmssffff"),
+                Channel = "alipay",
+                Amount = 100,
+                Subject = "fake item"
+            };
+
+            var result = await client.CreateChargeAsync(chargeInfo);
+            Assert.AreEqual(chargeInfo.Amount, result.Amount);
+        }
     }
 }

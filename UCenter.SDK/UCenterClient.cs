@@ -21,7 +21,6 @@ namespace UCenter.SDK
             this.host = host;
         }
 
-
         public async Task<AccountRegisterResponse> AccountRegisterAsync(AccountRegisterInfo info)
         {
             string url = GenerateApiEndpoint("account", "register");
@@ -67,6 +66,13 @@ namespace UCenter.SDK
         {
             string url = GenerateApiEndpoint("app", "writedata");
             var response = await httpClient.SendAsyncWithException<AppDataInfo, AppDataResponse>(HttpMethod.Post, url, info);
+            return response;
+        }
+
+        public async Task<Charge> CreateChargeAsync(ChargeInfo info)
+        {
+            string url = GenerateApiEndpoint("payment", "charge");
+            var response = await httpClient.SendAsyncWithException<ChargeInfo, Charge>(HttpMethod.Post, url, info);
             return response;
         }
 

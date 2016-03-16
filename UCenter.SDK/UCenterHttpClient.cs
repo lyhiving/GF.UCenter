@@ -14,7 +14,7 @@ namespace UCenter.SDK
 {
     public class UCenterHttpClient
     {
-        public async Task<TResponse> SendAsync<TResponse, TContent>(HttpMethod method, string url, TContent content)
+        public async Task<TResponse> SendAsync<TContent, TResponse>(HttpMethod method, string url, TContent content)
         {
             using (var httpClient = CreateHttpClient())
             {
@@ -33,7 +33,7 @@ namespace UCenter.SDK
 
         public async Task<TResult> SendAsyncWithException<TContent, TResult>(HttpMethod method, string url, TContent content)
         {
-            var response = await this.SendAsync<UCenterResponse<TResult>, TContent>(method, url, content);
+            var response = await this.SendAsync<TContent, UCenterResponse<TResult>>(method, url, content);
             if (response.Status == UCenterResponseStatus.Success)
             {
                 return response.Content;

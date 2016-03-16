@@ -25,12 +25,12 @@ namespace UCenter.Web.ApiControllers
     [RoutePrefix("api/account")]
     [ValidateModel]
     [TraceExceptionFilter("AccountController")]
-    public class AccountController : ApiControllerBase
+    public class AccountApiController : ApiControllerBase
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         [ImportingConstructor]
-        public AccountController(CouchBaseContext db)
+        public AccountApiController(CouchBaseContext db)
             : base(db)
         {
         }
