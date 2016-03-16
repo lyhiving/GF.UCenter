@@ -36,12 +36,6 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
-/.vs
-/packages
-/UCenter.Unity3DSDK/Library
-/UCenter.Unity3DSDK/Temp
-/UCenter.Unity3DSDK/*.csproj
-/UCenter.Unity3DSDK/*.sln
 
 #################
 ## Following are from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
@@ -100,10 +94,8 @@ artifacts/
 *.meta
 *.obj
 *.pch
-*.pdb
 *.pgc
 *.pgd
-*.rsp
 *.sbr
 *.tlb
 *.tli
@@ -293,9 +285,11 @@ paket-files/
 .idea/
 *.sln.iml
 
-/UCenter.Unity3DSDK/Library/
-/UCenter.Unity3DSDK/Temp/
-/UCenter.Unity3DSDK/UCenter.Unity3DSDK.CSharp.Editor.csproj
-/UCenter.Unity3DSDK/UCenter.Unity3DSDK.CSharp.Plugins.csproj
-/UCenter.Unity3DSDK/UCenter.Unity3DSDK.CSharp.csproj
-/UCenter.Unity3DSDK/UCenter.Unity3DSDK.sln
+/.vs
+/packages
+/UCenterSDK.Unity3D/Library/
+/UCenterSDK.Unity3D/Temp/
+/UCenterSDK.Unity3D/UCenterSDK.Unity3D.CSharp.Editor.csproj
+/UCenterSDK.Unity3D/UCenterSDK.Unity3D.CSharp.Plugins.csproj
+/UCenterSDK.Unity3D/UCenterSDK.Unity3D.CSharp.csproj
+/UCenterSDK.Unity3D/UCenterSDK.Unity3D.sln
