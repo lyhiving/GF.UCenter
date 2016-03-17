@@ -85,6 +85,7 @@
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
     <Compile Include="Models\Info\AppLoginInfo.cs" />
     <Compile Include="Models\Info\AccountVerificationInfo.cs" />
+    <Compile Include="Models\Responses\AccountGuestLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountResponse.cs" />
     <Compile Include="Models\Responses\AppDataResponse.cs" />
     <Compile Include="Models\Responses\AppEntity.cs" />
