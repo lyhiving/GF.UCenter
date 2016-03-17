@@ -31,14 +31,14 @@ namespace UCenter.Web.ApiControllers
 
         [HttpGet]
         [Route("test")]
-        public async Task<IHttpActionResult> Test()
+        public IHttpActionResult Test()
         {
             logger.Info("in test");
             return CreateSuccessResult("");
         }
 
         [Route("charge")]
-        public async Task<IHttpActionResult> Charge([FromBody]ChargeInfo info)
+        public IHttpActionResult Charge([FromBody]ChargeInfo info)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("webhook")]
-        public async Task<IHttpActionResult> WebHook()
+        public IHttpActionResult WebHook()
         {
             logger.Info("WebHook called, ready to receive events");
 

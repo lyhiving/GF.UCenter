@@ -70,6 +70,7 @@
     <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="Extensions\RSACryptoServiceProviderExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\Info\AppInfo.cs" />
     <Compile Include="Models\Info\ChargeInfo.cs" />
     <Compile Include="Models\Info\AppDataInfo.cs" />
     <Compile Include="Models\AccountResourceType.cs" />
@@ -91,6 +92,11 @@
     <Compile Include="Models\Info\ValidatableInfo.cs" />
     <Compile Include="Models\Sex.cs" />
     <Compile Include="Models\UCenterConst.cs" />
+    <Compile Include="SDK\UCenterClient.cs" />
+    <Compile Include="SDK\UCenterError.cs" />
+    <Compile Include="SDK\UCenterHttpClient.cs" />
+    <Compile Include="SDK\UCenterResponse.cs" />
+    <Compile Include="SDK\UCenterResponseStatus.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />
     <Compile Include="Models\UCenterResult.cs" />

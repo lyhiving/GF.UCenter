@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using UCenter.Common.Models;
+using UCenter.Common.SDK;
 
-namespace UCenter.SDK
+namespace UCenter.SDK.AppServer
 {
     public class UCenterClient
     {
@@ -20,24 +16,11 @@ namespace UCenter.SDK
             this.host = host;
         }
 
-        public async Task<AccountRegisterResponse> AccountRegisterAsync(AccountRegisterInfo info)
+        public async Task<AppResponse> AppCreateAsync(AppInfo info)
         {
-            string url = GenerateApiEndpoint("account", "register");
-            var response = await httpClient.SendAsyncWithException<AccountRegisterInfo, AccountRegisterResponse>(HttpMethod.Post, url, info);
+            string url = GenerateApiEndpoint("app", "create");
+            var response = await httpClient.SendAsyncWithException<AppInfo, AppResponse>(HttpMethod.Post, url, info);
             return response;
-        }
-
-        public async Task<AccountLoginResponse> AccountLoginAsync(AccountLoginInfo info)
-        {
-            string url = GenerateApiEndpoint("account", "login");
-            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountLoginResponse>(HttpMethod.Post, url, info);
-            return response;
-        }
-
-        public async Task<AccountChangePasswordResponse> AccountChangePassword(AccountChangePasswordInfo info)
-        {
-            string url = this.GenerateApiEndpoint("account", "changepassword");
-            return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountChangePasswordResponse>(HttpMethod.Post, url, info);
         }
 
         public async Task<AppResponse> AppLoginAsync(AppLoginInfo info)

@@ -32,6 +32,27 @@ namespace UCenter.Web.ApiControllers
         }
 
         [HttpPost]
+        [Route("create")]
+        public async Task<IHttpActionResult> Create([FromBody]AppInfo info, CancellationToken token)
+        {
+            logger.Info("创建App\nAppId={0}", info.AppId);
+
+            var appEntity = new AppEntity()
+            {
+                AppId = info.AppId,
+                AppSecret = info.AppSecret
+            };
+
+            await this.db.Bucket.InsertSlimAsync<AppEntity>(appEntity);
+            var response = new AppResponse()
+            {
+                AppId = info.AppId,
+                AppSecret = info.AppSecret
+            };
+            return CreateSuccessResult(response);
+        }
+
+        [HttpPost]
         [Route("login")]
         public async Task<IHttpActionResult> Login(AppLoginInfo info, CancellationToken token)
         {

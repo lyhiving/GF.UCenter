@@ -7,7 +7,6 @@ using System.Web.Http;
 using System.Threading.Tasks;
 using UCenter.Common.Models;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.Threading;
 using UCenter.Common;
 using Couchbase;

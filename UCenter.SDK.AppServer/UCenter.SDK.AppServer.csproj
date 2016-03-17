@@ -7,8 +7,8 @@
     <ProjectGuid>{004E44F3-934B-47CA-99E5-9CD38AA32EF0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UCenterSDK.App</RootNamespace>
-    <AssemblyName>UCenterSDK.App</AssemblyName>
+    <RootNamespace>UCenter.SDK.AppServer</RootNamespace>
+    <AssemblyName>UCenter.SDK.AppServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,13 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UCenterSDK.cs" />
-    <Compile Include="UCenterType.cs" />
+    <Compile Include="UCenterClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\UCenter.Common\UCenter.Common.csproj">
+      <Project>{fce33a61-93fc-4077-b362-beb2d5e6d8b0}</Project>
+      <Name>UCenter.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
