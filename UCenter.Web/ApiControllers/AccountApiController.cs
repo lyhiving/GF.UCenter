@@ -35,7 +35,7 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info)
         {
             logger.Info("客户端请求注册\nAccoundName={0}", info.AccountName);
 
@@ -57,7 +57,8 @@ namespace UCenter.Web.ApiControllers
                     Password = EncryptHashManager.ComputeHash(info.Password),
                     SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword),
                     PhoneNum = info.PhoneNum,
-                    Sex = info.Sex
+                    Sex = info.Sex,
+                    CreatedDateTime = DateTime.UtcNow
                 };
 
                 if (!string.IsNullOrEmpty(account.AccountName))
@@ -110,7 +111,7 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
         {
             logger.Info("客户端请求登录\nAccountName={0}", info.AccountName);
 
@@ -136,8 +137,36 @@ namespace UCenter.Web.ApiControllers
         }
 
         [HttpPost]
+        [Route("guest")]
+        public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
+        {
+            logger.Info("客户端请求匿名登陆");
+
+            var r = new Random();
+            string accountNamePostfix = r.Next(0, 1000000).ToString("D3");
+            string accountName = $"uc_{DateTime.Now.ToString("yyyyMMddHHmmssffff")}_{accountNamePostfix}";
+            string password = Guid.NewGuid().ToString();
+
+            var account = new AccountEntity()
+            {
+                AccountName = accountName,
+                Password = EncryptHashManager.ComputeHash(password),
+                CreatedDateTime = DateTime.UtcNow
+            };
+
+            await this.db.Accounts.InsertSlimAsync(account);
+
+            var response = new AccountGuestLoginResponse()
+            {
+                AccountName = accountName,
+                Password = password
+            };
+            return CreateSuccessResult(response);
+        }
+
+        [HttpPost]
         [Route("changepassword")]
-        public async Task<IHttpActionResult> ChangePassword([FromBody]AccountChangePasswordInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> ChangePassword([FromBody]AccountChangePasswordInfo info)
         {
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)

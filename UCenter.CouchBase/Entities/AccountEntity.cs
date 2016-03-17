@@ -27,5 +27,7 @@ namespace UCenter.CouchBase.Entities
 
         public string Email { get; set; }
 
+        public DateTime CreatedDateTime { get; set; }
+
     }
 }

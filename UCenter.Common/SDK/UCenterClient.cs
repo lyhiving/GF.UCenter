@@ -29,6 +29,13 @@ namespace UCenter.Common.SDK
             return response;
         }
 
+        public async Task<AccountResponse> AccountGuestLoginAsync(AccountLoginInfo info)
+        {
+            string url = GenerateApiEndpoint("account", "guest");
+            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountResponse>(HttpMethod.Post, url, info);
+            return response;
+        }
+
         public async Task<AccountChangePasswordResponse> AccountChangePassword(AccountChangePasswordInfo info)
         {
             string url = this.GenerateApiEndpoint("account", "changepassword");

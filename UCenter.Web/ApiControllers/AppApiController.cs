@@ -33,7 +33,7 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IHttpActionResult> Create([FromBody]AppInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Create([FromBody]AppInfo info)
         {
             logger.Info("创建App\nAppId={0}", info.AppId);
 
@@ -54,7 +54,7 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IHttpActionResult> Login(AppLoginInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Login(AppLoginInfo info)
         {
             logger.Info("App请求登录\nAppId={0}", info.AppId);
 
@@ -74,7 +74,7 @@ namespace UCenter.Web.ApiControllers
 
         [HttpPost]
         [Route("verifyaccount")]
-        public async Task<IHttpActionResult> AppVerifyAccount(AccountVerificationInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> AppVerifyAccount(AccountVerificationInfo info)
         {
             var result = new AppVerifyAccountResponse();
 

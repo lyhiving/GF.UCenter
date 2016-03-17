@@ -61,5 +61,14 @@ namespace UCenter.Test.SDK
             Assert.IsNotNull(loginResponse.LastLoginDateTime);
             Assert.IsNotNull(loginResponse.Token);
         }
+
+        [TestMethod]
+        public async Task SDK_Account_Guest_Login_Test()
+        {
+            var loginResponse = await client.AccountGuestLoginAsync(new AccountLoginInfo(){});
+
+            Assert.IsNotNull(loginResponse.AccountName);
+            Assert.IsNotNull(loginResponse.Password);
+        }
     }
 }

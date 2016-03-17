@@ -112,6 +112,9 @@ namespace UCenter.Test.SDK
             };
 
             await client.AppWriteDataAsync(appData);
+
+            await Task.Delay(1000);
+
             var result = await client.AppReadDataAsync(appData);
 
             Assert.AreEqual(appData.AppId, result.AppId);

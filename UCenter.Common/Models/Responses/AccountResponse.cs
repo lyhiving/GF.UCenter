@@ -27,6 +27,5 @@ namespace UCenter.Common.Models
         public string PhoneNum { get; set; }
 
         public string Email { get; set; }
-
     }
 }
