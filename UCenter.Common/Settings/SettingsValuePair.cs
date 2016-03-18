@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace UCenter.Common
 {
-    public interface ISettingsValueProvider
+    public class SettingsValuePair
     {
-        ICollection<SettingsValuePair> SettingValues { get; }
+        public string Name { get; set; }
+        public object Value { get; set; }
     }
 }

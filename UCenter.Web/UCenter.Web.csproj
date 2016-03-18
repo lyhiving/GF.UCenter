@@ -167,7 +167,6 @@
     </Compile>
     <Compile Include="MefDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RSACryptoServiceProviderExtension.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@ namespace UCenter.Web.ApiControllers
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/account")]
     [ValidateModel]
-    [TraceExceptionFilter("AccountController")]
+    [TraceExceptionFilter("AccountApiController")]
     public class AccountApiController : ApiControllerBase
     {
         private Logger logger = LogManager.GetCurrentClassLogger();

@@ -20,7 +20,7 @@ namespace UCenter.Web.ApiControllers
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/app")]
-    [TraceExceptionFilter("AppController")]
+    [TraceExceptionFilter("AppApiController")]
     public class AppApiController : ApiControllerBase
     {
         private Logger logger = LogManager.GetCurrentClassLogger();

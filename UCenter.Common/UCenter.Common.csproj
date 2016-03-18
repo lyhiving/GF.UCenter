@@ -77,6 +77,7 @@
     <Compile Include="Models\Pingplusplus\Charge.cs" />
     <Compile Include="Models\Pingplusplus\ChargeList.cs" />
     <Compile Include="Models\Responses\AccountChangePasswordResponse.cs" />
+    <Compile Include="Models\Responses\AccountGuestLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountRegisterResponse.cs" />
     <Compile Include="Models\Responses\AccountRequestResponse.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
     <Compile Include="Models\Info\AppLoginInfo.cs" />
     <Compile Include="Models\Info\AccountVerificationInfo.cs" />
-    <Compile Include="Models\Responses\AccountGuestLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountResponse.cs" />
     <Compile Include="Models\Responses\AppDataResponse.cs" />
     <Compile Include="Models\Responses\AppEntity.cs" />
@@ -106,6 +106,7 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsDefaultValueProvider.cs" />
     <Compile Include="Settings\SettingsInitializer.cs" />
+    <Compile Include="Settings\SettingsValuePair.cs" />
     <Compile Include="Utils\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
