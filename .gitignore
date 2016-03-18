@@ -289,7 +289,7 @@ paket-files/
 /packages
 /UCenter.SDK.Unity3D/Library/
 /UCenter.SDK.Unity3D/Temp/
-/UCenter.SDK.Unity3D/UCenterSDK.Unity3D.CSharp.Editor.csproj
-/UCenter.SDK.Unity3D/UCenterSDK.Unity3D.CSharp.Plugins.csproj
-/UCenter.SDK.Unity3D/UCenterSDK.Unity3D.CSharp.csproj
-/UCenter.SDK.Unity3D/UCenterSDK.Unity3D.sln
+/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.CSharp.Editor.csproj
+/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.CSharp.Plugins.csproj
+/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.CSharp.csproj
+/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.sln

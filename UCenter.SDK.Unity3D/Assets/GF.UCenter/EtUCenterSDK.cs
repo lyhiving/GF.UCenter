@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using GF.Common;
 
-public class DefSampleApp : ComponentDef
+public class EtUCenterSDK : EntityDef
 {
     //-------------------------------------------------------------------------
-    public override void defAllProp(Dictionary<string, string> map_param)
+    public override void declareAllComponent(byte node_type)
     {
+        declareComponent<DefUCenterSDK>();
     }
 }

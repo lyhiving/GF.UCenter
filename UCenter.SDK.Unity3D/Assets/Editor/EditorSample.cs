@@ -5,13 +5,13 @@ using System.Collections;
 public class EditorSample : EditorWindow
 {
     //-------------------------------------------------------------------------
-    [MenuItem("UCenter/导出GfUCenter.unitypackage")]
-    static void exportGfJsonPackage()
+    [MenuItem("UCenter/导出GF.UCenter.unitypackage")]
+    static void exportGFUCenterPackage()
     {
         string[] arr_assetpathname = new string[1];
-        arr_assetpathname[0] = "Assets/GfUCenter";
-        AssetDatabase.ExportPackage(arr_assetpathname, "GfUCenter.unitypackage", ExportPackageOptions.Recurse);
+        arr_assetpathname[0] = "Assets/GF.UCenter";
+        AssetDatabase.ExportPackage(arr_assetpathname, "GF.UCenter.unitypackage", ExportPackageOptions.Recurse);
 
-        Debug.Log("Export 导出GfUCenter.unitypackage Finished!");
+        Debug.Log("Export 导出GF.UCenter.unitypackage Finished!");
     }
 }
