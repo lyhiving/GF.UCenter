@@ -18,7 +18,8 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         // EtUCenterSDK示例
         var et_ucentersdk = EntityMgr.createEntity<EtUCenterSDK>(null, Entity);
         var co_ucentersdk = et_ucentersdk.getComponent<ClientUCenterSDK<DefUCenterSDK>>();
-        co_ucentersdk.UCenterDomain = "www.cragon.cn";
+        co_ucentersdk.UCenterDomain = "cragonucenter.chinacloudsites.cn";
+        co_ucentersdk.UseSsl = true;
 
         ClientLoginRequest login_request = new ClientLoginRequest();
         login_request.acc = "test1010";

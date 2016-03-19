@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 //-------------------------------------------------------------------------
 public enum UCenterResult : short
@@ -174,4 +175,35 @@ public class AppReadDataResponse
     public string app_id;
     public ulong acc_id;
     public AppData app_data;
+}
+
+public enum UCenterResponseStatus
+{
+    Success,
+    Error
+}
+
+public class UCenterError
+{
+    public int Code { get; set; }
+    public string Message { get; set; }
+}
+
+public class UCenterResponse
+{
+    public UCenterResponseStatus status { get; set; }
+    public virtual JToken result { get; set; }
+    public UCenterError error { get; set; }
+
+    public T As<T>()
+    {
+        if (this.result == null)
+        {
+            return default(T);
+        }
+        else
+        {
+            return this.result.ToObject<T>();
+        }
+    }
 }

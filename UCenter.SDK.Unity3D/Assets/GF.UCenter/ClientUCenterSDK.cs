@@ -11,6 +11,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 {
     //-------------------------------------------------------------------------
     public string UCenterDomain { get; set; }
+    public bool UseSsl { get; set; }
     public WWW WWWRegister { get; private set; }
     public WWW WWWLogin { get; private set; }
     OnUCenterRegister RegisterHandler { get; set; }
@@ -41,7 +42,9 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                 {
                     try
                     {
-                        register_response = EbTool.jsonDeserialize<ClientRegisterResponse>(WWWRegister.text);
+                        var ucenter_response = EbTool.jsonDeserialize<UCenterResponse>(WWWLogin.text);
+                        register_response = ucenter_response.As<ClientRegisterResponse>();
+                        //register_response = EbTool.jsonDeserialize<ClientRegisterResponse>(WWWRegister.text);
                     }
                     catch (Exception ex)
                     {
@@ -76,7 +79,9 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                 {
                     try
                     {
-                        login_response = EbTool.jsonDeserialize<ClientLoginResponse>(WWWLogin.text);
+                        var ucenter_response = EbTool.jsonDeserialize<UCenterResponse>(WWWLogin.text);
+                        login_response = ucenter_response.As<ClientLoginResponse>();
+                        //login_response = EbTool.jsonDeserialize<ClientLoginResponse>(WWWLogin.text);
                     }
                     catch (Exception ex)
                     {
@@ -117,19 +122,15 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         RegisterHandler = register_handler;
 
-        string param = EbTool.jsonSerialize(register_request);
-        string http_url = string.Format(
-            "https://{0}/ucenter/api/account/register",
-            UCenterDomain);
+        string http_url = _genUrl("register");
 
-        string str = EbTool.jsonSerialize(register_request);
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        string param = EbTool.jsonSerialize(register_request);
+        byte[] bytes = Encoding.UTF8.GetBytes(param);
 
         Dictionary<string, string> headers = new Dictionary<string, string>();
         headers["Accept"] = "application/json";
         headers["Content-Type"] = "application/json";
         headers["Host"] = UCenterDomain;
-        //headers["Connection"] = "Keep-Alive";
         headers["User-Agent"] = "";
 
         WWWRegister = new WWW(http_url, bytes, headers);
@@ -145,20 +146,36 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         LoginHandler = login_handler;
 
-        string http_url = string.Format(
-            "https://{0}/ucenter/api/account/login",
-            UCenterDomain);
+        string http_url = _genUrl("login");
 
-        string str = EbTool.jsonSerialize(login_request);
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        string param = EbTool.jsonSerialize(login_request);
+        byte[] bytes = Encoding.UTF8.GetBytes(param);
 
         Dictionary<string, string> headers = new Dictionary<string, string>();
         headers["Accept"] = "application/json";
         headers["Content-Type"] = "application/json";
         headers["Host"] = UCenterDomain;
-        //headers["Connection"] = "Keep-Alive";
         headers["User-Agent"] = "";
+        //headers["Connection"] = "Keep-Alive";
 
         WWWLogin = new WWW(http_url, bytes, headers);
+    }
+
+    //-------------------------------------------------------------------------
+    string _genUrl(string api)
+    {
+        string http_url = null;
+        if (UseSsl)
+        {
+            http_url = string.Format("https://{0}/ucenter/api/account/{1}",
+            UCenterDomain, api);
+        }
+        else
+        {
+            http_url = string.Format("http://{0}/ucenter/api/account/{1}",
+            UCenterDomain, api);
+        }
+
+        return http_url;
     }
 }

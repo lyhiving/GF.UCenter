@@ -191,6 +191,8 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\cragonucenter - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\cragonucenter - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\LocalPublish.pubxml">
       <SubType>Designer</SubType>
     </None>
