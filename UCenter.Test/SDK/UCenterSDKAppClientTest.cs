@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCenter.Common.Models;
-using UCenter.Common.SDK;
+using UCenter.Common.Portable;
+using UCenter.Common;
 
 namespace UCenter.Test.SDK
 {

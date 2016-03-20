@@ -7,7 +7,8 @@ using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.Http;
 using Couchbase;
-using UCenter.Common.Models;
+using UCenter.Common;
+using UCenter.Common.Portable;
 using UCenter.CouchBase.Database;
 
 namespace UCenter.Web.ApiControllers

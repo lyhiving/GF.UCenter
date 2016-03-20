@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using UCenter.Common.Models;
+using UCenter.Common.Portable;
 
-namespace UCenter.Common.SDK
+namespace UCenter.Common
 {
     public class UCenterClient
     {

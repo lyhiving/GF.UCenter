@@ -7,8 +7,6 @@ using GF.Common;
 public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, new()
 {
     //-------------------------------------------------------------------------
-
-    //-------------------------------------------------------------------------
     public override void init()
     {
         EbLog.Note("ClientSampleApp.init()");
@@ -21,10 +19,23 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         co_ucentersdk.UCenterDomain = "cragonucenter.chinacloudsites.cn";
         co_ucentersdk.UseSsl = false;
 
+        AccountRegisterInfo register_request = new AccountRegisterInfo();
+        register_request.AccountName = "aaaaabbbb";
+        register_request.Password = "123456";
+        register_request.SuperPassword = "12345678";
+        co_ucentersdk.register(register_request, _onUCenterRegister);
+
         AccountLoginInfo login_request = new AccountLoginInfo();
         login_request.AccountName = "test1010";
         login_request.Password = "123456";
         co_ucentersdk.login(login_request, _onUCenterLogin);
+
+        co_ucentersdk.guestLogin(_onUCenterGuestLogin);
+
+        AccountResetPasswordInfo resetpassword_request = new AccountResetPasswordInfo();
+        login_request.AccountName = "test1010";
+        login_request.Password = "123456";
+        co_ucentersdk.resetPassword(resetpassword_request, _onUCenterResetPassword);
     }
 
     //-------------------------------------------------------------------------
@@ -59,6 +70,30 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
     void _onUCenterLogin(UCenterResponseStatus status, AccountLoginResponse response, UCenterError error)
     {
         EbLog.Note("ClientSampleApp._onUCenterLogin() UCenterResult=" + status);
+
+        if (error != null)
+        {
+            EbLog.Note("ErrorCode=" + error.Code);
+            EbLog.Note("ErrorMessage=" + error.Message);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    void _onUCenterGuestLogin(UCenterResponseStatus status, AccountGuestLoginResponse response, UCenterError error)
+    {
+        EbLog.Note("ClientSampleApp._onUCenterGuestLogin() UCenterResult=" + status);
+
+        if (error != null)
+        {
+            EbLog.Note("ErrorCode=" + error.Code);
+            EbLog.Note("ErrorMessage=" + error.Message);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    void _onUCenterResetPassword(UCenterResponseStatus status, AccountResetPasswordResponse response, UCenterError error)
+    {
+        EbLog.Note("ClientSampleApp._onUCenterResetPassword() UCenterResult=" + status);
 
         if (error != null)
         {

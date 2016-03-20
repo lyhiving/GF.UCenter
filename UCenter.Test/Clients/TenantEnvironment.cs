@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
-using UCenter.Common.Models;
+using UCenter.Common.Portable;
 
 namespace UCenter.Test
 {

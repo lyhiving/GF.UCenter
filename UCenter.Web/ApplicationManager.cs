@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using UCenter.Common;
-using UCenter.Common.Models;
+using UCenter.Common.Portable;
 
 namespace UCenter.Web
 {

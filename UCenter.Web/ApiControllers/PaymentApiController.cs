@@ -11,8 +11,8 @@ using System.ComponentModel.Composition;
 using System.Web.Http;
 using System.Threading.Tasks;
 using UCenter.Common;
-using UCenter.Common.Attributes;
-using UCenter.Common.Models;
+
+using UCenter.Common.Portable;
 using UCenter.CouchBase.Database;
 
 namespace UCenter.Web.ApiControllers

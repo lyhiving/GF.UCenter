@@ -5,13 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Threading.Tasks;
-using UCenter.Common.Models;
+using UCenter.Common.Portable;
 using System.ComponentModel.Composition;
 using System.ServiceModel.Security;
 using System.Threading;
 using NLog;
 using UCenter.Common;
-using UCenter.Common.Attributes;
 using UCenter.CouchBase.Database;
 using UCenter.CouchBase.Entities;
 

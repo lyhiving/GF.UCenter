@@ -4,8 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using UCenter.Common.Portable;
 
-namespace UCenter.Common.SDK
+namespace UCenter.Common
 {
     public class UCenterHttpClient
     {
@@ -29,15 +30,15 @@ namespace UCenter.Common.SDK
         public async Task<TResult> SendAsyncWithException<TContent, TResult>(HttpMethod method, string url, TContent content)
         {
             var response = await this.SendAsync<TContent, UCenterResponse<TResult>>(method, url, content);
-            if (response.Status == UCenterResponseStatus.Success)
+            if (response.status == UCenterResponseStatus.Success)
             {
                 return response.Content;
             }
             else
             {
-                if (response.Error != null)
+                if (response.error != null)
                 {
-                    throw new ApplicationException($"[{response.Error.Code}]:{response.Error.Message}");
+                    throw new ApplicationException($"[{response.error.Code}]:{response.error.Message}");
                 }
                 else
                 {

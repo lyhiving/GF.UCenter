@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCenter.Common.Models;
+using UCenter.Common.Portable;
 
 namespace UCenter.Test.SDK
 {

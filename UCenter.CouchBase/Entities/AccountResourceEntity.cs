@@ -1,4 +1,5 @@
-﻿using UCenter.Common.Models;
+﻿using UCenter.Common;
+using UCenter.Common.Portable;
 using UCenter.CouchBase.Attributes;
 
 namespace UCenter.CouchBase.Entities

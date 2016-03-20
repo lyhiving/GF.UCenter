@@ -1,4 +1,4 @@
-﻿namespace UCenter.Common.Attributes
+﻿namespace UCenter.Common
 {
     public interface ITraceIdentifier
     {

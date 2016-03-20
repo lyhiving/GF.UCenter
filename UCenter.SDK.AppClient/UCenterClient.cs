@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using UCenter.Common.Models;
-using UCenter.Common.SDK;
+using UCenter.Common.Portable;
+using UCenter.Common;
 
 namespace UCenter.SDK.AppClient
 {
