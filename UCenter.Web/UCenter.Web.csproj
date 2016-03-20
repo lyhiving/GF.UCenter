@@ -193,6 +193,8 @@
     </Content>
     <None Include="Properties\PublishProfiles\cragonucenter - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\cragonucenter - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\cragonucenterdev - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\cragonucenterdev - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\LocalPublish.pubxml">
       <SubType>Designer</SubType>
     </None>

@@ -5,18 +5,16 @@ namespace UCenter.Common.Portable
 {
     public class AccountRequestResponse
     {
+        public string AccountId { get; set; }
         public string AccountName { get; set; }
-
         public string Name { get; set; }
-
         public Sex Sex { get; set; }
-
         public string IdentityNum { get; set; }
-
         public string PhoneNum { get; set; }
 
         public virtual void ApplyEntity(AccountResponse account)
         {
+            this.AccountId = account.AccountId;
             this.AccountName = account.AccountName;
             this.Name = account.Name;
             this.Sex = account.Sex;
