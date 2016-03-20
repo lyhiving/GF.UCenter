@@ -17,7 +17,7 @@ namespace UCenter.Test.SDK
     {
         protected UCenter.SDK.AppClient.UCenterClient cClient;
         protected UCenter.SDK.AppServer.UCenterClient sClient;
-        
+
         private readonly string host;
 
         public UCenterSDKAppServerTest()
@@ -148,7 +148,6 @@ namespace UCenter.Test.SDK
             InitlizazeAsync();
         }
 
-        // todo: 重复性检查
         private async void InitlizazeAsync()
         {
             var appInfo = new AppInfo()

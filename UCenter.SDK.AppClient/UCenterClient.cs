@@ -30,7 +30,6 @@ namespace UCenter.SDK.AppClient
             return response;
         }
 
-        // TODO: Not need pass parameter
         public async Task<AccountLoginResponse> AccountGuestLoginAsync()
         {
             string url = GenerateApiEndpoint("account", "guest");

@@ -39,13 +39,19 @@ namespace UCenter.Web.ApiControllers
         {
             logger.Info("创建App\nAppId={0}", info.AppId);
 
-            var appEntity = new AppEntity()
-            {
-                AppId = info.AppId,
-                AppSecret = info.AppSecret
-            };
+            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId);
 
-            await this.db.Bucket.InsertSlimAsync<AppEntity>(appEntity);
+            if (app != null)
+            {
+                var appEntity = new AppEntity()
+                {
+                    AppId = info.AppId,
+                    AppSecret = info.AppSecret
+                };
+
+                await this.db.Bucket.InsertSlimAsync<AppEntity>(appEntity);
+            }
+
             var response = new AppResponse()
             {
                 AppId = info.AppId,
@@ -149,7 +155,7 @@ namespace UCenter.Web.ApiControllers
             }
 
             // todo: && d.AccountName == info.AccountName
-            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId );
+            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId );
             if (appData == null)
             {
                 appData = new AppDataEntity()
