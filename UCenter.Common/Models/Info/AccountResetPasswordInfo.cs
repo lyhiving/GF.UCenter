@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UCenter.Common.Models
 {
-    public class AccountChangePasswordInfo
+    public class AccountResetPasswordInfo
     {
         [StringLength(16, MinimumLength = 6)]
         public string AccountName { get; set; }

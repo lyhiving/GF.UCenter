@@ -120,7 +120,7 @@ namespace UCenter.Web.ApiControllers
             catch (Exception ex)
             {
                 logger.Error(ex);
-                return CreateErrorResult(UCenterResult.Failed, ex.Message);
+                return CreateErrorResult(UCenterErrorCode.Failed, ex.Message);
             }
         }
 

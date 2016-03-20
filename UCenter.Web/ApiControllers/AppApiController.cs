@@ -62,7 +62,7 @@ namespace UCenter.Web.ApiControllers
 
             if (app == null)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist.");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist.");
             }
 
             app.Token = EncryptHashManager.GenerateToken();
@@ -79,20 +79,20 @@ namespace UCenter.Web.ApiControllers
             var result = new AppVerifyAccountResponse();
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
-            if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
+            if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist");
 
             }
-            else if (appAuthResult == UCenterResult.AppLoginFailedSecretError)
+            else if (appAuthResult == UCenterErrorCode.AppLoginFailedSecretError)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
             var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
             {
-                return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
             }
 
             result.AccountId = account.Id;
@@ -111,13 +111,13 @@ namespace UCenter.Web.ApiControllers
             logger.Info("App请求读取AppData\nAppId={0}", info.AppId);
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
-            if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
+            if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist");
             }
-            if (appAuthResult == UCenterResult.AppLoginFailedSecretError)
+            if (appAuthResult == UCenterErrorCode.AppLoginFailedSecretError)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
             var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountName == info.AccountName);
@@ -132,13 +132,13 @@ namespace UCenter.Web.ApiControllers
             logger.Info("App请求写入AppData\nAppId={0}", info.AppId);
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
-            if (appAuthResult == UCenterResult.AppLoginFailedNotExit)
+            if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedNotExit, "App does not exist");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist");
             }
-            if (appAuthResult == UCenterResult.AppLoginFailedSecretError)
+            if (appAuthResult == UCenterErrorCode.AppLoginFailedSecretError)
             {
-                return CreateErrorResult(UCenterResult.AppLoginFailedSecretError, "App secret incorrect");
+                return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
             var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountName == info.AccountName);
@@ -157,19 +157,19 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(appData);
         }
 
-        private async Task<UCenterResult> AuthApp(string appId, string appSecret)
+        private async Task<UCenterErrorCode> AuthApp(string appId, string appSecret)
         {
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == appId);
             if (app == null)
             {
-                return UCenterResult.AppLoginFailedNotExit;
+                return UCenterErrorCode.AppLoginFailedNotExit;
             }
             if (appSecret != app.AppSecret)
             {
-                return UCenterResult.AppLoginFailedSecretError;
+                return UCenterErrorCode.AppLoginFailedSecretError;
             }
 
-            return UCenterResult.Success;
+            return UCenterErrorCode.Success;
         }
     }
 }

@@ -36,10 +36,10 @@ namespace UCenter.Common.SDK
             return response;
         }
 
-        public async Task<AccountChangePasswordResponse> AccountChangePassword(AccountChangePasswordInfo info)
+        public async Task<AccountResetPasswordResponse> AccountChangePassword(AccountResetPasswordInfo info)
         {
             string url = this.GenerateApiEndpoint("account", "changepassword");
-            return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountChangePasswordResponse>(HttpMethod.Post, url, info);
+            return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);
         }
 
         public async Task<AppResponse> AppCreateAsync(AppInfo info)

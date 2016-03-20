@@ -6,7 +6,7 @@ using UCenter.Common.Models;
 
 namespace UCenter.Common.Models
 {
-    public class AccountChangePasswordResponse : AccountRequestResponse
+    public class AccountResetPasswordResponse : AccountRequestResponse
     {
         public string Token { get; private set; }
 

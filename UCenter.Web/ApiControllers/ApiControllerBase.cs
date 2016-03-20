@@ -55,7 +55,7 @@ namespace UCenter.Web.ApiControllers
             });
         }
 
-        protected IHttpActionResult CreateErrorResult(UCenterResult code, string message)
+        protected IHttpActionResult CreateErrorResult(UCenterErrorCode code, string message)
         {
             return Ok(new
             {
@@ -76,7 +76,7 @@ namespace UCenter.Web.ApiControllers
             }
             else
             {
-                return CreateErrorResult(UCenterResult.SystemError, result.Message);
+                return CreateErrorResult(UCenterErrorCode.SystemError, result.Message);
             }
         }
     }

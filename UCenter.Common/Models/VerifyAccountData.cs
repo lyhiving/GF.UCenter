@@ -9,7 +9,7 @@ namespace UCenter.Common.Models
     [Serializable]
     public class VerifyAccountData
     {
-        public UCenterResult result;
+        public UCenterErrorCode result;
         public ulong acc_id;
         public string token;
         public DateTime last_login_dt;

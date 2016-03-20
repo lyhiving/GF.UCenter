@@ -46,7 +46,7 @@ namespace UCenter.Web.ApiControllers
                 var account = await db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
                 if (account != null)
                 {
-                    return CreateErrorResult(UCenterResult.AccountRegisterFailedAlreadyExist, "The account already exists.");
+                    return CreateErrorResult(UCenterErrorCode.AccountRegisterFailedAlreadyExist, "The account already exists.");
                 }
 
                 account = new AccountEntity()
@@ -91,11 +91,11 @@ namespace UCenter.Web.ApiControllers
                     var status = (ex as CouchBaseException).Result as IDocumentResult<AccountResourceEntity>;
                     if (status != null)
                     {
-                        return CreateErrorResult(UCenterResult.AccountRegisterFailedAlreadyExist, "The account already exists.");
+                        return CreateErrorResult(UCenterErrorCode.AccountRegisterFailedAlreadyExist, "The account already exists.");
                     }
                 }
 
-                return CreateErrorResult(UCenterResult.Failed, ex.Message);
+                return CreateErrorResult(UCenterErrorCode.Failed, ex.Message);
             }
             finally
             {
@@ -118,19 +118,19 @@ namespace UCenter.Web.ApiControllers
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
             {
-                return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
             }
             else if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
             {
-                await this.RecordLogin(info.AccountName, UCenterResult.AccountLoginFailedPasswordError, "Password incorrect");
-                return CreateErrorResult(UCenterResult.AccountLoginFailedPasswordError, "Password incorrect");
+                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedPasswordError, "Password incorrect");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordError, "Password incorrect");
             }
             else
             {
                 account.LastLoginDateTime = DateTime.UtcNow;
                 account.Token = EncryptHashManager.GenerateToken();
                 await this.db.Accounts.UpsertSlimAsync(account);
-                await this.RecordLogin(info.AccountName, UCenterResult.Success);
+                await this.RecordLogin(info.AccountName, UCenterErrorCode.Success);
                 // todo: update token and only return necesary properties.
                 return CreateSuccessResult(ToResponse<AccountLoginResponse>(account));
             }
@@ -165,25 +165,25 @@ namespace UCenter.Web.ApiControllers
         }
 
         [HttpPost]
-        [Route("changepassword")]
-        public async Task<IHttpActionResult> ChangePassword([FromBody]AccountChangePasswordInfo info)
+        [Route("resetpassword")]
+        public async Task<IHttpActionResult> ResetPassword([FromBody]AccountResetPasswordInfo info)
         {
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
             {
-                return CreateErrorResult(UCenterResult.AccountLoginFailedNotExist, "Account not exists or password is wrong.");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account not exists or password is wrong.");
             }
             else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
-                await this.RecordLogin(info.AccountName, UCenterResult.AccountLoginFailedPasswordError, "Change password with wrong super password.");
-                return CreateErrorResult(UCenterResult.AccountLoginFailedPasswordError, "Account not exists or password is wrong.");
+                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedPasswordError, "Change password with wrong super password.");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordError, "Account not exists or password is wrong.");
             }
             else
             {
                 account.Password = EncryptHashManager.ComputeHash(info.Password);
                 await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
-                await this.RecordLogin(info.AccountName, UCenterResult.Success, "Change password successfully.");
-                return CreateSuccessResult(ToResponse<AccountChangePasswordResponse>(account));
+                await this.RecordLogin(info.AccountName, UCenterErrorCode.Success, "Reset password successfully.");
+                return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
             }
         }
 
@@ -200,7 +200,7 @@ namespace UCenter.Web.ApiControllers
             return await Task.FromResult<IHttpActionResult>(CreateSuccessResult(accounts));
         }
 
-        private async Task RecordLogin(string accountName, UCenterResult code, string comments = null)
+        private async Task RecordLogin(string accountName, UCenterErrorCode code, string comments = null)
         {
             LoginRecordEntity record = new LoginRecordEntity()
             {

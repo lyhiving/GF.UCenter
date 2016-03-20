@@ -31,17 +31,17 @@ namespace UCenter.SDK.AppClient
         }
 
         // TODO: Not need pass parameter
-        public async Task<AccountLoginResponse> AccountGuestLoginAsync(AccountLoginInfo info)
+        public async Task<AccountLoginResponse> AccountGuestLoginAsync()
         {
             string url = GenerateApiEndpoint("account", "guest");
-            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountLoginResponse>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountLoginResponse>(HttpMethod.Post, url, null);
             return response;
         }
 
-        public async Task<AccountChangePasswordResponse> AccountChangePassword(AccountChangePasswordInfo info)
+        public async Task<AccountResetPasswordResponse> AccountResetPassword(AccountResetPasswordInfo info)
         {
-            string url = this.GenerateApiEndpoint("account", "changepassword");
-            return await httpClient.SendAsyncWithException<AccountChangePasswordInfo, AccountChangePasswordResponse>(HttpMethod.Post, url, info);
+            string url = this.GenerateApiEndpoint("account", "resetpassword");
+            return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);
         }
 
         private string GenerateApiEndpoint(string controller, string route, string queryString = null)

@@ -76,12 +76,12 @@
     <Compile Include="Models\AccountResourceType.cs" />
     <Compile Include="Models\Pingplusplus\Charge.cs" />
     <Compile Include="Models\Pingplusplus\ChargeList.cs" />
-    <Compile Include="Models\Responses\AccountChangePasswordResponse.cs" />
+    <Compile Include="Models\Responses\AccountResetPasswordResponse.cs" />
     <Compile Include="Models\Responses\AccountGuestLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountLoginResponse.cs" />
     <Compile Include="Models\Responses\AccountRegisterResponse.cs" />
     <Compile Include="Models\Responses\AccountRequestResponse.cs" />
-    <Compile Include="Models\Info\AccountChangePasswordInfo.cs" />
+    <Compile Include="Models\Info\AccountResetPasswordInfo.cs" />
     <Compile Include="Models\Info\AccountLoginInfo.cs" />
     <Compile Include="Models\Info\AccountRegisterInfo.cs" />
     <Compile Include="Models\Info\AppLoginInfo.cs" />

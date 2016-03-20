@@ -15,7 +15,7 @@ namespace UCenter.CouchBase.Entities
 
         public string UserAgent { get; set; }
 
-        public UCenterResult Code { get; set; }
+        public UCenterErrorCode Code { get; set; }
 
         public string Comments { get; set; }
     }
