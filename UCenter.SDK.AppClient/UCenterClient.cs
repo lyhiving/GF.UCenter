@@ -38,7 +38,7 @@ namespace UCenter.SDK.AppClient
             return response;
         }
 
-        public async Task<AccountResetPasswordResponse> AccountResetPassword(AccountResetPasswordInfo info)
+        public async Task<AccountResetPasswordResponse> AccountResetPasswordAsync(AccountResetPasswordInfo info)
         {
             string url = this.GenerateApiEndpoint("account", "resetpassword");
             return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);

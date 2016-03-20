@@ -53,7 +53,9 @@ namespace UCenter.Web.ApiControllers
 
                 account = new AccountEntity()
                 {
+                    AccountId = Guid.NewGuid().ToString(),
                     AccountName = info.AccountName,
+                    IsGuest = false,
                     Name = info.Name,
                     IdentityNum = info.IdentityNum,
                     Password = EncryptHashManager.ComputeHash(info.Password),
@@ -116,7 +118,7 @@ namespace UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
         {
-            logger.Info("客户端请求登录\nAccountName={0}", info.AccountName);
+            logger.Info($"客户端请求登录\nAccountName={info.AccountName}");
 
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
@@ -147,14 +149,19 @@ namespace UCenter.Web.ApiControllers
             logger.Info("客户端请求匿名登陆");
 
             var r = new Random();
+            string accountId = Guid.NewGuid().ToString();
             string accountNamePostfix = r.Next(0, 1000000).ToString("D3");
             string accountName = $"uc_{DateTime.Now.ToString("yyyyMMddHHmmssffff")}_{accountNamePostfix}";
+            string token = EncryptHashManager.GenerateToken();
             string password = Guid.NewGuid().ToString();
 
             var account = new AccountEntity()
             {
+                AccountId = accountId,
                 AccountName = accountName,
+                IsGuest = true,
                 Password = EncryptHashManager.ComputeHash(password),
+                Token = EncryptHashManager.GenerateToken(),
                 CreatedDateTime = DateTime.UtcNow
             };
 
@@ -162,7 +169,9 @@ namespace UCenter.Web.ApiControllers
 
             var response = new AccountGuestLoginResponse()
             {
+                AccountId = accountId,
                 AccountName = accountName,
+                Token = token,
                 Password = password
             };
             return CreateSuccessResult(response);
@@ -173,21 +182,21 @@ namespace UCenter.Web.ApiControllers
         [Route("resetpassword")]
         public async Task<IHttpActionResult> ResetPassword([FromBody]AccountResetPasswordInfo info)
         {
-            var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+            var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
             if (account == null)
             {
                 return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account not exists or password is wrong.");
             }
             else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
-                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedPasswordError, "Change password with wrong super password.");
+                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedPasswordError, "Change password with wrong super password.");
                 return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordError, "Account not exists or password is wrong.");
             }
             else
             {
                 account.Password = EncryptHashManager.ComputeHash(info.Password);
                 await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
-                await this.RecordLogin(info.AccountName, UCenterErrorCode.Success, "Reset password successfully.");
+                await this.RecordLogin(info.AccountId, UCenterErrorCode.Success, "Reset password successfully.");
                 return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
             }
         }
@@ -228,6 +237,7 @@ namespace UCenter.Web.ApiControllers
         {
             var res = new AccountResponse()
             {
+                AccountId = entity.AccountId,
                 AccountName = entity.AccountName,
                 Password = entity.Password,
                 SuperPassword = entity.Password,

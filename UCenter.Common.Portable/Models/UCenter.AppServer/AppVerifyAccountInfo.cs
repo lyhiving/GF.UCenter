@@ -9,7 +9,6 @@ namespace UCenter.Common.Portable
         public string AppId;
         public string AppSecret;
         public string AccountId;
-        public string AccountName;
         public string AccountToken;
     }
 }

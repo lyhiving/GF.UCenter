@@ -90,6 +90,14 @@
       <Project>{fce33a61-93fc-4077-b362-beb2d5e6d8b0}</Project>
       <Name>UCenter.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UCenter.SDK.AppClient\UCenter.SDK.AppClient.csproj">
+      <Project>{4367dcaa-97af-4710-a12f-8139c48dd9e6}</Project>
+      <Name>UCenter.SDK.AppClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UCenter.SDK.AppServer\UCenter.SDK.AppServer.csproj">
+      <Project>{004e44f3-934b-47ca-99e5-9cd38aa32ef0}</Project>
+      <Name>UCenter.SDK.AppServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UCenter.Web\UCenter.Web.csproj">
       <Project>{a0cb1d60-827b-4702-8b50-4cb11889d656}</Project>
       <Name>UCenter.Web</Name>

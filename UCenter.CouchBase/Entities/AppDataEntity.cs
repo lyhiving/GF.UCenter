@@ -8,7 +8,7 @@ namespace UCenter.CouchBase.Entities
     public class AppDataEntity : BaseEntity<AppDataEntity>
     {
         public string AppId;
-        public string AccountName;
+        public string AccountId;
         public string Data;
     }
 }

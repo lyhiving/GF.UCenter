@@ -93,7 +93,7 @@ namespace UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
-            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
             if (account == null)
             {
                 return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
@@ -155,7 +155,7 @@ namespace UCenter.Web.ApiControllers
                 appData = new AppDataEntity()
                 {
                     AppId = info.AppId,
-                    //AccountName = info.AccountName,
+                    AccountId = info.AccountId,
                     Data = info.Data
                 };
             }

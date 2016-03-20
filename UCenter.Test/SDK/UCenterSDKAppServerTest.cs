@@ -15,13 +15,16 @@ namespace UCenter.Test.SDK
     [TestClass]
     public class UCenterSDKAppServerTest : UCenterSDKTestBase
     {
-        protected UCenterClient client;
+        protected UCenter.SDK.AppClient.UCenterClient cClient;
+        protected UCenter.SDK.AppServer.UCenterClient sClient;
+        
         private readonly string host;
 
         public UCenterSDKAppServerTest()
         {
             this.host = "http://localhost:8888/";
-            this.client = new UCenterClient(host);
+            this.cClient = new UCenter.SDK.AppClient.UCenterClient(host);
+            this.sClient = new UCenter.SDK.AppServer.UCenterClient(host);
         }
 
         [TestMethod]
@@ -32,7 +35,7 @@ namespace UCenter.Test.SDK
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
             };
-            var result = await client.AppLoginAsync(info);
+            var result = await sClient.AppLoginAsync(info);
             Assert.AreEqual(info.AppId, result.AppId);
             Assert.AreEqual(info.AppSecret, result.AppSecret);
             Assert.IsNotNull(result.Token);
@@ -52,24 +55,24 @@ namespace UCenter.Test.SDK
                 Sex = Sex.Female
             };
 
-            await client.AccountRegisterAsync(registerInfo);
+            await cClient.AccountRegisterAsync(registerInfo);
 
             await Task.Delay(1000);
 
-            var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = registerInfo.AccountName,
                 Password = registerInfo.Password
             });
 
-            var accountVerificationInfo = new AccountVerificationInfo()
+            var appVerifyAccountInfo = new AppVerifyAccountInfo()
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
-                AccountName = loginResponse.AccountName,
+                AccountId = loginResponse.AccountId,
                 AccountToken = loginResponse.Token
             };
-            var result = await client.AppVerifyAccountAsync(accountVerificationInfo);
+            var result = await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
 
             Assert.IsNotNull(result.AccountId);
             Assert.IsNotNull(result.AccountName);
@@ -92,11 +95,11 @@ namespace UCenter.Test.SDK
                 Sex = Sex.Female
             };
 
-            await client.AccountRegisterAsync(registerInfo);
+            await cClient.AccountRegisterAsync(registerInfo);
 
             await Task.Delay(1000);
 
-            var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = registerInfo.AccountName,
                 Password = registerInfo.Password
@@ -107,18 +110,18 @@ namespace UCenter.Test.SDK
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
-                AccountId = loginResponse.AccountName,
+                AccountId = loginResponse.AccountId,
                 Data = data
             };
 
-            await client.AppWriteDataAsync(appData);
+            await sClient.AppWriteDataAsync(appData);
 
             await Task.Delay(1000);
 
-            var result = await client.AppReadDataAsync(appData);
+            var result = await sClient.AppReadDataAsync(appData);
 
             Assert.AreEqual(appData.AppId, result.AppId);
-            Assert.AreEqual(appData.AccountId, result.AccountName);
+            Assert.AreEqual(appData.AccountId, result.AccountId);
             Assert.AreEqual(appData.Data, result.Data);
 
         }
@@ -134,7 +137,7 @@ namespace UCenter.Test.SDK
                 Subject = "fake item"
             };
 
-            var result = await client.CreateChargeAsync(chargeInfo);
+            var result = await sClient.CreateChargeAsync(chargeInfo);
             Assert.AreEqual(chargeInfo.Amount, result.Amount);
         }
 
@@ -154,7 +157,7 @@ namespace UCenter.Test.SDK
                 AppSecret = TestAppSecret
             };
 
-            await client.AppCreateAsync(appInfo);
+            await sClient.AppCreateAsync(appInfo);
         }
     }
 }

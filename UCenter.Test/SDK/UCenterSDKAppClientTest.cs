@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UCenter.Common.Portable;
 using UCenter.Common;
+using UCenter.SDK.AppClient;
 
 namespace UCenter.Test.SDK
 {
@@ -39,6 +40,7 @@ namespace UCenter.Test.SDK
             };
 
             var registerResponse = await client.AccountRegisterAsync(info);
+            Assert.IsNotNull(registerResponse.AccountId);
             Assert.AreEqual(registerResponse.AccountName, info.AccountName);
             Assert.AreEqual(registerResponse.IdentityNum, info.IdentityNum);
             Assert.AreEqual(registerResponse.Name, info.Name);
@@ -49,10 +51,11 @@ namespace UCenter.Test.SDK
 
             var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
             {
-                AccountName = info.AccountName,
+                AccountName = registerResponse.AccountName,
                 Password = info.Password
             });
 
+            Assert.IsNotNull(loginResponse.AccountId);
             Assert.AreEqual(loginResponse.AccountName, info.AccountName);
             Assert.AreEqual(loginResponse.IdentityNum, info.IdentityNum);
             Assert.AreEqual(loginResponse.Name, info.Name);
@@ -65,10 +68,57 @@ namespace UCenter.Test.SDK
         [TestMethod]
         public async Task SDK_Account_Guest_Login_Test()
         {
-            var loginResponse = await client.AccountGuestLoginAsync(new AccountLoginInfo(){});
+            var loginResponse = await client.AccountGuestLoginAsync();
 
+            Assert.IsNotNull(loginResponse.AccountId);
             Assert.IsNotNull(loginResponse.AccountName);
-            Assert.IsNotNull(loginResponse.Password);
+            Assert.IsNotNull(loginResponse.Token);
+        }
+
+        [TestMethod]
+        public async Task SDK_Account_Reset_Password_Test()
+        {
+            var registerInfo = new AccountRegisterInfo()
+            {
+                Name = GenerateRandomString(),
+                AccountName = GenerateRandomString(),
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
+                IdentityNum = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                Sex = Sex.Female
+            };
+
+            var registerResponse = await client.AccountRegisterAsync(registerInfo);
+
+            await Task.Delay(1000);
+
+            var resetInfo = new AccountResetPasswordInfo()
+            {
+                AccountId = registerResponse.AccountId,
+                Password = "123456",
+                SuperPassword = ValidPassword
+            };
+
+            var resetPasswordResponse = await client.AccountResetPasswordAsync(resetInfo);
+
+            var loginInfo = new AccountLoginInfo()
+            {
+                AccountName = registerResponse.AccountName,
+                Password = ValidPassword
+            };
+
+            await Task.Delay(1000);
+
+            try
+            {
+                var response = await client.AccountLoginAsync(loginInfo);
+            }
+            // todo: 
+            catch (Exception ex)
+            {
+                //ex.ErrorCode = UCenterError.
+            }
         }
     }
 }

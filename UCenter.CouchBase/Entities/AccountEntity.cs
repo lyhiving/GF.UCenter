@@ -7,6 +7,8 @@ namespace UCenter.CouchBase.Entities
     [DocumentType("Account")]
     public class AccountEntity : BaseEntity<AccountEntity>
     {
+        public string AccountId { get; set; }
+
         public string AccountName { get; set; }
 
         public string Password { get; set; }
@@ -16,6 +18,8 @@ namespace UCenter.CouchBase.Entities
         public string Token { get; set; }
 
         public DateTime LastLoginDateTime { get; set; }
+
+        public bool IsGuest { get; set; }
 
         public string Name { get; set; }
 

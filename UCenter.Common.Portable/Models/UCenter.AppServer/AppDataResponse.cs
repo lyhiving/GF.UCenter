@@ -7,7 +7,7 @@ namespace UCenter.Common.Portable
     public class AppDataResponse
     {
         public string AppId;
-        public string AccountName;
+        public string AccountId;
         public string Data;
     }
 }

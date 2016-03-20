@@ -7,8 +7,7 @@ namespace UCenter.Common.Portable
     public class AccountLoginInfo
     {
         public string AccountName { get; set; }
-
-        public string Password;
+        public string Password { get; set; }
     }
 
 }
