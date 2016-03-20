@@ -196,7 +196,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                 {
                     try
                     {
-                        response = EbTool.jsonDeserialize<UCenterResponse>(WWWLogin.text);
+                        response = EbTool.jsonDeserialize<UCenterResponse>(www.text);
                     }
                     catch (Exception ex)
                     {

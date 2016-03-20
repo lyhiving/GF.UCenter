@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace UCenter.Common.Portable
 {
@@ -6,33 +7,25 @@ namespace UCenter.Common.Portable
     {
         public T Content
         {
-            get
-            {
-                return base.As<T>();
-            }
+            get { return base.As<T>(); }
         }
     }
 
-    //[DataContract]
     public class UCenterResponse
     {
-        //[DataMember(Name = "status")]
+        [JsonProperty("status")]
         public UCenterResponseStatus status { get; set; }
 
-        //[DataMember(Name = "result")]
+        [JsonProperty("result")]
         public virtual JToken result { get; set; }
 
-        //[DataMember(Name = "error")]
+        [JsonProperty("error")]
         public UCenterError error { get; set; }
 
         public T As<T>()
         {
-            if (this.result == null)
-            {
-                return default(T);
-            }
-
-            return this.result.ToObject<T>();
+            if (this.result == null) return default(T);
+            else return this.result.ToObject<T>();
         }
     }
 }
