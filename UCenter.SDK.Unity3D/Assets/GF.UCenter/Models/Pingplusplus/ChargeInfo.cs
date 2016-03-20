@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+namespace UCenter.Common.Portable
+{
     [Serializable]
     public class ChargeInfo
     {
@@ -9,3 +11,4 @@ using System.Collections.Generic;
         public double Amount;
         public string Subject;
     }
+}

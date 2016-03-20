@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using GF.Common;
+using UCenter.Common.Portable;
 
 public delegate void OnUCenterRegister(UCenterResponseStatus status, AccountRegisterResponse response, UCenterError error);
 public delegate void OnUCenterLogin(UCenterResponseStatus status, AccountLoginResponse response, UCenterError error);
@@ -128,9 +129,6 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         GuestLoginHandler = new Action<UCenterResponseStatus, AccountGuestLoginResponse, UCenterError>(handler);
 
         string http_url = _genUrl("guestlogin");
-
-        //string param = EbTool.jsonSerialize(login_request);
-        //byte[] bytes = Encoding.UTF8.GetBytes(param);
 
         Dictionary<string, string> headers = new Dictionary<string, string>();
         headers["Accept"] = "application/json";

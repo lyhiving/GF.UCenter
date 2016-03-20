@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using GF.Common;
+using UCenter.Common.Portable;
 
 public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, new()
 {
@@ -19,19 +20,23 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         co_ucentersdk.UCenterDomain = "cragonucenter.chinacloudsites.cn";
         co_ucentersdk.UseSsl = false;
 
+        // 注册
         AccountRegisterInfo register_request = new AccountRegisterInfo();
         register_request.AccountName = "aaaaabbbb";
         register_request.Password = "123456";
         register_request.SuperPassword = "12345678";
         co_ucentersdk.register(register_request, _onUCenterRegister);
 
+        // 登录
         AccountLoginInfo login_request = new AccountLoginInfo();
         login_request.AccountName = "test1010";
         login_request.Password = "123456";
         co_ucentersdk.login(login_request, _onUCenterLogin);
 
+        // 游客登录
         co_ucentersdk.guestLogin(_onUCenterGuestLogin);
 
+        // 重置密码
         AccountResetPasswordInfo resetpassword_request = new AccountResetPasswordInfo();
         login_request.AccountName = "test1010";
         login_request.Password = "123456";

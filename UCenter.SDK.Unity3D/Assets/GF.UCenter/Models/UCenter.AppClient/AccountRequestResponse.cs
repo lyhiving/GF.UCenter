@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+namespace UCenter.Common.Portable
+{
     public class AccountRequestResponse
     {
         public string AccountName { get; set; }
@@ -22,3 +24,4 @@ using System.Collections.Generic;
             this.PhoneNum = account.PhoneNum;
         }
     }
+}

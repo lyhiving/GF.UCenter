@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+namespace UCenter.Common.Portable
+{
     public class AccountLoginResponse : AccountRequestResponse
     {
         public string Token { get; set; }
@@ -14,3 +16,4 @@ using System.Collections.Generic;
             base.ApplyEntity(account);
         }
     }
+}

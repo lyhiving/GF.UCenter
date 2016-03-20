@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+namespace UCenter.Common.Portable
+{
     public class AccountResponse
     {
         public string AccountName { get; set; }
@@ -23,3 +25,4 @@ using System.Collections.Generic;
 
         public string Email { get; set; }
     }
+}

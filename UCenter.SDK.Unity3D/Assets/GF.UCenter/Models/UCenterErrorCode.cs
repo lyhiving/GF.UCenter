@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+namespace UCenter.Common.Portable
+{
     public enum UCenterErrorCode : short
     {
         /// <summary>
@@ -55,3 +57,4 @@ using System.Collections.Generic;
 
         SystemError = 500,
     }
+}
