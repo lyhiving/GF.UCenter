@@ -8,7 +8,7 @@ namespace UCenter.Common.Portable
     {
         public string AppId;
         public string AppSecret;
-        public string AccountName;
+        public string AccountId;
         public string Data;
     }
 }

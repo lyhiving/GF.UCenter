@@ -4,11 +4,12 @@ using System.Collections.Generic;
 namespace UCenter.Common.Portable
 {
     [Serializable]
-    public class AppDataInfo
+    public class AppVerifyAccountInfo
     {
         public string AppId;
         public string AppSecret;
         public string AccountId;
-        public string Data;
+        public string AccountName;
+        public string AccountToken;
     }
 }

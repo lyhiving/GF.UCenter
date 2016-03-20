@@ -62,6 +62,7 @@
     <Compile Include="Models\UCenter.AppClient\AccountResponse.cs" />
     <Compile Include="Models\UCenter.AppServer\AppDataResponse.cs" />
     <Compile Include="Models\UCenter.AppServer\AppEntity.cs" />
+    <Compile Include="Models\UCenter.AppServer\AppVerifyAccountInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountResponse.cs" />
     <Compile Include="Models\Sex.cs" />
     <Compile Include="Models\UCenterError.cs" />

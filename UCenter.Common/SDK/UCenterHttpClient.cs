@@ -38,7 +38,7 @@ namespace UCenter.Common
             {
                 if (response.error != null)
                 {
-                    throw new ApplicationException($"[{response.error.Code}]:{response.error.Message}");
+                    throw new ApplicationException($"[{response.error.ErrorCode}]:{response.error.Message}");
                 }
                 else
                 {

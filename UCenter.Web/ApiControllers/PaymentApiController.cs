@@ -23,14 +23,17 @@ namespace UCenter.Web.ApiControllers
     [TraceExceptionFilter("PaymentApiController")]
     public class PaymentApiController : ApiControllerBase
     {
+        //---------------------------------------------------------------------
         private Logger logger = LogManager.GetCurrentClassLogger();
 
+        //---------------------------------------------------------------------
         [ImportingConstructor]
         public PaymentApiController(CouchBaseContext db)
             : base(db)
         {
         }
 
+        //---------------------------------------------------------------------
         [HttpGet]
         [Route("test")]
         public IHttpActionResult Test()
@@ -39,6 +42,7 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult("");
         }
 
+        //---------------------------------------------------------------------
         [Route("charge")]
         public IHttpActionResult Charge([FromBody]ChargeInfo info)
         {
@@ -124,6 +128,7 @@ namespace UCenter.Web.ApiControllers
             }
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("webhook")]
         public IHttpActionResult WebHook()
@@ -166,6 +171,7 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult("Success received order info");
         }
 
+        //---------------------------------------------------------------------
         public static string VerifySignedHash(string str_DataToVerify, string str_SignedData, string str_publicKeyFilePath)
         {
             byte[] SignedData = Convert.FromBase64String(str_SignedData);

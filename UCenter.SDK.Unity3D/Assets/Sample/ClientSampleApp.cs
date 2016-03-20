@@ -66,7 +66,7 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
 
         if (error != null)
         {
-            EbLog.Note("ErrorCode=" + error.Code);
+            EbLog.Note("ErrorCode=" + error.ErrorCode);
             EbLog.Note("ErrorMessage=" + error.Message);
         }
     }
@@ -78,7 +78,7 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
 
         if (error != null)
         {
-            EbLog.Note("ErrorCode=" + error.Code);
+            EbLog.Note("ErrorCode=" + error.ErrorCode);
             EbLog.Note("ErrorMessage=" + error.Message);
         }
     }
@@ -90,7 +90,7 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
 
         if (error != null)
         {
-            EbLog.Note("ErrorCode=" + error.Code);
+            EbLog.Note("ErrorCode=" + error.ErrorCode);
             EbLog.Note("ErrorMessage=" + error.Message);
         }
     }
@@ -102,7 +102,7 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
 
         if (error != null)
         {
-            EbLog.Note("ErrorCode=" + error.Code);
+            EbLog.Note("ErrorCode=" + error.ErrorCode);
             EbLog.Note("ErrorMessage=" + error.Message);
         }
     }

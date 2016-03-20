@@ -107,7 +107,7 @@ namespace UCenter.Test.SDK
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
-                AccountName = loginResponse.AccountName,
+                AccountId = loginResponse.AccountName,
                 Data = data
             };
 
@@ -118,7 +118,7 @@ namespace UCenter.Test.SDK
             var result = await client.AppReadDataAsync(appData);
 
             Assert.AreEqual(appData.AppId, result.AppId);
-            Assert.AreEqual(appData.AccountName, result.AccountName);
+            Assert.AreEqual(appData.AccountId, result.AccountName);
             Assert.AreEqual(appData.Data, result.Data);
 
         }

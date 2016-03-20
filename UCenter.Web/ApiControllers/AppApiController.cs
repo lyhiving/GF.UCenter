@@ -22,14 +22,17 @@ namespace UCenter.Web.ApiControllers
     [TraceExceptionFilter("AppApiController")]
     public class AppApiController : ApiControllerBase
     {
+        //---------------------------------------------------------------------
         private Logger logger = LogManager.GetCurrentClassLogger();
 
+        //---------------------------------------------------------------------
         [ImportingConstructor]
         public AppApiController(CouchBaseContext db)
             : base(db)
         {
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("create")]
         public async Task<IHttpActionResult> Create([FromBody]AppInfo info)
@@ -51,6 +54,7 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("login")]
         public async Task<IHttpActionResult> Login(AppLoginInfo info)
@@ -71,9 +75,10 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(app);
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("verifyaccount")]
-        public async Task<IHttpActionResult> AppVerifyAccount(AccountVerificationInfo info)
+        public async Task<IHttpActionResult> AppVerifyAccount(AppVerifyAccountInfo info)
         {
             var result = new AppVerifyAccountResponse();
 
@@ -103,6 +108,7 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(result);
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("readdata")]
         public async Task<IHttpActionResult> AppReadData(AppDataInfo info)
@@ -119,11 +125,13 @@ namespace UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
-            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountName == info.AccountName);
+            // todo: && d.AccountName == info.AccountName
+            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId );
 
             return CreateSuccessResult(result);
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("writedata")]
         public async Task<IHttpActionResult> AppWriteData(AppDataInfo info)
@@ -140,13 +148,14 @@ namespace UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
-            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountName == info.AccountName);
+            // todo: && d.AccountName == info.AccountName
+            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId );
             if (appData == null)
             {
                 appData = new AppDataEntity()
                 {
                     AppId = info.AppId,
-                    AccountName = info.AccountName,
+                    //AccountName = info.AccountName,
                     Data = info.Data
                 };
             }
@@ -156,6 +165,7 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(appData);
         }
 
+        //---------------------------------------------------------------------
         private async Task<UCenterErrorCode> AuthApp(string appId, string appSecret)
         {
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == appId);

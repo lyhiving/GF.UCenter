@@ -24,14 +24,17 @@ namespace UCenter.Web.ApiControllers
     [TraceExceptionFilter("AccountApiController")]
     public class AccountApiController : ApiControllerBase
     {
+        //---------------------------------------------------------------------
         private Logger logger = LogManager.GetCurrentClassLogger();
 
+        //---------------------------------------------------------------------
         [ImportingConstructor]
         public AccountApiController(CouchBaseContext db)
             : base(db)
         {
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("register")]
         public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info)
@@ -108,6 +111,7 @@ namespace UCenter.Web.ApiControllers
             }
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
@@ -135,6 +139,7 @@ namespace UCenter.Web.ApiControllers
             }
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("guest")]
         public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
@@ -163,6 +168,7 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("resetpassword")]
         public async Task<IHttpActionResult> ResetPassword([FromBody]AccountResetPasswordInfo info)
@@ -186,6 +192,7 @@ namespace UCenter.Web.ApiControllers
             }
         }
 
+        //---------------------------------------------------------------------
         [HttpGet]
         [Route("test")]
         public async Task<IHttpActionResult> Test(AccountLoginInfo info)
@@ -199,6 +206,7 @@ namespace UCenter.Web.ApiControllers
             return await Task.FromResult<IHttpActionResult>(CreateSuccessResult(accounts));
         }
 
+        //---------------------------------------------------------------------
         private async Task RecordLogin(string accountName, UCenterErrorCode code, string comments = null)
         {
             LoginRecordEntity record = new LoginRecordEntity()
@@ -214,6 +222,7 @@ namespace UCenter.Web.ApiControllers
             await this.db.LoginRecords.InsertSlimAsync(record, throwIfFailed: false);
         }
 
+        //---------------------------------------------------------------------
         // todo: clean up this later
         public TResponse ToResponse<TResponse>(AccountEntity entity) where TResponse : AccountRequestResponse
         {

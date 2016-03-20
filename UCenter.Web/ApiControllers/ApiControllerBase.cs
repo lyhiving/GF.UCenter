@@ -16,14 +16,17 @@ namespace UCenter.Web.ApiControllers
     [Export]
     public class ApiControllerBase : ApiController
     {
+        //---------------------------------------------------------------------
         protected readonly CouchBaseContext db;
 
+        //---------------------------------------------------------------------
         [ImportingConstructor]
         public ApiControllerBase(CouchBaseContext db)
         {
             this.db = db;
         }
 
+        //---------------------------------------------------------------------
         protected string GetClientIp(HttpRequestMessage request)
         {
             request = request ?? Request;
@@ -47,6 +50,7 @@ namespace UCenter.Web.ApiControllers
             }
         }
 
+        //---------------------------------------------------------------------
         protected IHttpActionResult CreateSuccessResult(object result)
         {
             return Ok(new
@@ -56,6 +60,7 @@ namespace UCenter.Web.ApiControllers
             });
         }
 
+        //---------------------------------------------------------------------
         protected IHttpActionResult CreateErrorResult(UCenterErrorCode code, string message)
         {
             return Ok(new
@@ -69,6 +74,7 @@ namespace UCenter.Web.ApiControllers
             });
         }
 
+        //---------------------------------------------------------------------
         public IHttpActionResult CreateResponse<T>(IDocumentResult<T> result)
         {
             if (result.Success)
