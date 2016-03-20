@@ -286,9 +286,9 @@ paket-files/
 
 /.vs
 /packages
-/UCenter.SDK.Unity3D/Library/
-/UCenter.SDK.Unity3D/Temp/
-/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.CSharp.Editor.csproj
-/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.CSharp.Plugins.csproj
-/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.CSharp.csproj
-/UCenter.SDK.Unity3D/UCenter.SDK.Unity3D.sln
+/GF.UCenter.SDK.Unity3D/Library/
+/GF.UCenter.SDK.Unity3D/Temp/
+/GF.UCenter.SDK.Unity3D/GF.UCenter.SDK.Unity3D.CSharp.Editor.csproj
+/GF.UCenter.SDK.Unity3D/GF.UCenter.SDK.Unity3D.CSharp.Plugins.csproj
+/GF.UCenter.SDK.Unity3D/GF.UCenter.SDK.Unity3D.CSharp.csproj
+/GF.UCenter.SDK.Unity3D/GF.UCenter.SDK.Unity3D.sln
