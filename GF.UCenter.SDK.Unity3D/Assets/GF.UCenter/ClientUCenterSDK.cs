@@ -225,7 +225,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                 {
                     if (response != null)
                     {
-                        handler(response.status, response.As<TResponse>(), response.error);
+                        handler(response.Status, response.As<TResponse>(), response.Error);
                     }
                     else
                     {
