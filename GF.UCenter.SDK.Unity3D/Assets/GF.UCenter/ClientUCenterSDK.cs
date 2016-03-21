@@ -81,14 +81,12 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         string http_url = _genUrl("register");
 
+        //string param = JsonUtility.ToJson(request);
+        //string param = Newtonsoft.Json.JsonConvert.SerializeObject(request, Newtonsoft.Json.Formatting.Indented);
         string param = EbTool.jsonSerialize(request);
         byte[] bytes = Encoding.UTF8.GetBytes(param);
 
-        Dictionary<string, string> headers = new Dictionary<string, string>();
-        headers["Accept"] = "application/json";
-        headers["Content-Type"] = "application/json";
-        headers["Host"] = UCenterDomain;
-        headers["User-Agent"] = "";
+        Dictionary<string, string> headers = _genHeader(bytes.Length);
 
         WWWRegister = new WWW(http_url, bytes, headers);
     }
@@ -163,6 +161,24 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         //headers["Connection"] = "Keep-Alive";
 
         WWWResetPassword = new WWW(http_url, bytes, headers);
+    }
+
+    //-------------------------------------------------------------------------
+    Dictionary<string, string> _genHeader(int content_len)
+    {
+        Dictionary<string, string> headers = new Dictionary<string, string>();
+        headers["Accept"] = "application/x-www-form-urlencoded";
+        headers["Content-Type"] = "application/json; charset=utf-8";
+        headers["Content-Length"] = content_len.ToString();
+        headers["Host"] = UCenterDomain;
+        headers["User-Agent"] = "";
+
+        //headers["Content-Type"] = "application/json";
+        //headers["Connection"] = "Keep-Alive";
+        //headers["Accept-Encoding"] = "";
+        //headers["X-Unity-Version"] = "";
+
+        return headers;
     }
 
     //-------------------------------------------------------------------------

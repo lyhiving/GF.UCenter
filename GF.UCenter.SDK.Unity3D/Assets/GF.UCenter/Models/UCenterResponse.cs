@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace UCenter.Common.Portable
@@ -11,14 +12,16 @@ namespace UCenter.Common.Portable
         }
     }
 
+    [DataContract]
     public class UCenterResponse
     {
+        [DataMember]
         [JsonProperty("status")]
         public UCenterResponseStatus status { get; set; }
-
+        [DataMember]
         [JsonProperty("result")]
         public virtual JToken result { get; set; }
-
+        [DataMember]
         [JsonProperty("error")]
         public UCenterError error { get; set; }
 

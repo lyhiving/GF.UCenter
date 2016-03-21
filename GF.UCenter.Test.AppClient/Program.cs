@@ -24,16 +24,23 @@ namespace GF.UCenter.Test.AppClient
         //---------------------------------------------------------------------
         static async void run()
         {
-            string host = "http://cragonucenter.chinacloudsites.cn";
-            UCenterClient c = new UCenterClient(host);
+            try
+            {
+                string host = "http://cragonucenter.chinacloudsites.cn";
+                UCenterClient c = new UCenterClient(host);
 
-            AccountRegisterInfo account_register_info = new AccountRegisterInfo();
-            account_register_info.AccountName = "test1010";
-            account_register_info.Password = "123456";
-            account_register_info.SuperPassword = "12345678";
-            AccountRegisterResponse r = await c.AccountRegisterAsync(account_register_info);
+                AccountRegisterInfo account_register_info = new AccountRegisterInfo();
+                account_register_info.AccountName = "test1010";
+                account_register_info.Password = "123456";
+                account_register_info.SuperPassword = "12345678";
+                AccountRegisterResponse r = await c.AccountRegisterAsync(account_register_info);
 
-            Console.WriteLine(r.AccountId);
+                Console.WriteLine(r.AccountId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

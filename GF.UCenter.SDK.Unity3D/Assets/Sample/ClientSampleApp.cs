@@ -28,19 +28,19 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         co_ucentersdk.register(register_request, _onUCenterRegister);
 
         // 登录
-        AccountLoginInfo login_request = new AccountLoginInfo();
-        login_request.AccountName = "test1010";
-        login_request.Password = "123456";
-        co_ucentersdk.login(login_request, _onUCenterLogin);
+        //AccountLoginInfo login_request = new AccountLoginInfo();
+        //login_request.AccountName = "test1010";
+        //login_request.Password = "123456";
+        //co_ucentersdk.login(login_request, _onUCenterLogin);
 
-        // 游客登录
-        co_ucentersdk.guestLogin(_onUCenterGuestLogin);
+        //// 游客登录
+        //co_ucentersdk.guestLogin(_onUCenterGuestLogin);
 
-        // 重置密码
-        AccountResetPasswordInfo resetpassword_request = new AccountResetPasswordInfo();
-        login_request.AccountName = "test1010";
-        login_request.Password = "123456";
-        co_ucentersdk.resetPassword(resetpassword_request, _onUCenterResetPassword);
+        //// 重置密码
+        //AccountResetPasswordInfo resetpassword_request = new AccountResetPasswordInfo();
+        //login_request.AccountName = "test1010";
+        //login_request.Password = "123456";
+        //co_ucentersdk.resetPassword(resetpassword_request, _onUCenterResetPassword);
     }
 
     //-------------------------------------------------------------------------
