@@ -67,6 +67,8 @@
     <Compile Include="Entities\AppEntity.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\LoginRecordEntity.cs" />
+    <Compile Include="Entities\OrderEntity.cs" />
+    <Compile Include="Entities\OrderStatus.cs" />
     <Compile Include="Exceptions\CouchBaseException.cs" />
     <Compile Include="Expressions\Evaluator.cs" />
     <Compile Include="Expressions\QueryCommand.cs" />
