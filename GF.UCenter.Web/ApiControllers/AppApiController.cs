@@ -161,6 +161,19 @@ namespace UCenter.Web.ApiControllers
             }
 
             var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            if (appData != null)
+            {
+                appData.Data = info.Data;
+            }
+            else
+            {
+                appData = new AppDataEntity
+                {
+                    AppId = info.AppId,
+                    AccountId = info.AccountId,
+                    Data = info.Data
+                };
+            }
 
             await db.Bucket.UpsertSlimAsync<AppDataEntity>(appData);
 
