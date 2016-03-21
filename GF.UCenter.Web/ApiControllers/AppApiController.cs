@@ -41,7 +41,7 @@ namespace UCenter.Web.ApiControllers
 
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId);
 
-            if (app != null)
+            if (app == null)
             {
                 var appEntity = new AppEntity()
                 {
@@ -130,8 +130,15 @@ namespace UCenter.Web.ApiControllers
             {
                 return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
-            
-            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId );
+
+            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+
+            var response = new AppDataResponse()
+            {
+                AppId = info.AppId,
+                AccountId = info.AccountId,
+                Data = result.Data
+            };
 
             return CreateSuccessResult(result);
         }
@@ -153,19 +160,16 @@ namespace UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
 
-            // todo: && d.AccountName == info.AccountName
-            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId );
-            if (appData == null)
-            {
-                appData = new AppDataEntity()
-                {
-                    AppId = info.AppId,
-                    AccountId = info.AccountId,
-                    Data = info.Data
-                };
-            }
+            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
 
             await db.Bucket.UpsertSlimAsync<AppDataEntity>(appData);
+
+            var response = new AppDataResponse()
+            {
+                AppId = info.AppId,
+                AccountId = info.AccountId,
+                Data = appData.Data
+            };
 
             return CreateSuccessResult(appData);
         }
