@@ -39,7 +39,7 @@ namespace UCenter.Web.ApiControllers
         [Route("register")]
         public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info)
         {
-            logger.Info("客户端请求注册\nAccoundName={0}", info.AccountName);
+            logger.Info($"AppClient请求登录请求注册\nAccoundName={info.AccountName}");
 
             var removeTempsIfError = new List<AccountResourceEntity>();
             var error = false;
@@ -118,7 +118,7 @@ namespace UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
         {
-            logger.Info($"客户端请求登录\nAccountName={info.AccountName}");
+            logger.Info($"AppClient请求登录\nAccountName={info.AccountName}");
 
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
@@ -146,11 +146,11 @@ namespace UCenter.Web.ApiControllers
         [Route("guest")]
         public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
         {
-            logger.Info("客户端请求匿名登陆");
+            logger.Info("AppClient请求登录");
 
             var r = new Random();
             string accountId = Guid.NewGuid().ToString();
-            string accountNamePostfix = r.Next(0, 1000000).ToString("D3");
+            string accountNamePostfix = r.Next(0, 1000000).ToString("D6");
             string accountName = $"uc_{DateTime.Now.ToString("yyyyMMddHHmmssffff")}_{accountNamePostfix}";
             string token = EncryptHashManager.GenerateToken();
             string password = Guid.NewGuid().ToString();

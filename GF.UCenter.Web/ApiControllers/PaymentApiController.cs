@@ -34,97 +34,45 @@ namespace UCenter.Web.ApiControllers
         }
 
         //---------------------------------------------------------------------
-        [HttpGet]
-        [Route("test")]
-        public IHttpActionResult Test()
-        {
-            logger.Info("in test");
-            return CreateSuccessResult("");
-        }
-
-        //---------------------------------------------------------------------
         [Route("charge")]
-        public IHttpActionResult Charge([FromBody]ChargeInfo info)
+        public IHttpActionResult Charge([FromBody] ChargeInfo info)
         {
+            logger.Info($"AppServer请求读取Data\nAppId={info.AppId}\nAccountId={info.AccountId}");
+
             try
             {
-                logger.Info("Charge");
-                Pingpp.SetApiKey("sk_test_n5S804PuLGOSTuD4KOTGiDC8");
-                const string appId = "app_H4yDu5COi1O4SWvz";
+                Pingpp.SetApiKey("sk_test_zXnD8KKOyfn1vDuj9SG8ibfT");
 
-                var amount = info.Amount;
-                var channel = info.Channel;
-                var orderNo = info.OrderNo;
-
-                logger.Info($"amount={amount}");
-                logger.Info($"channel={channel}");
-                logger.Info($"orderNo={orderNo}");
-
-                var extra = new Dictionary<string, object>();
-                if (channel.ToString().Equals("alipay_wap"))
-                {
-                    extra.Add("success_url", "http://www.yourdomain.com/success");
-                    extra.Add("cancel_url", "http://www.yourdomain.com/cancel");
-                }
-                else if (channel.ToString().Equals("wx_pub"))
-                {
-                    extra.Add("open_id", "asdfasdfsadfasdf");
-                }
-                else if (channel.ToString().Equals("upacp_wap"))
-                {
-                    extra.Add("result_url", "http://www.yourdomain.com/result");
-                }
-                else if (channel.ToString().Equals("upmp_wap"))
-                {
-                    extra.Add("result_url", "http://www.yourdomain.com/result?code=");
-                }
-                else if (channel.ToString().Equals("bfb_wap"))
-                {
-                    extra.Add("result_url", "http://www.yourdomain.com/result");
-                    extra.Add("bfb_login", true);
-                }
-                else if (channel.ToString().Equals("wx_pub_qr"))
-                {
-                    extra.Add("product_id", "asdfsadfadsf");
-                }
-                else if (channel.ToString().Equals("yeepay_wap"))
-                {
-                    extra.Add("product_category", "1");
-                    extra.Add("identity_id", "sadfsdaf");
-                    extra.Add("identity_type", 1);
-                    extra.Add("terminal_type", 1);
-                    extra.Add("terminal_id", "sadfsadf");
-                    extra.Add("user_ua", "sadfsdaf");
-                    extra.Add("result_url", "http://www.yourdomain.com/result");
-                }
-                else if (channel.ToString().Equals("jdpay_wap"))
-                {
-                    extra.Add("success_url", "http://www.yourdomain.com/success");
-                    extra.Add("fail_url", "http://www.yourdomain.com/fail");
-                    extra.Add("token", "fjdilkkydoqlpiunchdysiqkanczxude");//32 位字符串，京东支付成功后会返回
-                }
+                string appId = "app_H4yDu5COi1O4SWvz";
+                var r = new Random();
+                string orderNoPostfix = r.Next(0, 1000000).ToString("D6");
+                string orderNo = $"{DateTime.Now.ToString("yyyyMMddHHmmssffff")}_{orderNoPostfix}";
+                double amount = info.Amount;
+                string channel = "alipay";
+                string currency = "cny";
 
                 var param = new Dictionary<string, object>
                 {
+                    {"livemode", false},
                     {"order_no", orderNo},
                     {"amount", amount},
                     {"channel", channel},
-                    {"currency", "cny"},
-                    {"subject", "test"},
-                    {"body", "tests"},
-                    {"client_ip", "127.0.0.1"},
-                    {"app", new Dictionary<string, string> { { "id", appId } }},
-                    {"extra", extra}
+                    {"currency", currency},
+                    {"subject", info.Subject},
+                    {"body", info.Body},
+                    {"description", info.Description},
+                    {"client_ip", info.ClientIp},
+                    {"app", new Dictionary<string, string> {{"id", appId}}}
                 };
 
-
                 var charge = pingpp.Models.Charge.create(param);
+
                 return CreateSuccessResult(charge);
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
-                return CreateErrorResult(UCenterErrorCode.Failed, ex.Message);
+                logger.Error(ex, "创建Charge失败");
+                return CreateErrorResult(UCenterErrorCode.CreateChargeFailed, ex.Message);
             }
         }
 
@@ -133,12 +81,11 @@ namespace UCenter.Web.ApiControllers
         [Route("webhook")]
         public IHttpActionResult WebHook()
         {
-            logger.Info("WebHook called, ready to receive events");
+            logger.Info("UCenter接收到ping++回调消息");
 
-            //获取 post 的 event对象                                
+            //获取 post 的 event对象
             string inputData = Request.Content.ReadAsStringAsync().Result;
-
-            logger.Info("接收到消息\n" + inputData);
+            logger.Info("消息内容\n" + inputData);
 
             //获取 header 中的签名
             IEnumerable<string> headerValues;
@@ -149,14 +96,14 @@ namespace UCenter.Web.ApiControllers
             }
 
             //公钥路径（请检查你的公钥 .pem 文件存放路径）
-            string path = @"C:\openssl\bin\rsa_public_key.pem";
+            string path = @"~/App_Data/rsa_public_key.pem";
 
             //验证签名
             string result = VerifySignedHash(inputData, sig, path);
 
             var jObject = JObject.Parse(inputData);
             var type = jObject.SelectToken("type");
-            logger.Info($"type={type}");
+
             if (type.ToString() == "charge.succeeded" || type.ToString() == "refund.succeeded")
             {
                 // TODO what you need do
@@ -172,7 +119,8 @@ namespace UCenter.Web.ApiControllers
         }
 
         //---------------------------------------------------------------------
-        public static string VerifySignedHash(string str_DataToVerify, string str_SignedData, string str_publicKeyFilePath)
+        public static string VerifySignedHash(string str_DataToVerify, string str_SignedData,
+            string str_publicKeyFilePath)
         {
             byte[] SignedData = Convert.FromBase64String(str_SignedData);
 
@@ -204,5 +152,6 @@ namespace UCenter.Web.ApiControllers
             }
 
         }
+
     }
 }

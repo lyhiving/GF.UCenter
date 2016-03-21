@@ -9,16 +9,20 @@ namespace UCenter.Common.Portable
     public class ChargeInfo
     {
         [DataMember]
-        public string OrderNo { get; set; }
+        public string AppId { get; set; }
         [DataMember]
-        public string Channel { get; set; }
+        public string AppSecret { get; set; }
+        [DataMember]
+        public string AccountId { get; set; }
         [DataMember]
         public double Amount { get; set; }
-        [DataMember]
-        public string Currency { get; set; }
         [DataMember]
         public string Subject { get; set; }
         [DataMember]
         public string Body { get; set; }
+        [DataMember]
+        public string ClientIp { get; set; }
+        [DataMember]
+        public string Description { get; set; }
     }
 }

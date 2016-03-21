@@ -83,7 +83,7 @@ namespace UCenter.Web.ApiControllers
             }
             else
             {
-                return CreateErrorResult(UCenterErrorCode.SystemError, result.Message);
+                return CreateErrorResult(UCenterErrorCode.CouchBaseError, result.Message);
             }
         }
     }

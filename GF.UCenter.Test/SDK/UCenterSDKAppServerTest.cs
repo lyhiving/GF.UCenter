@@ -129,16 +129,47 @@ namespace UCenter.Test.SDK
         [TestMethod]
         public async Task SDK_Create_Charge_Test()
         {
+            var registerInfo = new AccountRegisterInfo()
+            {
+                Name = GenerateRandomString(),
+                AccountName = GenerateRandomString(),
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
+                IdentityNum = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                Sex = Sex.Female
+            };
+
+            await cClient.AccountRegisterAsync(registerInfo);
+
+            await Task.Delay(1000);
+
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            {
+                AccountName = registerInfo.AccountName,
+                Password = registerInfo.Password
+            });
+
             var chargeInfo = new ChargeInfo()
             {
-                OrderNo = DateTime.Now.ToString("yyyyMMddHHmmssffff"),
-                Channel = "alipay",
-                Amount = 100,
-                Subject = "fake item"
+                AppId = TestAppId,
+                AppSecret = TestAppSecret,
+                AccountId = loginResponse.AccountId,
+                Amount = 100.5,
+                Subject = "Super Axe",
+                Body = "Test body",
+                ClientIp = "1.2.3.4",
+                Description = "This is a test order created by unit test"
             };
 
             var result = await sClient.CreateChargeAsync(chargeInfo);
-            Assert.AreEqual(chargeInfo.Amount, result.Amount);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Amount, chargeInfo.Amount);
+            Assert.AreEqual(result.Subject, chargeInfo.Subject);
+            Assert.AreEqual(result.Body, chargeInfo.Body);
+            Assert.AreEqual(result.Description, chargeInfo.Description);
+            Assert.IsNotNull(result.OrderNo);
+            Assert.IsNotNull(result.TransactionNo);
         }
 
         [TestInitialize]

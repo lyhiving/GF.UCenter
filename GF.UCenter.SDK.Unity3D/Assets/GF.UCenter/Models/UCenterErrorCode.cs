@@ -55,6 +55,12 @@ namespace UCenter.Common.Portable
         /// </summary>
         LoginVerifyWriteAppDataFailed,
 
-        SystemError = 500,
+        /// <summary>
+        /// 创建Charge失败
+        /// </summary>
+        CreateChargeFailed = 400,
+
+
+        CouchBaseError = 600,
     }
 }

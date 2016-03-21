@@ -37,7 +37,7 @@ namespace UCenter.Web.ApiControllers
         [Route("create")]
         public async Task<IHttpActionResult> Create([FromBody]AppInfo info)
         {
-            logger.Info("创建App\nAppId={0}", info.AppId);
+            logger.Info("AppServer请求创建App\nAppId={0}", info.AppId);
 
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId);
 
@@ -65,7 +65,7 @@ namespace UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login(AppLoginInfo info)
         {
-            logger.Info("App请求登录\nAppId={0}", info.AppId);
+            logger.Info("AppServer请求登录\nAppId={0}", info.AppId);
 
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId && a.AppSecret == info.AppSecret);
 
@@ -86,6 +86,8 @@ namespace UCenter.Web.ApiControllers
         [Route("verifyaccount")]
         public async Task<IHttpActionResult> AppVerifyAccount(AppVerifyAccountInfo info)
         {
+            logger.Info($"AppServer请求验证Account\nAppId={info.AppId}\nAccountId={info.AccountId}");
+
             var result = new AppVerifyAccountResponse();
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
@@ -119,7 +121,7 @@ namespace UCenter.Web.ApiControllers
         [Route("readdata")]
         public async Task<IHttpActionResult> AppReadData(AppDataInfo info)
         {
-            logger.Info("App请求读取AppData\nAppId={0}", info.AppId);
+            logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
@@ -148,7 +150,7 @@ namespace UCenter.Web.ApiControllers
         [Route("writedata")]
         public async Task<IHttpActionResult> AppWriteData(AppDataInfo info)
         {
-            logger.Info("App请求写入AppData\nAppId={0}", info.AppId);
+            logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)

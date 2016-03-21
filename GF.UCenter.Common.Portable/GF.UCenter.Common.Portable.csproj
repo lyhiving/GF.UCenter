@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Pingplusplus\ChargeResponse.cs" />
+    <Compile Include="Models\Pingplusplus\Refund.cs" />
+    <Compile Include="Models\Pingplusplus\RefundList.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountLoginInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountRegisterInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordInfo.cs" />
@@ -62,7 +65,7 @@
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResponse.cs" />
     <Compile Include="Models\UCenter.AppServer\AppDataResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppEntity.cs" />
+    <Compile Include="Models\UCenter.AppServer\AppResponse.cs" />
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountResponse.cs" />
     <Compile Include="Models\Sex.cs" />
