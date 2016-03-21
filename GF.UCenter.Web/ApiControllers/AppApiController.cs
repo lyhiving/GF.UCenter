@@ -130,9 +130,8 @@ namespace UCenter.Web.ApiControllers
             {
                 return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
             }
-
-            // todo: && d.AccountName == info.AccountName
-            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId );
+            
+            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId );
 
             return CreateSuccessResult(result);
         }
