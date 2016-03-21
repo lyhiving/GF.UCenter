@@ -17,18 +17,18 @@ namespace UCenter.Common.Portable
     {
         [DataMember]
         [JsonProperty("status")]
-        public UCenterResponseStatus status { get; set; }
+        public UCenterResponseStatus Status { get; set; }
         [DataMember]
         [JsonProperty("result")]
-        public virtual JToken result { get; set; }
+        public virtual JToken Result { get; set; }
         [DataMember]
         [JsonProperty("error")]
-        public UCenterError error { get; set; }
+        public UCenterError Error { get; set; }
 
         public T As<T>()
         {
-            if (this.result == null) return default(T);
-            else return this.result.ToObject<T>();
+            if (this.Result == null) return default(T);
+            else return this.Result.ToObject<T>();
         }
     }
 }

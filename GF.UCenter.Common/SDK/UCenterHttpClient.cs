@@ -30,15 +30,15 @@ namespace UCenter.Common
         public async Task<TResult> SendAsyncWithException<TContent, TResult>(HttpMethod method, string url, TContent content)
         {
             var response = await this.SendAsync<TContent, UCenterResponse<TResult>>(method, url, content);
-            if (response.status == UCenterResponseStatus.Success)
+            if (response.Status == UCenterResponseStatus.Success)
             {
                 return response.Content;
             }
             else
             {
-                if (response.error != null)
+                if (response.Error != null)
                 {
-                    throw new ApplicationException($"[{response.error.ErrorCode}]:{response.error.Message}");
+                    throw new ApplicationException($"[{response.Error.ErrorCode}]:{response.Error.Message}");
                 }
                 else
                 {
