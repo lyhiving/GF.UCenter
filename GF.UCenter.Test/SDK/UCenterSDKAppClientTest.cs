@@ -9,51 +9,24 @@ namespace GF.UCenter.Test
     [TestClass]
     public class UCenterSDKAppClientTest : UCenterSDKTestBase
     {
-        protected UCenterClient client;
-        private readonly string host;
-
-        public UCenterSDKAppClientTest()
-        {
-            this.host = "http://localhost:8888/";
-            this.client = new UCenterClient(host);
-        }
 
         [TestMethod]
         public async Task SDK_Account_Register_And_Login_Test()
         {
-            var info = new AccountRegisterInfo()
-            {
-                AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
-                Name = GenerateRandomString(),
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
+            var registerResponse = await CreateTestAccount();
 
-            var registerResponse = await client.AccountRegisterAsync(info);
-            Assert.IsNotNull(registerResponse.AccountId);
-            Assert.AreEqual(registerResponse.AccountName, info.AccountName);
-            Assert.AreEqual(registerResponse.IdentityNum, info.IdentityNum);
-            Assert.AreEqual(registerResponse.Name, info.Name);
-            Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
-            Assert.AreEqual(registerResponse.Sex, info.Sex);
-
-            await Task.Delay(1000);
-
-            var loginResponse = await client.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = registerResponse.AccountName,
-                Password = info.Password
+                Password = ValidPassword
             });
 
             Assert.IsNotNull(loginResponse.AccountId);
-            Assert.AreEqual(loginResponse.AccountName, info.AccountName);
-            Assert.AreEqual(loginResponse.IdentityNum, info.IdentityNum);
-            Assert.AreEqual(loginResponse.Name, info.Name);
-            Assert.AreEqual(loginResponse.PhoneNum, info.PhoneNum);
-            Assert.AreEqual(loginResponse.Sex, info.Sex);
+            Assert.AreEqual(loginResponse.AccountName, registerResponse.AccountName);
+            Assert.AreEqual(loginResponse.IdentityNum, registerResponse.IdentityNum);
+            Assert.AreEqual(loginResponse.Name, registerResponse.Name);
+            Assert.AreEqual(loginResponse.PhoneNum, registerResponse.PhoneNum);
+            Assert.AreEqual(loginResponse.Sex, registerResponse.Sex);
             Assert.IsNotNull(loginResponse.LastLoginDateTime);
             Assert.IsNotNull(loginResponse.Token);
         }
@@ -63,22 +36,11 @@ namespace GF.UCenter.Test
         {
             try
             {
-                var info = new AccountRegisterInfo()
-                {
-                    AccountName = GenerateRandomString(),
-                    Password = ValidPassword,
-                    SuperPassword = ValidPassword,
-                    Name = GenerateRandomString(),
-                    IdentityNum = GenerateRandomString(),
-                    PhoneNum = GenerateRandomString(),
-                    Sex = Sex.Female
-                };
-
-                var registerResponse = await client.AccountRegisterAsync(info);
+                var registerResponse = await CreateTestAccount();
 
                 await Task.Delay(1000);
 
-                await client.AccountLoginAsync(new AccountLoginInfo()
+                await cClient.AccountLoginAsync(new AccountLoginInfo()
                 {
                     AccountName = registerResponse.AccountName,
                     Password = ""
@@ -106,11 +68,11 @@ namespace GF.UCenter.Test
                     Sex = Sex.Female
                 };
 
-                await client.AccountRegisterAsync(info);
+                await cClient.AccountRegisterAsync(info);
 
                 await Task.Delay(1000);
 
-                await client.AccountRegisterAsync(info);
+                await cClient.AccountRegisterAsync(info);
                 Assert.Fail();
             }
             catch (UCenterException ex)
@@ -122,7 +84,7 @@ namespace GF.UCenter.Test
         [TestMethod]
         public async Task SDK_Account_Guest_Login_And_Convert_Test()
         {
-            var loginResponse = await client.AccountGuestLoginAsync();
+            var loginResponse = await cClient.AccountGuestLoginAsync();
 
             Assert.IsNotNull(loginResponse.AccountId);
             Assert.IsNotNull(loginResponse.AccountName);
@@ -144,7 +106,7 @@ namespace GF.UCenter.Test
 
             await Task.Delay(1000);
 
-            var convertResponse = await client.AccountConvertAsync(convertInfo);
+            var convertResponse = await cClient.AccountConvertAsync(convertInfo);
 
             Assert.IsNotNull(convertResponse.AccountId);
             Assert.IsNotNull(convertResponse.AccountId, convertInfo.AccountId);
@@ -158,18 +120,7 @@ namespace GF.UCenter.Test
         [TestMethod]
         public async Task SDK_Account_Reset_Password_Test()
         {
-            var registerInfo = new AccountRegisterInfo()
-            {
-                AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
-                Name = GenerateRandomString(),
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
-
-            var registerResponse = await client.AccountRegisterAsync(registerInfo);
+            var registerResponse = await CreateTestAccount();
 
             await Task.Delay(1000);
 
@@ -180,7 +131,7 @@ namespace GF.UCenter.Test
                 SuperPassword = ValidPassword
             };
 
-            var resetPasswordResponse = await client.AccountResetPasswordAsync(resetInfo);
+            var resetPasswordResponse = await cClient.AccountResetPasswordAsync(resetInfo);
 
             var loginInfo = new AccountLoginInfo()
             {
@@ -192,12 +143,12 @@ namespace GF.UCenter.Test
 
             try
             {
-                var response = await client.AccountLoginAsync(loginInfo);
+                await cClient.AccountLoginAsync(loginInfo);
+                Assert.Fail();
             }
-            // todo: 
-            catch (Exception ex)
+            catch (UCenterException ex)
             {
-                //ex.ErrorCode = UCenterError.
+                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedNotMatch);
             }
         }
     }

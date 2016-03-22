@@ -27,14 +27,6 @@ namespace GF.UCenter.SDK.AppServer
         }
 
         //---------------------------------------------------------------------
-        public async Task<AppResponse> AppLoginAsync(AppLoginInfo info)
-        {
-            string url = GenerateApiEndpoint("app", "login");
-            var response = await httpClient.SendAsyncWithException<AppLoginInfo, AppResponse>(HttpMethod.Post, url, info);
-            return response;
-        }
-
-        //---------------------------------------------------------------------
         public async Task<AppVerifyAccountResponse> AppVerifyAccountAsync(AppVerifyAccountInfo info)
         {
             string url = GenerateApiEndpoint("app", "verifyaccount");

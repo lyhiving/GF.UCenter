@@ -5,9 +5,6 @@ namespace GF.UCenter.CouchBase
     public class AppEntity : BaseEntity<AppEntity>
     {
         public string AppId { get; set; }
-
         public string AppSecret { get; set; }
-
-        public string Token { get; set; }
     }
 }

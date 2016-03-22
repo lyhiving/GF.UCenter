@@ -7,54 +7,15 @@ namespace GF.UCenter.Test
     [TestClass]
     public class UCenterSDKAppServerTest : UCenterSDKTestBase
     {
-        protected UCenter.SDK.AppClient.UCenterClient cClient;
-        protected UCenter.SDK.AppServer.UCenterClient sClient;
-
-        private readonly string host;
-
-        public UCenterSDKAppServerTest()
-        {
-            this.host = "http://localhost:8888/";
-            this.cClient = new UCenter.SDK.AppClient.UCenterClient(host);
-            this.sClient = new UCenter.SDK.AppServer.UCenterClient(host);
-        }
-
-        [TestMethod]
-        public async Task SDK_App_Login_Test()
-        {
-            var info = new AppLoginInfo()
-            {
-                AppId = TestAppId,
-                AppSecret = TestAppSecret,
-            };
-            var result = await sClient.AppLoginAsync(info);
-            Assert.AreEqual(info.AppId, result.AppId);
-            Assert.AreEqual(info.AppSecret, result.AppSecret);
-            Assert.IsNotNull(result.Token);
-        }
-
         [TestMethod]
         public async Task SDK_App_VerifyAccount_Test()
         {
-            var registerInfo = new AccountRegisterInfo()
-            {
-                Name = GenerateRandomString(),
-                AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
-
-            await cClient.AccountRegisterAsync(registerInfo);
-
-            await Task.Delay(1000);
+            var registerResponse = await CreateTestAccount();
 
             var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
-                AccountName = registerInfo.AccountName,
-                Password = registerInfo.Password
+                AccountName = registerResponse.AccountName,
+                Password = ValidPassword
             });
 
             var appVerifyAccountInfo = new AppVerifyAccountInfo()
@@ -76,25 +37,12 @@ namespace GF.UCenter.Test
         [TestMethod]
         public async Task SDK_App_ReadData_And_WriteData_Test()
         {
-            var registerInfo = new AccountRegisterInfo()
-            {
-                Name = GenerateRandomString(),
-                AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
-
-            await cClient.AccountRegisterAsync(registerInfo);
-
-            await Task.Delay(1000);
+            var registerResponse = await CreateTestAccount();
 
             var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
-                AccountName = registerInfo.AccountName,
-                Password = registerInfo.Password
+                AccountName = registerResponse.AccountName,
+                Password = ValidPassword
             });
 
             string data = @"{ 'id': 1, 'name': 'abc'}";
@@ -121,25 +69,12 @@ namespace GF.UCenter.Test
         [TestMethod]
         public async Task SDK_Create_Charge_Test()
         {
-            var registerInfo = new AccountRegisterInfo()
-            {
-                Name = GenerateRandomString(),
-                AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
-
-            await cClient.AccountRegisterAsync(registerInfo);
-
-            await Task.Delay(1000);
+            var registerResponse = await CreateTestAccount();
 
             var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
-                AccountName = registerInfo.AccountName,
-                Password = registerInfo.Password
+                AccountName = registerResponse.AccountName,
+                Password = ValidPassword
             });
 
             var chargeInfo = new ChargeInfo()
