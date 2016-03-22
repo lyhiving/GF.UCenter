@@ -48,6 +48,7 @@
     <Compile Include="Models\Pingplusplus\ChargeResponse.cs" />
     <Compile Include="Models\Pingplusplus\Refund.cs" />
     <Compile Include="Models\Pingplusplus\RefundList.cs" />
+    <Compile Include="Models\UCenter.AppClient\AccountUploadProfileImageInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountConvertInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountLoginInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountRegisterInfo.cs" />

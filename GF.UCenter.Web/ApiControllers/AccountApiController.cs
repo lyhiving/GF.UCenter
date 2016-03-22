@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
+using System.Web.Compilation;
+using System.Web.Configuration;
 using System.Web.Http;
 using Couchbase;
 using GF.UCenter.Common;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using NLog;
 
 namespace GF.UCenter.Web.ApiControllers
@@ -225,6 +231,37 @@ namespace GF.UCenter.Web.ApiControllers
                 await this.RecordLogin(info.AccountId, UCenterErrorCode.Success, "Reset password successfully.");
                 return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
             }
+        }
+
+        //---------------------------------------------------------------------
+        [HttpPost]
+        [Route("upload")]
+        public async Task<IHttpActionResult> UploadProfileImage([FromBody]AccountUploadProfileImageInfo info)
+        {
+            var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            if (account == null)
+            {
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+            }
+
+            string connectionString =
+                @"DefaultEndpointsProtocol=http;AccountName=ucstormagewestus;AccountKey=a4ahcg9gTTdvw6GLKAir+qp/ThVlASxcUjjwgksXqge39z1v7NL9LmIHzvRpRRsXEGQNVQM2vLNzhEGGj5HbDw==";
+            var storageAccount =CloudStorageAccount.Parse(connectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference("images");
+            var blockBlob = container.GetBlockBlobReference($"profile_l_{info.AccountId}.jpg");
+            using (var fileStream = File.OpenRead(@"c:\git\UCenter\src\GF.UCenter.Test\TestData\github.png"))
+            {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                await blockBlob.UploadFromStreamAsync(fileStream);
+                stopwatch.Stop();
+                logger.Info($"Uploaded to {blockBlob.Uri.AbsoluteUri} takes {stopwatch.ElapsedMilliseconds / 1000}s");
+            }
+            account.ProfileImage = blockBlob.Uri.AbsoluteUri;
+            await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
+            await this.RecordLogin(info.AccountId, UCenterErrorCode.Success, "Profile image uploaded successfully.");
+            return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
         }
 
         //---------------------------------------------------------------------

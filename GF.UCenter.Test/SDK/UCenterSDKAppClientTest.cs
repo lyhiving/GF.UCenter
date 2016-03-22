@@ -156,5 +156,18 @@ namespace GF.UCenter.Test
                 Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedNotMatch);
             }
         }
+
+        [TestMethod]
+        public async Task SDK_AppClient_Upload_Profile_Image_Test()
+        {
+            var registerResponse = await CreateTestAccount();
+
+            var accountUploadProfileImageInfo = new AccountUploadProfileImageInfo()
+            {
+                AccountId = registerResponse.AccountId
+            };
+
+            var response = await cClient.AccountUploadProfileImagesync(accountUploadProfileImageInfo);
+        }
     }
 }
