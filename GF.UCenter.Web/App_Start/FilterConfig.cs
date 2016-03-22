@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace UCenter.Web
+namespace GF.UCenter.Web
 {
     public class FilterConfig
     {

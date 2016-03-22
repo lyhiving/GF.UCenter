@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UCenter.CouchBase.Expressions
+namespace GF.UCenter.CouchBase
 {
     internal class QueryCommand
     {

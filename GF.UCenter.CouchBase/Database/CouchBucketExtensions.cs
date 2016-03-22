@@ -5,10 +5,8 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Couchbase.Core;
 using Couchbase.N1QL;
-using UCenter.CouchBase.Entities;
-using UCenter.CouchBase.Exceptions;
 
-namespace UCenter.CouchBase.Database
+namespace GF.UCenter.CouchBase
 {
     public static class CouchBucketExtensions
     {

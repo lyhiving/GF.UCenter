@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace UCenter.Web
+namespace GF.UCenter.Web
 {
     public class BundleConfig
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     public enum UCenterResponseStatus
     {

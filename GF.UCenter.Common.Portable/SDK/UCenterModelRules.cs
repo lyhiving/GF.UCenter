@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Portable
 {
     public static class UCenterModelRules
     {

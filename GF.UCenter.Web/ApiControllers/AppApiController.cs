@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Threading.Tasks;
-using UCenter.Common.Portable;
 using System.ComponentModel.Composition;
-using System.ServiceModel.Security;
-using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http;
+using GF.UCenter.Common;
+using GF.UCenter.Common.Portable;
+using GF.UCenter.CouchBase;
 using NLog;
-using UCenter.Common;
-using UCenter.CouchBase.Database;
-using UCenter.CouchBase.Entities;
 
-namespace UCenter.Web.ApiControllers
+namespace GF.UCenter.Web.ApiControllers
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]

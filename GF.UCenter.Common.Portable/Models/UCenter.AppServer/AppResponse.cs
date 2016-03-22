@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     [DataContract]
     public class AppResponse

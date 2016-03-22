@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.ComponentModel.Composition;
 using System.Net.Http;
 using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.Http;
 using Couchbase;
-using UCenter.Common;
-using UCenter.Common.Portable;
-using UCenter.CouchBase.Database;
+using GF.UCenter.Common.Portable;
+using GF.UCenter.CouchBase;
 
-namespace UCenter.Web.ApiControllers
+namespace GF.UCenter.Web.ApiControllers
 {
     [Export]
     public class ApiControllerBase : ApiController

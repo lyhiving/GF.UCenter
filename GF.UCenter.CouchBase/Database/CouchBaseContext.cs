@@ -6,10 +6,9 @@ using System.Linq;
 using Couchbase;
 using Couchbase.Configuration.Client;
 using Couchbase.Core;
-using UCenter.Common;
-using UCenter.CouchBase.Entities;
+using GF.UCenter.Common;
 
-namespace UCenter.CouchBase.Database
+namespace GF.UCenter.CouchBase
 {
     [Export]
     public class CouchBaseContext

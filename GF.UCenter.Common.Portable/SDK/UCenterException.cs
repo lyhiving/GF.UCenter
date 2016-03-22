@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     public class UCenterException : ApplicationException
     {

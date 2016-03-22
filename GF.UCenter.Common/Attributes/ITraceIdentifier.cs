@@ -1,4 +1,4 @@
-﻿namespace UCenter.Common
+﻿namespace GF.UCenter.Common
 {
     public interface ITraceIdentifier
     {

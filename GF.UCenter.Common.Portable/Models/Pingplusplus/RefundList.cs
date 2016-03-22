@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     public class RefundList
     {

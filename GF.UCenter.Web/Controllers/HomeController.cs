@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.Composition;
 using System.Web.Mvc;
 
-namespace UCenter.Web.Controllers
+namespace GF.UCenter.Web.Controllers
 {
     [Export]
     public class HomeController : Controller

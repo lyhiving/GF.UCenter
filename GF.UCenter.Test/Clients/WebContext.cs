@@ -4,16 +4,14 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
-using UCenter.Common;
-using UCenter.Web;
-using UCenter.Web.ApiControllers;
+using GF.UCenter.Common;
+using GF.UCenter.Web;
+using GF.UCenter.Web.ApiControllers;
 
-namespace UCenter.Test
+namespace GF.UCenter.Test
 {
     [Export]
     public class WebContext : DisposableObjectSlim

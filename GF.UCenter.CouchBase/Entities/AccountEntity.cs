@@ -1,8 +1,7 @@
 ﻿using System;
-using UCenter.Common.Portable;
-using UCenter.CouchBase.Attributes;
+using GF.UCenter.Common.Portable;
 
-namespace UCenter.CouchBase.Entities
+namespace GF.UCenter.CouchBase
 {
     [DocumentType("Account")]
     public class AccountEntity : BaseEntity<AccountEntity>

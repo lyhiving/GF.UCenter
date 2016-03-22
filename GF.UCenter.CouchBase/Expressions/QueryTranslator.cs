@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace UCenter.CouchBase.Expressions
+namespace GF.UCenter.CouchBase
 {
     public abstract class QueryTranslator : ExpressionVisitor
     {

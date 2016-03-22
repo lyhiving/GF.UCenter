@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using UCenter.Common.Portable;
+using GF.UCenter.Common.Portable;
 
-namespace UCenter.Common
+namespace GF.UCenter.Common
 {
     public class UCenterHttpClient
     {

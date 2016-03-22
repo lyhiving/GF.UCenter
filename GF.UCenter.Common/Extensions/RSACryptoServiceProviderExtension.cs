@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace UCenter.Common
+namespace GF.UCenter.Common
 {
     /// <summary>Extension method for initializing a RSACryptoServiceProvider from PEM data string.</summary>  
     public static class RSACryptoServiceProviderExtension

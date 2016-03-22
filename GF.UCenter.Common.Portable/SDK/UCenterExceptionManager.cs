@@ -1,4 +1,4 @@
-﻿namespace UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Portable
 {
     public static class UCenterExceptionManager
     {

@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 
-namespace UCenter.Common.Log
+namespace GF.UCenter.Common
 {
-    public static class Logger
+    public static class TraceLogger
     {
         private static DateTime currentTime;
         public static void TraceInformation(ITraceIdentifier traceIdentifier, string message, params object[] args)

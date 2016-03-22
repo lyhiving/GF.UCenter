@@ -78,7 +78,7 @@
     <Compile Include="Settings\SettingsDefaultValueProvider.cs" />
     <Compile Include="Settings\SettingsInitializer.cs" />
     <Compile Include="Settings\SettingsValuePair.cs" />
-    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\TraceLogger.cs" />
     <Compile Include="ValidatableInfo.cs" />
   </ItemGroup>
   <ItemGroup>

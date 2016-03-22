@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UCenter.CouchBase.Attributes
+namespace GF.UCenter.CouchBase
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class DocumentTypeAttribute : Attribute

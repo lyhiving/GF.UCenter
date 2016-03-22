@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using UCenter.Common.Portable;
-using UCenter.SDK.AppClient;
+using GF.UCenter.Common.Portable;
+using GF.UCenter.SDK.AppClient;
 
 namespace GF.UCenter.Test.AppClient
 {

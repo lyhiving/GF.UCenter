@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     [DataContract]
     public class ChargeList

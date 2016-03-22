@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Threading;
-using System.Web;
+﻿using System.ComponentModel.Composition.Hosting;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using UCenter.Common;
-using UCenter.Common.Portable;
+using GF.UCenter.Common;
 
-namespace UCenter.Web
+namespace GF.UCenter.Web
 {
     public static class ApplicationManager
     {

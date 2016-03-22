@@ -1,6 +1,5 @@
-﻿using UCenter.CouchBase.Attributes;
-
-namespace UCenter.CouchBase.Entities
+﻿
+namespace GF.UCenter.CouchBase
 {
     [DocumentType("App")]
     public class AppEntity : BaseEntity<AppEntity>

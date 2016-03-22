@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.ComponentModel.Composition;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Text;
-using System.Threading.Tasks;
-using UCenter.Common.Portable;
 
-namespace UCenter.Test
+namespace GF.UCenter.Test
 {
     [Export]
     public class TenantEnvironment

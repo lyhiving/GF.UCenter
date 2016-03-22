@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace UCenter.CouchBase.Expressions
+namespace GF.UCenter.CouchBase
 {
     public static class Evaluator
     {

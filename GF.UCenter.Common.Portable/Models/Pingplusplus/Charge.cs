@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     public class Charge
     {

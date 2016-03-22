@@ -2,9 +2,8 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http.Filters;
-using UCenter.Common.Log;
 
-namespace UCenter.Common
+namespace GF.UCenter.Common
 {
     public class TraceExceptionFilter : ExceptionFilterAttribute, ITraceIdentifier
     {
@@ -18,7 +17,7 @@ namespace UCenter.Common
             var exception = actionExecutedContext.Exception;
             var request = actionExecutedContext.Request;
             string id = Guid.NewGuid().ToString();
-            Logger.TraceError(this,
+            TraceLogger.TraceError(this,
                 "Error Occurred,ErrorId:{0}\n,Method:{1},\nUri:{2},\nContent:{3},\nException:{4}",
                 id,
                 request.Method,

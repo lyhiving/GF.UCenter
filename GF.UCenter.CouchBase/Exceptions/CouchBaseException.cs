@@ -1,7 +1,7 @@
 ﻿using System;
 using Couchbase;
 
-namespace UCenter.CouchBase.Exceptions
+namespace GF.UCenter.CouchBase
 {
     public class CouchBaseException : Exception
     {

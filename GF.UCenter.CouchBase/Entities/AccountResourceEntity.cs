@@ -1,8 +1,6 @@
-﻿using UCenter.Common;
-using UCenter.Common.Portable;
-using UCenter.CouchBase.Attributes;
+﻿using GF.UCenter.Common.Portable;
 
-namespace UCenter.CouchBase.Entities
+namespace GF.UCenter.CouchBase
 {
     [DocumentType("AccountResource")]
     public class AccountResourceEntity : BaseEntity<AccountResourceEntity>

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.Composition.Hosting;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
-using UCenter.Common;
+using GF.UCenter.Common;
+using GF.UCenter.Web.Common;
 
-namespace UCenter.Web
+namespace GF.UCenter.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {

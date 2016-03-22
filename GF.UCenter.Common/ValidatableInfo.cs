@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UCenter.Common
+namespace GF.UCenter.Common
 {
     // todo: 由于无法跨平台，所以暂时移除
     public abstract class ValidatableInfo

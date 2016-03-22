@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Threading;
+using GF.UCenter.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCenter.Common;
 
-namespace UCenter.Test
+namespace GF.UCenter.Test
 {
     [TestClass]
     public class UCenterTestBase

@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web.Http;
+using GF.UCenter.Common;
+using GF.UCenter.Common.Portable;
+using GF.UCenter.CouchBase;
 using Newtonsoft.Json.Linq;
 using NLog;
 using pingpp;
-using System.ComponentModel.Composition;
-using System.Web.Http;
-using System.Threading.Tasks;
-using UCenter.Common;
+using Logger = NLog.Logger;
 
-using UCenter.Common.Portable;
-using UCenter.CouchBase.Database;
-
-namespace UCenter.Web.ApiControllers
+namespace GF.UCenter.Web.ApiControllers
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]

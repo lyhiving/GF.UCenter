@@ -1,7 +1,6 @@
 ﻿using System;
-using UCenter.CouchBase.Attributes;
 
-namespace UCenter.CouchBase.Entities
+namespace GF.UCenter.CouchBase
 {
     [Serializable]
     [DocumentType("AppData")]

@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Web;
 using System.Web.Http.Dependencies;
 
-namespace UCenter.Web
+namespace GF.UCenter.Web
 {
     public class MefDependencyResolver : IDependencyResolver
     {

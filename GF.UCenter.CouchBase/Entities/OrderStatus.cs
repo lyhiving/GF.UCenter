@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GF.UCenter.CouchBase.Entities
+namespace GF.UCenter.CouchBase
 {
     public enum OrderStatus
     {

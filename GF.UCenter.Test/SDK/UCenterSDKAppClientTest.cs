@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using GF.UCenter.Common.Portable;
+using GF.UCenter.SDK.AppClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UCenter.Common.Portable;
-using UCenter.Common;
-using UCenter.SDK.AppClient;
 
-namespace UCenter.Test.SDK
+namespace GF.UCenter.Test
 {
     [TestClass]
     public class UCenterSDKAppClientTest : UCenterSDKTestBase

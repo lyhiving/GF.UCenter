@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace UCenter.Web
+namespace GF.UCenter.Web
 {
     public static class WebApiConfig
     {

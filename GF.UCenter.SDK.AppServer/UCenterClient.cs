@@ -1,9 +1,9 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using UCenter.Common.Portable;
-using UCenter.Common;
+using GF.UCenter.Common;
+using GF.UCenter.Common.Portable;
 
-namespace UCenter.SDK.AppServer
+namespace GF.UCenter.SDK.AppServer
 {
     public class UCenterClient
     {
