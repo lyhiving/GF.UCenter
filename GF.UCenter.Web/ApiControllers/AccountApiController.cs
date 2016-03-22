@@ -127,8 +127,8 @@ namespace UCenter.Web.ApiControllers
             }
             else if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
             {
-                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedPasswordError, "Password incorrect");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordError, "Password incorrect");
+                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
             }
             else
             {
@@ -146,7 +146,7 @@ namespace UCenter.Web.ApiControllers
         [Route("guest")]
         public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
         {
-            logger.Info("AppClient请求登录");
+            logger.Info("AppClient请求访客登录");
 
             var r = new Random();
             string accountId = Guid.NewGuid().ToString();
@@ -177,6 +177,36 @@ namespace UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
+        [HttpPost]
+        [Route("convert")]
+        public async Task<IHttpActionResult> Convert([FromBody]AccountConvertInfo info)
+        {
+            logger.Info($"AppClient请求访客账号转正式账号AccountName={info.AccountName}");
+
+            var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            if (account == null)
+            {
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+            }
+            if (!EncryptHashManager.VerifyHash(info.OldPassword, account.Password))
+            {
+                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
+            }
+
+            account.AccountName = info.AccountName;
+            account.IsGuest = false;
+            account.Name = info.Name;
+            account.IdentityNum = info.IdentityNum;
+            account.Password = EncryptHashManager.ComputeHash(info.Password);
+            account.SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword);
+            account.PhoneNum = info.PhoneNum;
+            account.Sex = info.Sex;
+            await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
+            await this.RecordLogin(info.AccountId, UCenterErrorCode.Success, "Account converted successfully.");
+            return CreateSuccessResult(ToResponse<AccountRegisterResponse>(account));
+        }
+
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("resetpassword")]
@@ -185,12 +215,12 @@ namespace UCenter.Web.ApiControllers
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account not exists or password is wrong.");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
             }
             else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
-                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedPasswordError, "Change password with wrong super password.");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordError, "Account not exists or password is wrong.");
+                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedNotMatch, "The super password provided is incorrect");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotMatch, "The super password provided is incorrect");
             }
             else
             {

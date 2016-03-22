@@ -4,11 +4,16 @@ using System.Runtime.Serialization;
 
 namespace UCenter.Common.Portable
 {
+    [Serializable]
     [DataContract]
-    public class AccountRegisterInfo
+    public class AccountConvertInfo
     {
         [DataMember]
+        public string AccountId { get; set; }
+        [DataMember]
         public string AccountName { get; set; }
+        [DataMember]
+        public string OldPassword { get; set; }
         [DataMember]
         public string Password { get; set; }
         [DataMember]

@@ -33,7 +33,7 @@ namespace UCenter.Common.Portable
         /// <summary>
         /// 登陆，密码错误
         /// </summary>
-        AccountLoginFailedPasswordError,
+        AccountLoginFailedNotMatch,
 
         /// <summary>
         /// App验证登录，帐号不存在
@@ -60,7 +60,10 @@ namespace UCenter.Common.Portable
         /// </summary>
         CreateChargeFailed = 400,
 
-
+        /// <summary>
+        /// 其他未处理的通用错误
+        /// </summary>
         CouchBaseError = 600,
+        HttpClientError = 601,
     }
 }

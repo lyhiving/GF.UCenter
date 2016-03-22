@@ -30,10 +30,10 @@ namespace UCenter.Test.SDK
         {
             var info = new AccountRegisterInfo()
             {
-                Name = GenerateRandomString(),
                 AccountName = GenerateRandomString(),
                 Password = ValidPassword,
                 SuperPassword = ValidPassword,
+                Name = GenerateRandomString(),
                 IdentityNum = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
                 Sex = Sex.Female
@@ -66,13 +66,100 @@ namespace UCenter.Test.SDK
         }
 
         [TestMethod]
-        public async Task SDK_Account_Guest_Login_Test()
+        public async Task SDK_Account_Login_Incorrect_Password_Test()
+        {
+            try
+            {
+                var info = new AccountRegisterInfo()
+                {
+                    AccountName = GenerateRandomString(),
+                    Password = ValidPassword,
+                    SuperPassword = ValidPassword,
+                    Name = GenerateRandomString(),
+                    IdentityNum = GenerateRandomString(),
+                    PhoneNum = GenerateRandomString(),
+                    Sex = Sex.Female
+                };
+
+                var registerResponse = await client.AccountRegisterAsync(info);
+
+                await Task.Delay(1000);
+
+                await client.AccountLoginAsync(new AccountLoginInfo()
+                {
+                    AccountName = registerResponse.AccountName,
+                    Password = ""
+                });
+            }
+            catch (UCenterException ex)
+            {
+                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedNotMatch);
+            }
+        }
+
+        [TestMethod]
+        public async Task SDK_Account_Register_Twice_Test()
+        {
+            try
+            {
+                var info = new AccountRegisterInfo()
+                {
+                    AccountName = GenerateRandomString(),
+                    Password = ValidPassword,
+                    SuperPassword = ValidPassword,
+                    Name = GenerateRandomString(),
+                    IdentityNum = GenerateRandomString(),
+                    PhoneNum = GenerateRandomString(),
+                    Sex = Sex.Female
+                };
+
+                await client.AccountRegisterAsync(info);
+
+                await Task.Delay(1000);
+
+                await client.AccountRegisterAsync(info);
+                Assert.Fail();
+            }
+            catch (UCenterException ex)
+            {
+                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountRegisterFailedAlreadyExist);
+            }
+        }
+
+        [TestMethod]
+        public async Task SDK_Account_Guest_Login_And_Convert_Test()
         {
             var loginResponse = await client.AccountGuestLoginAsync();
 
             Assert.IsNotNull(loginResponse.AccountId);
             Assert.IsNotNull(loginResponse.AccountName);
+            Assert.IsNotNull(loginResponse.Password);
             Assert.IsNotNull(loginResponse.Token);
+
+            var convertInfo = new AccountConvertInfo()
+            {
+                AccountId = loginResponse.AccountId,
+                AccountName = GenerateRandomString(),
+                OldPassword = loginResponse.Password,
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
+                Name = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                IdentityNum = GenerateRandomString(),
+                Sex = Sex.Female
+            };
+
+            await Task.Delay(1000);
+
+            var convertResponse = await client.AccountConvertAsync(convertInfo);
+
+            Assert.IsNotNull(convertResponse.AccountId);
+            Assert.IsNotNull(convertResponse.AccountId, convertInfo.AccountId);
+            Assert.AreEqual(convertResponse.AccountName, convertInfo.AccountName);
+            Assert.AreEqual(convertResponse.IdentityNum, convertInfo.IdentityNum);
+            Assert.AreEqual(convertResponse.Name, convertInfo.Name);
+            Assert.AreEqual(convertResponse.PhoneNum, convertInfo.PhoneNum);
+            Assert.AreEqual(convertResponse.Sex, convertInfo.Sex);
         }
 
         [TestMethod]
@@ -80,10 +167,10 @@ namespace UCenter.Test.SDK
         {
             var registerInfo = new AccountRegisterInfo()
             {
-                Name = GenerateRandomString(),
                 AccountName = GenerateRandomString(),
                 Password = ValidPassword,
                 SuperPassword = ValidPassword,
+                Name = GenerateRandomString(),
                 IdentityNum = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
                 Sex = Sex.Female

@@ -70,7 +70,6 @@
     <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="Extensions\RSACryptoServiceProviderExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="SDK\AccountResourceType.cs" />
     <Compile Include="SDK\UCenterHttpClient.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />

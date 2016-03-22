@@ -33,7 +33,7 @@ namespace UCenter.Common.Portable
         /// <summary>
         /// 登陆，密码错误
         /// </summary>
-        AccountLoginFailedPasswordError,
+        AccountLoginFailedNotMatch,
 
         /// <summary>
         /// App验证登录，帐号不存在

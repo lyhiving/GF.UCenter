@@ -38,11 +38,19 @@ namespace UCenter.Common
             {
                 if (response.Error != null)
                 {
-                    throw new ApplicationException($"[{response.Error.ErrorCode}]:{response.Error.Message}");
+                    throw UCenterExceptionManager.FromError(new UCenterError
+                    {
+                        ErrorCode = response.Error.ErrorCode,
+                        Message = response.Error.Message
+                    });
                 }
                 else
                 {
-                    throw new ApplicationException("Unknown exception");
+                    throw UCenterExceptionManager.FromError(new UCenterError
+                    {
+                        ErrorCode = UCenterErrorCode.AccountLoginFailedNotExist,
+                        Message = "Error occurred when sending http request"
+                    });
                 }
             }
         }
@@ -52,11 +60,9 @@ namespace UCenter.Common
             var handler = new HttpClientHandler();
             handler.UseDefaultCredentials = true;
             handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
-            handler.AutomaticDecompression = DecompressionMethods.GZip;
 
             var httpClient = new HttpClient(handler);
-            httpClient.Timeout = TimeSpan.FromSeconds(100);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            httpClient.Timeout = TimeSpan.FromSeconds(90);
 
             return httpClient;
         }

@@ -30,10 +30,17 @@ namespace UCenter.SDK.AppClient
             return response;
         }
 
-        public async Task<AccountLoginResponse> AccountGuestLoginAsync()
+        public async Task<AccountGuestLoginResponse> AccountGuestLoginAsync()
         {
             string url = GenerateApiEndpoint("account", "guest");
-            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountLoginResponse>(HttpMethod.Post, url, null);
+            var response = await httpClient.SendAsyncWithException<AccountLoginInfo, AccountGuestLoginResponse>(HttpMethod.Post, url, null);
+            return response;
+        }
+
+        public async Task<AccountConvertResponse> AccountConvertAsync(AccountConvertInfo info)
+        {
+            string url = GenerateApiEndpoint("account", "convert");
+            var response = await httpClient.SendAsyncWithException<AccountConvertInfo, AccountConvertResponse>(HttpMethod.Post, url, info);
             return response;
         }
 

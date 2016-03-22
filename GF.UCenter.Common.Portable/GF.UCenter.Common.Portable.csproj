@@ -48,9 +48,12 @@
     <Compile Include="Models\Pingplusplus\ChargeResponse.cs" />
     <Compile Include="Models\Pingplusplus\Refund.cs" />
     <Compile Include="Models\Pingplusplus\RefundList.cs" />
+    <Compile Include="Models\UCenter.AppClient\AccountConvertInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountLoginInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountRegisterInfo.cs" />
+    <Compile Include="Models\UCenter.AppClient\AccountConvertResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordInfo.cs" />
+    <Compile Include="Models\UCenter.AppClient\AccountResourceType.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountVerificationInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppDataInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppInfo.cs" />
@@ -69,12 +72,14 @@
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountResponse.cs" />
     <Compile Include="Models\Sex.cs" />
-    <Compile Include="Models\UCenterError.cs" />
-    <Compile Include="Models\UCenterErrorCode.cs" />
-    <Compile Include="Models\UCenterModelRules.cs" />
+    <Compile Include="SDK\UCenterError.cs" />
+    <Compile Include="SDK\UCenterErrorCode.cs" />
+    <Compile Include="SDK\UCenterException.cs" />
+    <Compile Include="SDK\UCenterExceptionManager.cs" />
+    <Compile Include="SDK\UCenterModelRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\UCenterResponse.cs" />
-    <Compile Include="Models\UCenterResponseStatus.cs" />
+    <Compile Include="SDK\UCenterResponse.cs" />
+    <Compile Include="SDK\UCenterResponseStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
