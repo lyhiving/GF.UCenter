@@ -8,7 +8,7 @@ namespace GF.UCenter.Test
     public class UCenterSDKAppServerTest : UCenterSDKTestBase
     {
         [TestMethod]
-        public async Task SDK_App_VerifyAccount_Test()
+        public async Task SDK_AppServer_VerifyAccount_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -26,7 +26,6 @@ namespace GF.UCenter.Test
                 AccountToken = loginResponse.Token
             };
             var result = await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
-
             Assert.IsNotNull(result.AccountId);
             Assert.IsNotNull(result.AccountName);
             Assert.IsNotNull(result.AccountToken);
@@ -35,7 +34,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_App_ReadData_And_WriteData_Test()
+        public async Task SDK_AppServer_ReadData_And_WriteData_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -63,11 +62,10 @@ namespace GF.UCenter.Test
             Assert.AreEqual(appData.AppId, result.AppId);
             Assert.AreEqual(appData.AccountId, result.AccountId);
             Assert.AreEqual(appData.Data, result.Data);
-
         }
 
         [TestMethod]
-        public async Task SDK_Create_Charge_Test()
+        public async Task SDK_AppServer_Create_Charge_Test()
         {
             var registerResponse = await CreateTestAccount();
 

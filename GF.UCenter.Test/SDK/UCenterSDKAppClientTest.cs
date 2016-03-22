@@ -11,7 +11,7 @@ namespace GF.UCenter.Test
     {
 
         [TestMethod]
-        public async Task SDK_Account_Register_And_Login_Test()
+        public async Task SDK_AppClient_Register_And_Login_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -26,13 +26,14 @@ namespace GF.UCenter.Test
             Assert.AreEqual(loginResponse.IdentityNum, registerResponse.IdentityNum);
             Assert.AreEqual(loginResponse.Name, registerResponse.Name);
             Assert.AreEqual(loginResponse.PhoneNum, registerResponse.PhoneNum);
+            Assert.AreEqual(loginResponse.Email, registerResponse.Email);
             Assert.AreEqual(loginResponse.Sex, registerResponse.Sex);
             Assert.IsNotNull(loginResponse.LastLoginDateTime);
             Assert.IsNotNull(loginResponse.Token);
         }
 
         [TestMethod]
-        public async Task SDK_Account_Login_Incorrect_Password_Test()
+        public async Task SDK_AppClient_Login_Incorrect_Password_Test()
         {
             try
             {
@@ -53,7 +54,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_Account_Register_Twice_Test()
+        public async Task SDK_AppClient_Register_Twice_Test()
         {
             try
             {
@@ -65,6 +66,7 @@ namespace GF.UCenter.Test
                     Name = GenerateRandomString(),
                     IdentityNum = GenerateRandomString(),
                     PhoneNum = GenerateRandomString(),
+                    Email = GenerateRandomString(),
                     Sex = Sex.Female
                 };
 
@@ -82,7 +84,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_Account_Guest_Login_And_Convert_Test()
+        public async Task SDK_AppClient_Guest_Login_And_Convert_Test()
         {
             var loginResponse = await cClient.AccountGuestLoginAsync();
 
@@ -100,6 +102,7 @@ namespace GF.UCenter.Test
                 SuperPassword = ValidPassword,
                 Name = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
+                Email = GenerateRandomString(),
                 IdentityNum = GenerateRandomString(),
                 Sex = Sex.Female
             };
@@ -109,16 +112,18 @@ namespace GF.UCenter.Test
             var convertResponse = await cClient.AccountConvertAsync(convertInfo);
 
             Assert.IsNotNull(convertResponse.AccountId);
+            Assert.IsNotNull(convertResponse.Token);
             Assert.IsNotNull(convertResponse.AccountId, convertInfo.AccountId);
             Assert.AreEqual(convertResponse.AccountName, convertInfo.AccountName);
             Assert.AreEqual(convertResponse.IdentityNum, convertInfo.IdentityNum);
             Assert.AreEqual(convertResponse.Name, convertInfo.Name);
             Assert.AreEqual(convertResponse.PhoneNum, convertInfo.PhoneNum);
+            Assert.AreEqual(convertResponse.Email, convertInfo.Email);
             Assert.AreEqual(convertResponse.Sex, convertInfo.Sex);
         }
 
         [TestMethod]
-        public async Task SDK_Account_Reset_Password_Test()
+        public async Task SDK_AppClient_Reset_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
 

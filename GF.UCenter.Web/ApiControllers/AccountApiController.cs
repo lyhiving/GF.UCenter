@@ -196,6 +196,7 @@ namespace GF.UCenter.Web.ApiControllers
             account.Password = EncryptHashManager.ComputeHash(info.Password);
             account.SuperPassword = EncryptHashManager.ComputeHash(info.SuperPassword);
             account.PhoneNum = info.PhoneNum;
+            account.Email = info.Email;
             account.Sex = info.Sex;
             await this.db.Accounts.UpsertSlimAsync<AccountEntity>(account);
             await this.RecordLogin(info.AccountId, UCenterErrorCode.Success, "Account converted successfully.");
