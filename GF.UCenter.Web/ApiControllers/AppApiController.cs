@@ -55,27 +55,6 @@ namespace GF.UCenter.Web.ApiControllers
 
         //---------------------------------------------------------------------
         [HttpPost]
-        [Route("login")]
-        public async Task<IHttpActionResult> Login(AppLoginInfo info)
-        {
-            logger.Info("AppServer请求登录\nAppId={0}", info.AppId);
-
-            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId && a.AppSecret == info.AppSecret);
-
-            if (app == null)
-            {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist.");
-            }
-
-            app.Token = EncryptHashManager.GenerateToken();
-            await this.db.Bucket.UpsertSlimAsync(app);
-
-            //todo: need login record?
-            return CreateSuccessResult(app);
-        }
-
-        //---------------------------------------------------------------------
-        [HttpPost]
         [Route("verifyaccount")]
         public async Task<IHttpActionResult> AppVerifyAccount(AppVerifyAccountInfo info)
         {

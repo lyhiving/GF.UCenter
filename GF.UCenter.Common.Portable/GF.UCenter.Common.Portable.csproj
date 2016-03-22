@@ -57,7 +57,6 @@
     <Compile Include="Models\UCenter.AppClient\AccountVerificationInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppDataInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppLoginInfo.cs" />
     <Compile Include="Models\Pingplusplus\ChargeInfo.cs" />
     <Compile Include="Models\Pingplusplus\Charge.cs" />
     <Compile Include="Models\Pingplusplus\ChargeList.cs" />
