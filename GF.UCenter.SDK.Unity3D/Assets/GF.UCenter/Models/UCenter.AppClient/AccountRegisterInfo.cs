@@ -16,6 +16,8 @@ namespace GF.UCenter.Common.Portable
         [DataMember]
         public string PhoneNum { get; set; }
         [DataMember]
+        public string Email { get; set; }
+        [DataMember]
         public string IdentityNum { get; set; }
         [DataMember]
         public Sex Sex { get; set; }

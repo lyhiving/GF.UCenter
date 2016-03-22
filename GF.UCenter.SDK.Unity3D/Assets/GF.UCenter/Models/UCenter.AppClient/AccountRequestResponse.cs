@@ -17,6 +17,8 @@ namespace GF.UCenter.Common.Portable
         public string IdentityNum { get; set; }
         [DataMember]
         public string PhoneNum { get; set; }
+        [DataMember]
+        public string Email { get; set; }
 
         public virtual void ApplyEntity(AccountResponse account)
         {
@@ -26,6 +28,7 @@ namespace GF.UCenter.Common.Portable
             this.Sex = account.Sex;
             this.IdentityNum = account.IdentityNum;
             this.PhoneNum = account.PhoneNum;
+            this.Email = account.Email;
         }
     }
 }
