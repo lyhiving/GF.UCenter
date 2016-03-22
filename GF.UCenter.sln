@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GF.UCenter.SDK.AppServer", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GF.UCenter.Common.Portable", "GF.UCenter.Common.Portable\GF.UCenter.Common.Portable.csproj", "{4497DC6E-5B0E-42E4-9C2D-B93B9783D667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GF.UCenter.Test.AppClient", "GF.UCenter.Test.AppClient\GF.UCenter.Test.AppClient.csproj", "{B7A51F6F-9FB0-4301-A686-8C3A3C3D5086}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{4497DC6E-5B0E-42E4-9C2D-B93B9783D667}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4497DC6E-5B0E-42E4-9C2D-B93B9783D667}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4497DC6E-5B0E-42E4-9C2D-B93B9783D667}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7A51F6F-9FB0-4301-A686-8C3A3C3D5086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7A51F6F-9FB0-4301-A686-8C3A3C3D5086}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7A51F6F-9FB0-4301-A686-8C3A3C3D5086}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7A51F6F-9FB0-4301-A686-8C3A3C3D5086}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
