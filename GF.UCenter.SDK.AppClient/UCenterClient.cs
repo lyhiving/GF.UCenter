@@ -50,6 +50,12 @@ namespace GF.UCenter.SDK.AppClient
             return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);
         }
 
+        public async Task<AccountResponse> AccountUploadProfileImagesync(AccountUploadProfileImageInfo info)
+        {
+            string url = this.GenerateApiEndpoint("account", "upload");
+            return await httpClient.SendAsyncWithException<AccountUploadProfileImageInfo, AccountResponse>(HttpMethod.Post, url, info);
+        }
+
         private string GenerateApiEndpoint(string controller, string route, string queryString = null)
         {
             var url = $"{this.host}/api/{controller}/{route}";
