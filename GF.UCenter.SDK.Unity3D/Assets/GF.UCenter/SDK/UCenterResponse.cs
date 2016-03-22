@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace UCenter.Common.Portable
+namespace GF.UCenter.Common.Portable
 {
     public class UCenterResponse<T> : UCenterResponse
     {

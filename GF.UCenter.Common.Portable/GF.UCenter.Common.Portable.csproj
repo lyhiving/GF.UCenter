@@ -86,7 +86,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /f /i /r /y /k /e  $(ProjectDir)Models\*.*   $(SolutionDir)GF.UCenter.SDK.Unity3D\Assets\GF.UCenter\Models\</PostBuildEvent>
+    <PostBuildEvent>xcopy /f /i /r /y /k /e  $(ProjectDir)Models\*.*   $(SolutionDir)GF.UCenter.SDK.Unity3D\Assets\GF.UCenter\Models\
+xcopy /f /i /r /y /k /e  $(ProjectDir)SDK\*.*   $(SolutionDir)GF.UCenter.SDK.Unity3D\Assets\GF.UCenter\SDK\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

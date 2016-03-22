@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Portable
 {
     public enum UCenterErrorCode : short
     {
@@ -60,7 +57,10 @@ namespace UCenter.Common.Portable
         /// </summary>
         CreateChargeFailed = 400,
 
-
+        /// <summary>
+        /// 其他未处理的通用错误
+        /// </summary>
         CouchBaseError = 600,
+        HttpClientError = 601,
     }
 }

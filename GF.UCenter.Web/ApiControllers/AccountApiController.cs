@@ -171,6 +171,7 @@ namespace GF.UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("convert")]
         public async Task<IHttpActionResult> Convert([FromBody]AccountConvertInfo info)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using GF.Common;
-using UCenter.Common.Portable;
+using GF.UCenter.Common.Portable;
 
 public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, new()
 {

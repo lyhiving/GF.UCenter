@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using GF.Common;
-using UCenter.Common.Portable;
+using GF.UCenter.Common.Portable;
 
 public delegate void OnUCenterRegister(UCenterResponseStatus status, AccountRegisterResponse response, UCenterError error);
 public delegate void OnUCenterLogin(UCenterResponseStatus status, AccountLoginResponse response, UCenterError error);
 public delegate void OnUCenterGuestLogin(UCenterResponseStatus status, AccountGuestLoginResponse response, UCenterError error);
+public delegate void OnUCenterConvert(UCenterResponseStatus status, AccountConvertResponse response, UCenterError error);
 public delegate void OnUCenterResetPassword(UCenterResponseStatus status, AccountResetPasswordResponse response, UCenterError error);
 
 public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK, new()
@@ -18,10 +19,12 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
     public WWW WWWRegister { get; private set; }
     public WWW WWWLogin { get; private set; }
     public WWW WWWGuestLogin { get; private set; }
+    public WWW WWWConvert { get; private set; }
     public WWW WWWResetPassword { get; private set; }
     Action<UCenterResponseStatus, AccountRegisterResponse, UCenterError> RegisterHandler { get; set; }
     Action<UCenterResponseStatus, AccountLoginResponse, UCenterError> LoginHandler { get; set; }
     Action<UCenterResponseStatus, AccountGuestLoginResponse, UCenterError> GuestLoginHandler { get; set; }
+    Action<UCenterResponseStatus, AccountConvertResponse, UCenterError> ConvertHandler { get; set; }
     Action<UCenterResponseStatus, AccountResetPasswordResponse, UCenterError> ResetPasswordHandler { get; set; }
 
     //-------------------------------------------------------------------------
@@ -81,8 +84,6 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         string http_url = _genUrl("register");
 
-        //string param = JsonUtility.ToJson(request);
-        //string param = Newtonsoft.Json.JsonConvert.SerializeObject(request, Newtonsoft.Json.Formatting.Indented);
         string param = EbTool.jsonSerialize(request);
         byte[] bytes = Encoding.UTF8.GetBytes(param);
 
@@ -106,12 +107,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         string param = EbTool.jsonSerialize(request);
         byte[] bytes = Encoding.UTF8.GetBytes(param);
 
-        Dictionary<string, string> headers = new Dictionary<string, string>();
-        headers["Accept"] = "application/json";
-        headers["Content-Type"] = "application/json";
-        headers["Host"] = UCenterDomain;
-        headers["User-Agent"] = "";
-        //headers["Connection"] = "Keep-Alive";
+        Dictionary<string, string> headers = _genHeader(bytes.Length);
 
         WWWLogin = new WWW(http_url, bytes, headers);
     }
@@ -126,16 +122,31 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         GuestLoginHandler = new Action<UCenterResponseStatus, AccountGuestLoginResponse, UCenterError>(handler);
 
-        string http_url = _genUrl("guestlogin");
+        string http_url = _genUrl("guest");
 
-        Dictionary<string, string> headers = new Dictionary<string, string>();
-        headers["Accept"] = "application/json";
-        headers["Content-Type"] = "application/json";
-        headers["Host"] = UCenterDomain;
-        headers["User-Agent"] = "";
-        //headers["Connection"] = "Keep-Alive";
+        Dictionary<string, string> headers = _genHeader(0);
 
         WWWGuestLogin = new WWW(http_url, null, headers);
+    }
+
+    //-------------------------------------------------------------------------
+    public void convert(AccountConvertInfo request, OnUCenterConvert handler)
+    {
+        if (WWWConvert != null)
+        {
+            return;
+        }
+
+        ConvertHandler = new Action<UCenterResponseStatus, AccountConvertResponse, UCenterError>(handler);
+
+        string http_url = _genUrl("convert");
+
+        string param = EbTool.jsonSerialize(request);
+        byte[] bytes = Encoding.UTF8.GetBytes(param);
+
+        Dictionary<string, string> headers = _genHeader(bytes.Length);
+
+        WWWConvert = new WWW(http_url, null, headers);
     }
 
     //-------------------------------------------------------------------------
@@ -153,12 +164,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         string param = EbTool.jsonSerialize(request);
         byte[] bytes = Encoding.UTF8.GetBytes(param);
 
-        Dictionary<string, string> headers = new Dictionary<string, string>();
-        headers["Accept"] = "application/json";
-        headers["Content-Type"] = "application/json";
-        headers["Host"] = UCenterDomain;
-        headers["User-Agent"] = "";
-        //headers["Connection"] = "Keep-Alive";
+        Dictionary<string, string> headers = _genHeader(bytes.Length);
 
         WWWResetPassword = new WWW(http_url, bytes, headers);
     }

@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 
 namespace GF.UCenter.Common.Portable
 {
-    [Serializable]
     [DataContract]
     public class AppDataResponse
     {
