@@ -123,12 +123,12 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
             else if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
             {
-                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
+                await this.RecordLogin(info.AccountName, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
             }
             else
             {
@@ -187,12 +187,12 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
             if (!EncryptHashManager.VerifyHash(info.OldPassword, account.Password))
             {
-                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotMatch, "The account name and password do not match");
+                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
             }
 
             account.AccountName = info.AccountName;
@@ -217,12 +217,12 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
             else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
-                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedNotMatch, "The super password provided is incorrect");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotMatch, "The super password provided is incorrect");
+                await this.RecordLogin(info.AccountId, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The super password provided is incorrect");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The super password provided is incorrect");
             }
             else
             {
@@ -241,7 +241,7 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Accounts.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
 
             string connectionString =

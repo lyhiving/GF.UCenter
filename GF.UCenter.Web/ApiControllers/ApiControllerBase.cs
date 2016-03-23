@@ -6,6 +6,7 @@ using System.Web.Http;
 using Couchbase;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
+using NLog;
 
 namespace GF.UCenter.Web.ApiControllers
 {
@@ -14,6 +15,7 @@ namespace GF.UCenter.Web.ApiControllers
     {
         //---------------------------------------------------------------------
         protected readonly CouchBaseContext db;
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         //---------------------------------------------------------------------
         [ImportingConstructor]
@@ -49,25 +51,14 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         protected IHttpActionResult CreateSuccessResult(object result)
         {
-            return Ok(new
-            {
-                status = "success",
-                result = result
-            });
+            return Ok(new { Status = "success", Result = result });
         }
 
         //---------------------------------------------------------------------
         protected IHttpActionResult CreateErrorResult(UCenterErrorCode code, string message)
         {
-            return Ok(new
-            {
-                status = "error",
-                error = new
-                {
-                    code = code,
-                    message = message
-                }
-            });
+            logger.Info($"[UCenterError] Code={code}, Message={message}");
+            return Ok(new { Status = "error", Error = new { Code = code, Message = message } });
         }
 
         //---------------------------------------------------------------------

@@ -56,7 +56,7 @@
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResourceType.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountVerificationInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppDataInfo.cs" />
+    <Compile Include="Models\UCenter.AppServer\AppAccountDataInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppInfo.cs" />
     <Compile Include="Models\Pingplusplus\ChargeInfo.cs" />
     <Compile Include="Models\Pingplusplus\Charge.cs" />
@@ -67,7 +67,7 @@
     <Compile Include="Models\UCenter.AppClient\AccountRequestResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppDataResponse.cs" />
+    <Compile Include="Models\UCenter.AppServer\AppAccountDataResponse.cs" />
     <Compile Include="Models\UCenter.AppServer\AppResponse.cs" />
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppVerifyAccountResponse.cs" />

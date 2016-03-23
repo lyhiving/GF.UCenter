@@ -34,7 +34,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_ReadData_And_WriteData_Test()
+        public async Task SDK_AppServer_ReadAccountData_And_WriteAccountData_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -45,23 +45,23 @@ namespace GF.UCenter.Test
             });
 
             string data = @"{ 'id': 1, 'name': 'abc'}";
-            var appData = new AppDataInfo()
+            var accountData = new AppAccountDataInfo()
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
                 AccountId = loginResponse.AccountId,
-                Data = data
+                Data = null
             };
 
-            await sClient.AppWriteDataAsync(appData);
+            await sClient.AppWriteAccountDataAsync(accountData);
 
             await Task.Delay(1000);
 
-            var result = await sClient.AppReadDataAsync(appData);
+            var result = await sClient.AppReadAccountDataAsync(accountData);
 
-            Assert.AreEqual(appData.AppId, result.AppId);
-            Assert.AreEqual(appData.AccountId, result.AccountId);
-            Assert.AreEqual(appData.Data, result.Data);
+            Assert.AreEqual(accountData.AppId, result.AppId);
+            Assert.AreEqual(accountData.AccountId, result.AccountId);
+            Assert.AreEqual(accountData.Data, result.Data);
         }
 
         [TestMethod]

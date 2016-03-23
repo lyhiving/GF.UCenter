@@ -8,59 +8,52 @@
         Success = 0,
 
         /// <summary>
-        /// 失败
+        /// 未处理的通用错误
         /// </summary>
-        Failed = 10,
+        Failed = 1000,
+        CouchBaseError = 1001,
+        HttpClientError = 1002,
 
         /// <summary>
-        /// 超时
+        /// 帐号不存在
         /// </summary>
-        Timeout = 20,
+        AccountNotExist = 2000,
 
         /// <summary>
         /// 注册，用户名重复
         /// </summary>
-        AccountRegisterFailedAlreadyExist = 100,
-
-        /// <summary>
-        /// 登陆，帐号不存在
-        /// </summary>
-        AccountLoginFailedNotExist = 200,
+        AccountRegisterFailedAlreadyExist,
 
         /// <summary>
         /// 登陆，密码错误
         /// </summary>
-        AccountLoginFailedNotMatch,
+        AccountLoginFailedPasswordNotMatch,
 
         /// <summary>
-        /// App验证登录，帐号不存在
+        /// 登陆，Token错误
         /// </summary>
-        AppLoginFailedNotExit = 300,
+        AccountLoginFailedTokenNotMatch,
+
+        AppNotExit = 3000,
 
         /// <summary>
         /// App登陆失败，secret错误
         /// </summary>
-        AppLoginFailedSecretError,
+        AppAuthFailedSecretNotMatch,
 
         /// <summary>
-        /// 读取AppData失败
+        /// App读取AccountData失败
         /// </summary>
-        LoginVerifyReadAppDataFailed,
+        AppReadAccountDataFailed,
 
         /// <summary>
-        /// 写入AppData失败
+        /// App写入AccountData失败
         /// </summary>
-        LoginVerifyWriteAppDataFailed,
+        AppWriteAccountDataFailed,
 
         /// <summary>
         /// 创建Charge失败
         /// </summary>
-        CreateChargeFailed = 400,
-
-        /// <summary>
-        /// 其他未处理的通用错误
-        /// </summary>
-        CouchBaseError = 600,
-        HttpClientError = 601,
+        PaymentCreateChargeFailed = 4000,
     }
 }

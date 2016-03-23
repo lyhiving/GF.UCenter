@@ -63,20 +63,20 @@ namespace GF.UCenter.Web.ApiControllers
             var result = new AppVerifyAccountResponse();
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
-            if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
+            if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist");
+                return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
 
             }
-            else if (appAuthResult == UCenterErrorCode.AppLoginFailedSecretError)
+            else if (appAuthResult == UCenterErrorCode.AppAuthFailedSecretNotMatch)
             {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
+                return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
             }
 
-            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId && a.Token == info.AccountToken);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedNotExist, "Account does not exist");
+                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedTokenNotMatch, "Account and token do not match");
             }
 
             result.AccountId = account.Id;
@@ -91,57 +91,69 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("readdata")]
-        public async Task<IHttpActionResult> AppReadData(AppDataInfo info)
+        public async Task<IHttpActionResult> AppReadAccountData(AppAccountDataInfo info)
         {
             logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
-            if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
+            if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist");
+                return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
             }
-            if (appAuthResult == UCenterErrorCode.AppLoginFailedSecretError)
+            if (appAuthResult == UCenterErrorCode.AppAuthFailedSecretNotMatch)
             {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
+                return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
             }
 
-            var result = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            if (account == null)
+            {
+                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+            }
 
-            var response = new AppDataResponse()
+            var accountData = await db.Bucket.FirstOrDefaultAsync<AppAccountDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+
+            var response = new AppAccountDataResponse()
             {
                 AppId = info.AppId,
                 AccountId = info.AccountId,
-                Data = result.Data
+                Data = accountData?.Data
             };
 
-            return CreateSuccessResult(result);
+            return CreateSuccessResult(response);
         }
 
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("writedata")]
-        public async Task<IHttpActionResult> AppWriteData(AppDataInfo info)
+        public async Task<IHttpActionResult> AppWriteAccountData(AppAccountDataInfo info)
         {
             logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
             var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
-            if (appAuthResult == UCenterErrorCode.AppLoginFailedNotExit)
+            if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedNotExit, "App does not exist");
+                return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
             }
-            if (appAuthResult == UCenterErrorCode.AppLoginFailedSecretError)
+            if (appAuthResult == UCenterErrorCode.AppAuthFailedSecretNotMatch)
             {
-                return CreateErrorResult(UCenterErrorCode.AppLoginFailedSecretError, "App secret incorrect");
+                return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
             }
 
-            var appData = await db.Bucket.FirstOrDefaultAsync<AppDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
-            if (appData != null)
+            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            if (account == null)
             {
-                appData.Data = info.Data;
+                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+            }
+
+            var accountData = await db.Bucket.FirstOrDefaultAsync<AppAccountDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            if (accountData != null)
+            {
+                accountData.Data = info.Data;
             }
             else
             {
-                appData = new AppDataEntity
+                accountData = new AppAccountDataEntity()
                 {
                     AppId = info.AppId,
                     AccountId = info.AccountId,
@@ -149,16 +161,16 @@ namespace GF.UCenter.Web.ApiControllers
                 };
             }
 
-            await db.Bucket.UpsertSlimAsync<AppDataEntity>(appData);
+            await db.Bucket.UpsertSlimAsync<AppAccountDataEntity>(accountData);
 
-            var response = new AppDataResponse()
+            var response = new AppAccountDataResponse()
             {
                 AppId = info.AppId,
                 AccountId = info.AccountId,
-                Data = appData.Data
+                Data = accountData.Data
             };
 
-            return CreateSuccessResult(appData);
+            return CreateSuccessResult(response);
         }
 
         //---------------------------------------------------------------------
@@ -167,11 +179,11 @@ namespace GF.UCenter.Web.ApiControllers
             var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == appId);
             if (app == null)
             {
-                return UCenterErrorCode.AppLoginFailedNotExit;
+                return UCenterErrorCode.AppNotExit;
             }
             if (appSecret != app.AppSecret)
             {
-                return UCenterErrorCode.AppLoginFailedSecretError;
+                return UCenterErrorCode.AppAuthFailedSecretNotMatch;
             }
 
             return UCenterErrorCode.Success;

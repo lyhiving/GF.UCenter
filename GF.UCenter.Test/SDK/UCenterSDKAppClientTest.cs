@@ -49,7 +49,7 @@ namespace GF.UCenter.Test
             }
             catch (UCenterException ex)
             {
-                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedNotMatch);
+                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountNotExist);
             }
         }
 
@@ -153,7 +153,7 @@ namespace GF.UCenter.Test
             }
             catch (UCenterException ex)
             {
-                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedNotMatch);
+                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
         }
 

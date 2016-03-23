@@ -35,18 +35,18 @@ namespace GF.UCenter.SDK.AppServer
         }
 
         //---------------------------------------------------------------------
-        public async Task<AppDataResponse> AppReadDataAsync(AppDataInfo info)
+        public async Task<AppAccountDataResponse> AppReadAccountDataAsync(AppAccountDataInfo info)
         {
             string url = GenerateApiEndpoint("app", "readdata");
-            var response = await httpClient.SendAsyncWithException<AppDataInfo, AppDataResponse>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AppAccountDataInfo, AppAccountDataResponse>(HttpMethod.Post, url, info);
             return response;
         }
 
         //---------------------------------------------------------------------
-        public async Task<AppDataResponse> AppWriteDataAsync(AppDataInfo info)
+        public async Task<AppAccountDataResponse> AppWriteAccountDataAsync(AppAccountDataInfo info)
         {
             string url = GenerateApiEndpoint("app", "writedata");
-            var response = await httpClient.SendAsyncWithException<AppDataInfo, AppDataResponse>(HttpMethod.Post, url, info);
+            var response = await httpClient.SendAsyncWithException<AppAccountDataInfo, AppAccountDataResponse>(HttpMethod.Post, url, info);
             return response;
         }
 

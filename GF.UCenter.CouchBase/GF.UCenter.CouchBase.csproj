@@ -63,7 +63,7 @@
     <Compile Include="Database\CouchQueryTranslator.cs" />
     <Compile Include="Entities\AccountEntity.cs" />
     <Compile Include="Entities\AccountResourceEntity.cs" />
-    <Compile Include="Entities\AppDataEntity.cs" />
+    <Compile Include="Entities\AppAccountDataEntity.cs" />
     <Compile Include="Entities\AppEntity.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\LoginRecordEntity.cs" />
