@@ -3,8 +3,8 @@
 namespace GF.UCenter.CouchBase
 {
     [Serializable]
-    [DocumentType("AppData")]
-    public class AppDataEntity : BaseEntity<AppDataEntity>
+    [DocumentType("AppAccountData")]
+    public class AppAccountDataEntity : BaseEntity<AppAccountDataEntity>
     {
         public string AppId;
         public string AccountId;

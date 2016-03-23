@@ -70,7 +70,7 @@ namespace GF.UCenter.Web.ApiControllers
             catch (Exception ex)
             {
                 logger.Error(ex, "创建Charge失败");
-                return CreateErrorResult(UCenterErrorCode.CreateChargeFailed, ex.Message);
+                return CreateErrorResult(UCenterErrorCode.PaymentCreateChargeFailed, ex.Message);
             }
         }
 

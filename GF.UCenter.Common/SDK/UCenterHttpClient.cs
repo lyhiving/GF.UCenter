@@ -46,7 +46,7 @@ namespace GF.UCenter.Common
                 {
                     throw UCenterExceptionManager.FromError(new UCenterError
                     {
-                        ErrorCode = UCenterErrorCode.AccountLoginFailedNotExist,
+                        ErrorCode = UCenterErrorCode.Failed,
                         Message = "Error occurred when sending http request"
                     });
                 }
