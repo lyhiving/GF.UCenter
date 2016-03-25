@@ -42,8 +42,7 @@ namespace GF.UCenter.Test
             Assert.AreEqual(registerResponse.Name, info.Name);
             Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
             Assert.AreEqual(registerResponse.Sex, info.Sex);
-
-            await Task.Delay(1000);
+            
             return registerResponse;
         }
     }

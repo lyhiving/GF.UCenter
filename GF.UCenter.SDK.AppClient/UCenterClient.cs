@@ -1,4 +1,7 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using GF.UCenter.Common;
 using GF.UCenter.Common.Portable;
@@ -50,10 +53,10 @@ namespace GF.UCenter.SDK.AppClient
             return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);
         }
 
-        public async Task<AccountResponse> AccountUploadProfileImagesync(AccountUploadProfileImageInfo info)
+        public async Task<AccountUploadProfileImageResponse> AccountUploadProfileImagesync(AccountUploadProfileImageInfo info)
         {
             string url = this.GenerateApiEndpoint("account", "upload");
-            return await httpClient.SendAsyncWithException<AccountUploadProfileImageInfo, AccountResponse>(HttpMethod.Post, url, info);
+            return await httpClient.SendMutipleContent<AccountUploadProfileImageInfo, AccountUploadProfileImageResponse>(HttpMethod.Post, url, info);
         }
 
         private string GenerateApiEndpoint(string controller, string route, string queryString = null)

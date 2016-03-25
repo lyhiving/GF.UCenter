@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using GF.UCenter.Common.Portable;
 
@@ -49,6 +51,29 @@ namespace GF.UCenter.Common
                         ErrorCode = UCenterErrorCode.Failed,
                         Message = "Error occurred when sending http request"
                     });
+                }
+            }
+        }
+
+        public async Task<TResult> SendMutipleContent<TContent, TResult>(HttpMethod method, string url, TContent content)
+        {
+            using (var client = new HttpClient())
+            {
+                using (var muLtipart = new MultipartFormDataContent())
+                {
+                    muLtipart.Add(new ObjectContent<TContent>(content, new JsonMediaTypeFormatter()));
+
+                    string fileName = @"c:\git\UCenter\src\GF.UCenter.Test\TestData\github.png";
+                    var fileContent = new ByteArrayContent(File.ReadAllBytes(fileName));
+                    fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                    {
+                        FileName = "Foo.txt"
+                    };
+                    muLtipart.Add(fileContent);
+
+                    var response = await client.PostAsync(url, muLtipart);
+                    var result = await response.Content.ReadAsAsync<UCenterResponse<TResult>>();
+                    return result.Content;
                 }
             }
         }

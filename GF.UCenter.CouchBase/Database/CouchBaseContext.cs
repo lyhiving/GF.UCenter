@@ -96,21 +96,5 @@ namespace GF.UCenter.CouchBase
                 return this.CreateCluster();
             }
         }
-
-        public IBucket Accounts
-        {
-            get
-            {
-                return this.GetBucket<AccountEntity>();
-            }
-        }
-
-        public IBucket LoginRecords
-        {
-            get
-            {
-                return this.GetBucket<LoginRecordEntity>();
-            }
-        }
     }
 }

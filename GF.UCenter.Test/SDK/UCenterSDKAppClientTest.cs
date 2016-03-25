@@ -38,9 +38,7 @@ namespace GF.UCenter.Test
             try
             {
                 var registerResponse = await CreateTestAccount();
-
-                await Task.Delay(1000);
-
+                
                 await cClient.AccountLoginAsync(new AccountLoginInfo()
                 {
                     AccountName = registerResponse.AccountName,
@@ -49,7 +47,7 @@ namespace GF.UCenter.Test
             }
             catch (UCenterException ex)
             {
-                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountNotExist);
+                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
         }
 
@@ -71,9 +69,7 @@ namespace GF.UCenter.Test
                 };
 
                 await cClient.AccountRegisterAsync(info);
-
-                await Task.Delay(1000);
-
+                
                 await cClient.AccountRegisterAsync(info);
                 Assert.Fail();
             }
@@ -106,9 +102,7 @@ namespace GF.UCenter.Test
                 IdentityNum = GenerateRandomString(),
                 Sex = Sex.Female
             };
-
-            await Task.Delay(1000);
-
+            
             var convertResponse = await cClient.AccountConvertAsync(convertInfo);
 
             Assert.IsNotNull(convertResponse.AccountId);
@@ -126,9 +120,7 @@ namespace GF.UCenter.Test
         public async Task SDK_AppClient_Reset_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
-
-            await Task.Delay(1000);
-
+            
             var resetInfo = new AccountResetPasswordInfo()
             {
                 AccountId = registerResponse.AccountId,
@@ -143,9 +135,7 @@ namespace GF.UCenter.Test
                 AccountName = registerResponse.AccountName,
                 Password = ValidPassword
             };
-
-            await Task.Delay(1000);
-
+            
             try
             {
                 await cClient.AccountLoginAsync(loginInfo);
@@ -167,7 +157,9 @@ namespace GF.UCenter.Test
                 AccountId = registerResponse.AccountId
             };
 
-            var response = await cClient.AccountUploadProfileImagesync(accountUploadProfileImageInfo);
+            var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(accountUploadProfileImageInfo);
+            Assert.IsNotNull(uploadProfileResponse.AccountId);
+            Assert.IsNotNull(uploadProfileResponse.ProfileImage);
         }
     }
 }

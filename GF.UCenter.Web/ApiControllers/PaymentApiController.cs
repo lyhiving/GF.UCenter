@@ -22,9 +22,6 @@ namespace GF.UCenter.Web.ApiControllers
     public class PaymentApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------
-        private Logger logger = LogManager.GetCurrentClassLogger();
-
-        //---------------------------------------------------------------------
         [ImportingConstructor]
         public PaymentApiController(CouchBaseContext db)
             : base(db)

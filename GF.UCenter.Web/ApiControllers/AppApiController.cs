@@ -16,9 +16,6 @@ namespace GF.UCenter.Web.ApiControllers
     public class AppApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------
-        private Logger logger = LogManager.GetCurrentClassLogger();
-
-        //---------------------------------------------------------------------
         [ImportingConstructor]
         public AppApiController(CouchBaseContext db)
             : base(db)
@@ -32,13 +29,13 @@ namespace GF.UCenter.Web.ApiControllers
         {
             logger.Info("AppServer请求创建App\nAppId={0}", info.AppId);
 
-            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == info.AppId);
+            var app = await this.db.Bucket.GetByEntityIdSlimAsync<AppEntity>(info.AppId, throwIfFailed: false);
 
             if (app == null)
             {
                 var appEntity = new AppEntity()
                 {
-                    AppId = info.AppId,
+                    Id = info.AppId,
                     AppSecret = info.AppSecret
                 };
 
@@ -56,13 +53,13 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("verifyaccount")]
-        public async Task<IHttpActionResult> AppVerifyAccount(AppVerifyAccountInfo info)
+        public async Task<IHttpActionResult> VerifyAccount(AppVerifyAccountInfo info)
         {
             logger.Info($"AppServer请求验证Account\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
             var result = new AppVerifyAccountResponse();
 
-            var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
+            var appAuthResult = await VerifyApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
                 return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
@@ -73,8 +70,8 @@ namespace GF.UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
             }
 
-            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId && a.Token == info.AccountToken);
-            if (account == null)
+            var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId, throwIfFailed: false);
+            if (account == null || account.Token != info.AccountToken)
             {
                 return CreateErrorResult(UCenterErrorCode.AccountLoginFailedTokenNotMatch, "Account and token do not match");
             }
@@ -91,11 +88,11 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("readdata")]
-        public async Task<IHttpActionResult> AppReadAccountData(AppAccountDataInfo info)
+        public async Task<IHttpActionResult> ReadAppAccountData(AppAccountDataInfo info)
         {
             logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
-            var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
+            var appAuthResult = await VerifyApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
                 return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
@@ -105,13 +102,14 @@ namespace GF.UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
             }
 
-            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId, throwIfFailed: false);
             if (account == null)
             {
                 return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
 
-            var accountData = await db.Bucket.FirstOrDefaultAsync<AppAccountDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            string dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
+            var accountData = await db.Bucket.GetByEntityIdSlimAsync<AppAccountDataEntity>(dataId);
 
             var response = new AppAccountDataResponse()
             {
@@ -126,11 +124,11 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("writedata")]
-        public async Task<IHttpActionResult> AppWriteAccountData(AppAccountDataInfo info)
+        public async Task<IHttpActionResult> WriteAppAccountData(AppAccountDataInfo info)
         {
             logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
 
-            var appAuthResult = await AuthApp(info.AppId, info.AppSecret);
+            var appAuthResult = await VerifyApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
                 return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
@@ -140,13 +138,14 @@ namespace GF.UCenter.Web.ApiControllers
                 return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
             }
 
-            var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountId == info.AccountId);
+            var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
             if (account == null)
             {
                 return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
 
-            var accountData = await db.Bucket.FirstOrDefaultAsync<AppAccountDataEntity>(d => d.AppId == info.AppId && d.AccountId == info.AccountId);
+            string dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
+            var accountData = await db.Bucket.GetByEntityIdSlimAsync<AppAccountDataEntity>(dataId);
             if (accountData != null)
             {
                 accountData.Data = info.Data;
@@ -155,6 +154,7 @@ namespace GF.UCenter.Web.ApiControllers
             {
                 accountData = new AppAccountDataEntity()
                 {
+                    Id = dataId,
                     AppId = info.AppId,
                     AccountId = info.AccountId,
                     Data = info.Data
@@ -174,9 +174,9 @@ namespace GF.UCenter.Web.ApiControllers
         }
 
         //---------------------------------------------------------------------
-        private async Task<UCenterErrorCode> AuthApp(string appId, string appSecret)
+        private async Task<UCenterErrorCode> VerifyApp(string appId, string appSecret)
         {
-            var app = await this.db.Bucket.FirstOrDefaultAsync<AppEntity>(a => a.AppId == appId);
+            var app = await this.db.Bucket.GetByEntityIdSlimAsync<AppEntity>(appId);
             if (app == null)
             {
                 return UCenterErrorCode.AppNotExit;
@@ -187,6 +187,11 @@ namespace GF.UCenter.Web.ApiControllers
             }
 
             return UCenterErrorCode.Success;
+        }
+
+        private string CreateAppAccountDataId(string appId, string accountId)
+        {
+            return $"{appId}##{accountId}";
         }
     }
 }

@@ -6,7 +6,6 @@ namespace GF.UCenter.CouchBase
     [DocumentType("Account")]
     public class AccountEntity : BaseEntity<AccountEntity>
     {
-        public string AccountId { get; set; }
         public string AccountName { get; set; }
         public string Password { get; set; }
         public string SuperPassword { get; set; }

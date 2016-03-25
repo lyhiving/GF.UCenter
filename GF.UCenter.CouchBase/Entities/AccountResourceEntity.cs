@@ -17,13 +17,13 @@ namespace GF.UCenter.CouchBase
                 case AccountResourceType.None:
                     break;
                 case AccountResourceType.AccountName:
-                    this.Id = $"{pointerType}-{account.AccountName}";
+                    this.Id = GenerateResourceId(AccountResourceType.AccountName, account.AccountName);
                     break;
                 case AccountResourceType.Phone:
-                    this.Id = $"{pointerType}-{account.PhoneNum}";
+                    this.Id = GenerateResourceId(AccountResourceType.Phone, account.PhoneNum);
                     break;
                 case AccountResourceType.Email:
-                    this.Id = $"{pointerType}-{account.Email}";
+                    this.Id = GenerateResourceId(AccountResourceType.Email, account.Email);
                     break;
                 default:
                     break;
@@ -36,5 +36,10 @@ namespace GF.UCenter.CouchBase
         public string AccountId { get; set; }
 
         public AccountResourceType PointerType { get; set; }
+
+        public static string GenerateResourceId(AccountResourceType resourceType, string postfixId)
+        {
+            return $"{resourceType}-{postfixId}";
+        }
     }
 }

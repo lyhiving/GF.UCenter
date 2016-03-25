@@ -107,6 +107,13 @@ namespace GF.UCenter.CouchBase
             return null;
         }
 
+        public static Task<TEntity> GetByEntityIdSlimAsync<TEntity>(this IBucket bucket, string entityId, bool throwIfFailed = false) where TEntity : BaseEntity<TEntity>, IBaseEntity
+        {
+            var key = BaseEntity<TEntity>.GetDocumentId(entityId);
+
+            return bucket.GetSlimAsync<TEntity>(key, throwIfFailed);
+        }
+
         public async static Task<TEntity> FirstOrDefaultAsync<TEntity>(this IBucket bucket, Expression<Func<TEntity, bool>> expression, bool throwIfFailed = true) where TEntity : class, IBaseEntity
         {
             var result = await bucket.QuerySlimAsync(expression, throwIfFailed);

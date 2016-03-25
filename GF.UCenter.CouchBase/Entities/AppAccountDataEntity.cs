@@ -6,8 +6,10 @@ namespace GF.UCenter.CouchBase
     [DocumentType("AppAccountData")]
     public class AppAccountDataEntity : BaseEntity<AppAccountDataEntity>
     {
-        public string AppId;
-        public string AccountId;
-        public string Data;
+        public string AppId { get; set; }
+
+        public string AccountId { get; set; }
+
+        public string Data { get; set; }
     }
 }

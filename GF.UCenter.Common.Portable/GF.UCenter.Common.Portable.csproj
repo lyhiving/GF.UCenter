@@ -48,6 +48,7 @@
     <Compile Include="Models\Pingplusplus\ChargeResponse.cs" />
     <Compile Include="Models\Pingplusplus\Refund.cs" />
     <Compile Include="Models\Pingplusplus\RefundList.cs" />
+    <Compile Include="Models\UCenter.AppClient\AccountUploadProfileImageResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountUploadProfileImageInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountConvertInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountLoginInfo.cs" />
@@ -55,7 +56,6 @@
     <Compile Include="Models\UCenter.AppClient\AccountConvertResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResourceType.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountVerificationInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppAccountDataInfo.cs" />
     <Compile Include="Models\UCenter.AppServer\AppInfo.cs" />
     <Compile Include="Models\Pingplusplus\ChargeInfo.cs" />

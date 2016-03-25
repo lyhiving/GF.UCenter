@@ -8,6 +8,8 @@ namespace GF.UCenter.CouchBase
     {
         public string AccountName { get; set; }
 
+        public string AccountId { get; set; }
+
         public DateTime LoginTime { get; set; }
 
         public string ClientIp { get; set; }

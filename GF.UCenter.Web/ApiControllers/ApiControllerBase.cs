@@ -15,7 +15,7 @@ namespace GF.UCenter.Web.ApiControllers
     {
         //---------------------------------------------------------------------
         protected readonly CouchBaseContext db;
-        private Logger logger = LogManager.GetCurrentClassLogger();
+        protected Logger logger = LogManager.GetCurrentClassLogger();
 
         //---------------------------------------------------------------------
         [ImportingConstructor]

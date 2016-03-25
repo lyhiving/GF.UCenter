@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Threading;
 using GF.UCenter.Common.Portable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -55,8 +56,6 @@ namespace GF.UCenter.Test
 
             await sClient.AppWriteAccountDataAsync(accountData);
 
-            await Task.Delay(1000);
-
             var result = await sClient.AppReadAccountDataAsync(accountData);
 
             Assert.AreEqual(accountData.AppId, result.AppId);
@@ -101,10 +100,10 @@ namespace GF.UCenter.Test
         public void Initialize()
         {
             // use public async void Initialize() will never triggered
-            InitlizazeAsync();
+            this.InitlizazeAsync().Wait();
         }
 
-        private async void InitlizazeAsync()
+        private async Task InitlizazeAsync()
         {
             var appInfo = new AppInfo()
             {

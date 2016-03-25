@@ -39,9 +39,19 @@ namespace GF.UCenter.CouchBase
         {
             return new Document<TEntity>
             {
-                Id = this.Id,
+                Id = GetDocumentId(this.Id),
                 Content = this as TEntity
             };
+        }
+
+        public static string GetDocumentId(TEntity entity)
+        {
+            return GetDocumentId(entity.Id);
+        }
+
+        public static string GetDocumentId(string entityId)
+        {
+            return $"{DocumentType}_{entityId}";
         }
     }
 
