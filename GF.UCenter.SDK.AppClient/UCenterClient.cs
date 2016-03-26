@@ -53,10 +53,10 @@ namespace GF.UCenter.SDK.AppClient
             return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);
         }
 
-        public async Task<AccountUploadProfileImageResponse> AccountUploadProfileImagesync(AccountUploadProfileImageInfo info)
+        public async Task<AccountUploadProfileImageResponse> AccountUploadProfileImagesync(AccountUploadProfileImageInfo info, string attachmentFileFullPath)
         {
             string url = this.GenerateApiEndpoint("account", "upload");
-            return await httpClient.SendMutipleContent<AccountUploadProfileImageInfo, AccountUploadProfileImageResponse>(HttpMethod.Post, url, info);
+            return await httpClient.SendMutipleContent<AccountUploadProfileImageInfo, AccountUploadProfileImageResponse>(HttpMethod.Post, url, info, attachmentFileFullPath);
         }
 
         private string GenerateApiEndpoint(string controller, string route, string queryString = null)

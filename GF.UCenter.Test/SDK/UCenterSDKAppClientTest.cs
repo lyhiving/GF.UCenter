@@ -156,8 +156,8 @@ namespace GF.UCenter.Test
             {
                 AccountId = registerResponse.AccountId
             };
-
-            var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(accountUploadProfileImageInfo);
+            string testFileForUpload = @"TestData\github.png";
+            var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(accountUploadProfileImageInfo, testFileForUpload);
             Assert.IsNotNull(uploadProfileResponse.AccountId);
             Assert.IsNotNull(uploadProfileResponse.ProfileImage);
         }

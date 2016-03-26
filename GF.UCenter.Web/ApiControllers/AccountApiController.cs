@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -8,6 +10,9 @@ using Couchbase;
 using GF.UCenter.Common;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
+using Microsoft.WindowsAzure.Storage;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NLog;
 
 namespace GF.UCenter.Web.ApiControllers
@@ -238,51 +243,90 @@ namespace GF.UCenter.Web.ApiControllers
         }
 
         //---------------------------------------------------------------------
+        //[HttpPost]
+        //[Route("upload1")]
+        //public async Task<HttpResponseMessage> PostFormData()
+        //{
+        //    if (!Request.Content.IsMimeMultipartContent())
+        //    {
+        //        throw new Exception("nOT SUPPORT");
+        //    }
+
+        //    logger.Info($"AppClient请求上传图片AccountId=475201a3-e9c7-4659-9cec-a3e31396ce83");
+
+        //    var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>("475201a3-e9c7-4659-9cec-a3e31396ce83");
+        //    if (account == null)
+        //    {
+        //        throw new Exception("nOT SUPPORT");
+        //        //return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+        //    }
+
+        //    string fileName = $"profile_l_475201a3-e9c7-4659-9cec-a3e31396ce83.jpg";
+        //    var provider = new BlobStorageMultipartStreamProvider(fileName);
+        //    logger.Info("Uploading raw profile image to azure storage");
+        //    await Request.Content.ReadAsMultipartAsync(provider);
+        //    logger.Info("Uploading completed");
+
+        //    account.ProfileImage = provider.BlobUrl;
+        //    await this.db.Bucket.UpsertSlimAsync<AccountEntity>(account);
+        //    await this.RecordLogin(account, UCenterErrorCode.Success, "Profile image uploaded successfully.");
+        //    //return CreateSuccessResult(ToResponse<AccountUploadProfileImageResponse>(account));
+
+        //    //string root = HttpContext.Current.Server.MapPath("~/App_Data");
+        //    //var provider = new MultipartFormDataStreamProvider(root);
+
+        //    // Read the form data.
+        //    await Request.Content.ReadAsMultipartAsync(provider);
+
+        //    //use provider.FileData to get the file
+        //    //use provider.FormData to get FeedItemParams. you have to deserialize the JSON yourself
+
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
+
         [HttpPost]
         [Route("upload")]
         public async Task<IHttpActionResult> UploadProfileImage()
-        //public async Task<IHttpActionResult> UploadProfileImage([FromBody]AccountUploadProfileImageInfo info)
         {
-            logger.Info($"AppClient请求上传图片AccountId=475201a3-e9c7-4659-9cec-a3e31396ce83");
 
-            var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>("475201a3-e9c7-4659-9cec-a3e31396ce83");
+            if (!Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            var provider = await Request.Content.ReadAsMultipartAsync<InMemoryMultipartFormDataStreamProvider>(new InMemoryMultipartFormDataStreamProvider());
+
+            var formData = provider.FormData;
+            var info = JsonConvert.DeserializeObject<AccountUploadProfileImageInfo>(formData["json"]);
+
+            logger.Info($"AppClient请求上传图片AccountId={info.AccountId}");
+
+            IList<HttpContent> files = provider.Files;
+
+            HttpContent file = files[0];
+            var stream = await file.ReadAsStreamAsync();
+
+            var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
             if (account == null)
             {
                 return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
             }
 
-            string fileName = $"profile_l_475201a3-e9c7-4659-9cec-a3e31396ce83.jpg";
-            var provider = new BlobStorageMultipartStreamProvider(fileName);
             logger.Info("Uploading raw profile image to azure storage");
-            await Request.Content.ReadAsMultipartAsync(provider);
-            logger.Info("Uploading completed");
+            string blobName = $"profile_l_{info.AccountId}.jpg";
+            string connectionString = @"DefaultEndpointsProtocol=http;AccountName=ucstormagewestus;AccountKey=a4ahcg9gTTdvw6GLKAir+qp/ThVlASxcUjjwgksXqge39z1v7NL9LmIHzvRpRRsXEGQNVQM2vLNzhEGGj5HbDw==";
+            string container = "images";
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var blobContainer = blobClient.GetContainerReference(container);
+            var blob = blobContainer.GetBlockBlobReference(blobName);
+            await blob.UploadFromStreamAsync(stream);
+            logger.Info($"Uploading successfully, url = {blob.Uri.AbsoluteUri}");
 
-            account.ProfileImage = provider.BlobUrl;
+            account.ProfileImage = blob.Uri.AbsoluteUri;
             await this.db.Bucket.UpsertSlimAsync<AccountEntity>(account);
             await this.RecordLogin(account, UCenterErrorCode.Success, "Profile image uploaded successfully.");
             return CreateSuccessResult(ToResponse<AccountUploadProfileImageResponse>(account));
-        }
-
-        [HttpPost]
-        [Route("upload1")]
-        public async Task<IHttpActionResult> UploadTest()
-        {
-            logger.Info($"AppClient请求上传图片");
-
-            string fileName = $"profile_l.jpg";
-            try
-            {
-                var provider = new BlobStorageMultipartStreamProvider(fileName);
-                logger.Info("Uploading raw profile image to azure storage");
-                await Request.Content.ReadAsMultipartAsync(provider);
-                logger.Info($"Uploading completed, {provider.BlobUrl}");
-            }
-            catch (Exception ex)
-            {
-                CreateErrorResult(UCenterErrorCode.Failed, ex.Message);
-            }
-
-            return CreateSuccessResult("O");
         }
 
         //---------------------------------------------------------------------

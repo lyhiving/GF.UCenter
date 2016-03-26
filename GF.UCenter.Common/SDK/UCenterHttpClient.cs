@@ -55,23 +55,22 @@ namespace GF.UCenter.Common
             }
         }
 
-        public async Task<TResult> SendMutipleContent<TContent, TResult>(HttpMethod method, string url, TContent content)
+        public async Task<TResult> SendMutipleContent<TContent, TResult>(HttpMethod method, string url, TContent content, string attachmentFileFullPath)
         {
             using (var client = new HttpClient())
             {
-                using (var muLtipart = new MultipartFormDataContent())
+                using (var multipart = new MultipartFormDataContent())
                 {
-                    muLtipart.Add(new ObjectContent<TContent>(content, new JsonMediaTypeFormatter()));
+                    multipart.Add(new ObjectContent<TContent>(content, new JsonMediaTypeFormatter()), "json");
 
-                    string fileName = @"c:\git\UCenter\src\GF.UCenter.Test\TestData\github.png";
-                    var fileContent = new ByteArrayContent(File.ReadAllBytes(fileName));
+                    var fileContent = new ByteArrayContent(File.ReadAllBytes(attachmentFileFullPath));
                     fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
                     {
                         FileName = "Foo.txt"
                     };
-                    muLtipart.Add(fileContent);
+                    multipart.Add(fileContent, "binary");
 
-                    var response = await client.PostAsync(url, muLtipart);
+                    var response = await client.PostAsync(url, multipart);
                     var result = await response.Content.ReadAsAsync<UCenterResponse<TResult>>();
                     return result.Content;
                 }
