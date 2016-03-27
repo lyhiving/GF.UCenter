@@ -23,7 +23,7 @@ namespace GF.UCenter.Web.ApiControllers
     {
         //---------------------------------------------------------------------
         [ImportingConstructor]
-        public PaymentApiController(CouchBaseContext db)
+        public PaymentApiController(CouchBaseContext db, Settings settings)
             : base(db)
         {
         }

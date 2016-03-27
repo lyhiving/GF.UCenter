@@ -38,5 +38,10 @@ namespace GF.UCenter.Common
 
         [DefaultValue(12000)]
         public int PoolSendTimeout { get; set; }
+
+        public string UCStorageConnectionString { get; set; }
+
+        [DefaultValue("images")]
+        public string ImageContainerName { get; set; }
     }
 }

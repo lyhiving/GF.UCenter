@@ -53,10 +53,21 @@ namespace GF.UCenter.SDK.AppClient
             return await httpClient.SendAsyncWithException<AccountResetPasswordInfo, AccountResetPasswordResponse>(HttpMethod.Post, url, info);
         }
 
-        public async Task<AccountUploadProfileImageResponse> AccountUploadProfileImagesync(AccountUploadProfileImageInfo info, string attachmentFileFullPath)
+        public async Task<AccountUploadProfileImageResponse> AccountUploadProfileImagesync(string accountId, string imagePath)
         {
-            string url = this.GenerateApiEndpoint("account", "upload");
-            return await httpClient.SendMutipleContent<AccountUploadProfileImageInfo, AccountUploadProfileImageResponse>(HttpMethod.Post, url, info, attachmentFileFullPath);
+            const int bufferSize = 1024 * 1024;
+            using (var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize, useAsync: true))
+            {
+                return await this.AccountUploadProfileImagesync(accountId, stream);
+            }
+        }
+	
+        public async Task<AccountUploadProfileImageResponse> AccountUploadProfileImagesync(string accountId, Stream imageStream)
+        {
+            string url = this.GenerateApiEndpoint("account", $"upload/{accountId}");
+            var content = new StreamContent(imageStream);
+            content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+            return await httpClient.SendAsyncWithException<HttpContent, AccountUploadProfileImageResponse>(HttpMethod.Post, url, content);
         }
 
         private string GenerateApiEndpoint(string controller, string route, string queryString = null)

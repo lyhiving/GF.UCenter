@@ -10,14 +10,29 @@ namespace GF.UCenter.Common
 {
     public class UCenterHttpClient
     {
-        public async Task<TResponse> SendAsync<TContent, TResponse>(HttpMethod method, string url, TContent content)
+        public Task<TResponse> SendAsync<TContent, TResponse>(HttpMethod method, string url, TContent content)
+        {
+            HttpContent httpContent = null;
+            if (content is HttpContent)
+            {
+                httpContent = content as HttpContent;
+            }
+            else
+            {
+                httpContent = new ObjectContent<TContent>(content, new JsonMediaTypeFormatter());
+            }
+
+            return this.SentAsync<TResponse>(method, url, httpContent);
+        }
+
+        public async Task<TResponse> SentAsync<TResponse>(HttpMethod method, string url, HttpContent content)
         {
             using (var httpClient = CreateHttpClient())
             {
                 var request = new HttpRequestMessage(method, new Uri(url));
                 request.Headers.Clear();
                 request.Headers.ExpectContinue = false;
-                request.Content = new ObjectContent<TContent>(content, new JsonMediaTypeFormatter());
+                request.Content = content;
 
                 var response = await httpClient.SendAsync(request);
 
@@ -51,28 +66,6 @@ namespace GF.UCenter.Common
                         ErrorCode = UCenterErrorCode.Failed,
                         Message = "Error occurred when sending http request"
                     });
-                }
-            }
-        }
-
-        public async Task<TResult> SendMutipleContent<TContent, TResult>(HttpMethod method, string url, TContent content, string attachmentFileFullPath)
-        {
-            using (var client = new HttpClient())
-            {
-                using (var multipart = new MultipartFormDataContent())
-                {
-                    multipart.Add(new ObjectContent<TContent>(content, new JsonMediaTypeFormatter()), "json");
-
-                    var fileContent = new ByteArrayContent(File.ReadAllBytes(attachmentFileFullPath));
-                    fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                    {
-                        FileName = "Foo.txt"
-                    };
-                    multipart.Add(fileContent, "binary");
-
-                    var response = await client.PostAsync(url, multipart);
-                    var result = await response.Content.ReadAsAsync<UCenterResponse<TResult>>();
-                    return result.Content;
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.ServiceModel.Channels;
 using System.Web;
 using System.Web.Http;
 using Couchbase;
+using GF.UCenter.Common;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
 using NLog;
@@ -15,7 +16,7 @@ namespace GF.UCenter.Web.ApiControllers
     {
         //---------------------------------------------------------------------
         protected readonly CouchBaseContext db;
-        protected Logger logger = LogManager.GetCurrentClassLogger();
+        protected readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         //---------------------------------------------------------------------
         [ImportingConstructor]

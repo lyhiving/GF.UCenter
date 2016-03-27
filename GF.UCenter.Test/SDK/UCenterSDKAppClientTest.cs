@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.SDK.AppClient;
@@ -9,6 +10,7 @@ namespace GF.UCenter.Test
     [TestClass]
     public class UCenterSDKAppClientTest : UCenterSDKTestBase
     {
+        private int bufferSize;
 
         [TestMethod]
         public async Task SDK_AppClient_Register_And_Login_Test()
@@ -33,50 +35,37 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
+        [UCExceptionExpected(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
         public async Task SDK_AppClient_Login_Incorrect_Password_Test()
         {
-            try
+            var registerResponse = await CreateTestAccount();
+
+            await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
-                var registerResponse = await CreateTestAccount();
-                
-                await cClient.AccountLoginAsync(new AccountLoginInfo()
-                {
-                    AccountName = registerResponse.AccountName,
-                    Password = ""
-                });
-            }
-            catch (UCenterException ex)
-            {
-                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
-            }
+                AccountName = registerResponse.AccountName,
+                Password = ""
+            });
         }
 
         [TestMethod]
+        [UCExceptionExpected(UCenterErrorCode.AccountRegisterFailedAlreadyExist)]
         public async Task SDK_AppClient_Register_Twice_Test()
         {
-            try
+            var info = new AccountRegisterInfo()
             {
-                var info = new AccountRegisterInfo()
-                {
-                    AccountName = GenerateRandomString(),
-                    Password = ValidPassword,
-                    SuperPassword = ValidPassword,
-                    Name = GenerateRandomString(),
-                    IdentityNum = GenerateRandomString(),
-                    PhoneNum = GenerateRandomString(),
-                    Email = GenerateRandomString(),
-                    Sex = Sex.Female
-                };
+                AccountName = GenerateRandomString(),
+                Password = ValidPassword,
+                SuperPassword = ValidPassword,
+                Name = GenerateRandomString(),
+                IdentityNum = GenerateRandomString(),
+                PhoneNum = GenerateRandomString(),
+                Email = GenerateRandomString(),
+                Sex = Sex.Female
+            };
 
-                await cClient.AccountRegisterAsync(info);
-                
-                await cClient.AccountRegisterAsync(info);
-                Assert.Fail();
-            }
-            catch (UCenterException ex)
-            {
-                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountRegisterFailedAlreadyExist);
-            }
+            await cClient.AccountRegisterAsync(info);
+
+            await cClient.AccountRegisterAsync(info);
         }
 
         [TestMethod]
@@ -102,7 +91,7 @@ namespace GF.UCenter.Test
                 IdentityNum = GenerateRandomString(),
                 Sex = Sex.Female
             };
-            
+
             var convertResponse = await cClient.AccountConvertAsync(convertInfo);
 
             Assert.IsNotNull(convertResponse.AccountId);
@@ -117,10 +106,11 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
+        [UCExceptionExpected(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
         public async Task SDK_AppClient_Reset_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
-            
+
             var resetInfo = new AccountResetPasswordInfo()
             {
                 AccountId = registerResponse.AccountId,
@@ -135,31 +125,45 @@ namespace GF.UCenter.Test
                 AccountName = registerResponse.AccountName,
                 Password = ValidPassword
             };
-            
-            try
-            {
-                await cClient.AccountLoginAsync(loginInfo);
-                Assert.Fail();
-            }
-            catch (UCenterException ex)
-            {
-                Assert.AreEqual(ex.ErrorCode, UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
-            }
+
+            await cClient.AccountLoginAsync(loginInfo);
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Upload_Profile_Image_Test()
+        public async Task SDK_AppClient_Upload_Profile_Image_By_Path_Test()
         {
             var registerResponse = await CreateTestAccount();
 
-            var accountUploadProfileImageInfo = new AccountUploadProfileImageInfo()
-            {
-                AccountId = registerResponse.AccountId
-            };
             string testFileForUpload = @"TestData\github.png";
-            var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(accountUploadProfileImageInfo, testFileForUpload);
-            Assert.IsNotNull(uploadProfileResponse.AccountId);
+            var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(registerResponse.AccountId, testFileForUpload);
+            Assert.AreEqual(registerResponse.AccountId, uploadProfileResponse.AccountId);
+            Assert.AreEqual(registerResponse.AccountName, uploadProfileResponse.AccountName);
+            Assert.AreEqual(registerResponse.Email, uploadProfileResponse.Email);
+            Assert.AreEqual(registerResponse.IdentityNum, uploadProfileResponse.IdentityNum);
+            Assert.AreEqual(registerResponse.Name, uploadProfileResponse.Name);
+            Assert.AreEqual(registerResponse.PhoneNum, uploadProfileResponse.PhoneNum);
+            Assert.AreEqual(registerResponse.Sex, uploadProfileResponse.Sex);
             Assert.IsNotNull(uploadProfileResponse.ProfileImage);
+        }
+
+        [TestMethod]
+        public async Task SDK_AppClient_Upload_Profile_Image_By_Stream_Test()
+        {
+            var registerResponse = await CreateTestAccount();
+
+            string testFileForUpload = @"TestData\github.png";
+            using (var stream = new FileStream(testFileForUpload, FileMode.Open))
+            {
+                var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(registerResponse.AccountId, stream);
+                Assert.AreEqual(registerResponse.AccountId, uploadProfileResponse.AccountId);
+                Assert.AreEqual(registerResponse.AccountName, uploadProfileResponse.AccountName);
+                Assert.AreEqual(registerResponse.Email, uploadProfileResponse.Email);
+                Assert.AreEqual(registerResponse.IdentityNum, uploadProfileResponse.IdentityNum);
+                Assert.AreEqual(registerResponse.Name, uploadProfileResponse.Name);
+                Assert.AreEqual(registerResponse.PhoneNum, uploadProfileResponse.PhoneNum);
+                Assert.AreEqual(registerResponse.Sex, uploadProfileResponse.Sex);
+                Assert.IsNotNull(uploadProfileResponse.ProfileImage);
+            }
         }
     }
 }
