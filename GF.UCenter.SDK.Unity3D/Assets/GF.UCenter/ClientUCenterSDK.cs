@@ -247,13 +247,13 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         {
             if (www.isDone)
             {
-                UCenterResponse response = null;
+                UCenterResponse<TResponse> response = null;
 
                 if (string.IsNullOrEmpty(www.error))
                 {
                     try
                     {
-                        response = EbTool.jsonDeserialize<UCenterResponse>(www.text);
+                        response = EbTool.jsonDeserialize<UCenterResponse<TResponse>>(www.text);
                     }
                     catch (Exception ex)
                     {
@@ -269,7 +269,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                 {
                     if (response != null)
                     {
-                        handler(response.Status, response.As<TResponse>(), response.Error);
+                        handler(response.Status, response.Result, response.Error);
                     }
                     else
                     {

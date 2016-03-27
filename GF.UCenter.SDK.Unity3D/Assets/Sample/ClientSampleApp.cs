@@ -32,7 +32,7 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         AccountLoginInfo login_request = new AccountLoginInfo();
         login_request.AccountName = "aaaaabbbb";
         login_request.Password = "123456";
-        //co_ucentersdk.login(login_request, _onUCenterLogin);
+        co_ucentersdk.login(login_request, _onUCenterLogin);
 
         // 游客登录
         //co_ucentersdk.guest(_onUCenterGuestLogin);
