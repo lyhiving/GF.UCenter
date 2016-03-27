@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using GF.UCenter.Common.Portable;
-using GF.UCenter.SDK.AppClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GF.UCenter.Test
@@ -10,8 +9,6 @@ namespace GF.UCenter.Test
     [TestClass]
     public class UCenterSDKAppClientTest : UCenterSDKTestBase
     {
-        private int bufferSize;
-
         [TestMethod]
         public async Task SDK_AppClient_Register_And_Login_Test()
         {
@@ -20,7 +17,7 @@ namespace GF.UCenter.Test
             var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = registerResponse.AccountName,
-                Password = ValidPassword
+                Password = ValidAccountPassword
             });
 
             Assert.IsNotNull(loginResponse.AccountId);
@@ -35,7 +32,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        [UCExceptionExpected(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
+        [UCExpectedException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
         public async Task SDK_AppClient_Login_Incorrect_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -43,19 +40,19 @@ namespace GF.UCenter.Test
             await cClient.AccountLoginAsync(new AccountLoginInfo()
             {
                 AccountName = registerResponse.AccountName,
-                Password = ""
+                Password = InValidAccountPassword
             });
         }
 
         [TestMethod]
-        [UCExceptionExpected(UCenterErrorCode.AccountRegisterFailedAlreadyExist)]
+        [UCExpectedException(UCenterErrorCode.AccountRegisterFailedAlreadyExist)]
         public async Task SDK_AppClient_Register_Twice_Test()
         {
             var info = new AccountRegisterInfo()
             {
                 AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
+                Password = ValidAccountPassword,
+                SuperPassword = ValidAccountPassword,
                 Name = GenerateRandomString(),
                 IdentityNum = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
@@ -83,8 +80,8 @@ namespace GF.UCenter.Test
                 AccountId = loginResponse.AccountId,
                 AccountName = GenerateRandomString(),
                 OldPassword = loginResponse.Password,
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
+                Password = ValidAccountPassword,
+                SuperPassword = ValidAccountPassword,
                 Name = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
                 Email = GenerateRandomString(),
@@ -106,7 +103,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        [UCExceptionExpected(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
+        [UCExpectedException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
         public async Task SDK_AppClient_Reset_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -115,7 +112,7 @@ namespace GF.UCenter.Test
             {
                 AccountId = registerResponse.AccountId,
                 Password = "123456",
-                SuperPassword = ValidPassword
+                SuperPassword = ValidAccountPassword
             };
 
             var resetPasswordResponse = await cClient.AccountResetPasswordAsync(resetInfo);
@@ -123,7 +120,7 @@ namespace GF.UCenter.Test
             var loginInfo = new AccountLoginInfo()
             {
                 AccountName = registerResponse.AccountName,
-                Password = ValidPassword
+                Password = ValidAccountPassword
             };
 
             await cClient.AccountLoginAsync(loginInfo);

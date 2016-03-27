@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ITraceIdentifier.cs" />
-    <Compile Include="Attributes\TraceExceptionFilter.cs" />
+    <Compile Include="Attributes\TraceExceptionFilterAttribute.cs" />
     <Compile Include="CompositionContainerFactory.cs" />
     <Compile Include="DisposableObjectSlim.cs" />
     <Compile Include="EncryptHashManager.cs" />

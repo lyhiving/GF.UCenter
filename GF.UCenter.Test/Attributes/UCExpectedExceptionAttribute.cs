@@ -8,11 +8,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GF.UCenter.Test
 {
-    public class UCExceptionExpectedAttribute : ExpectedExceptionBaseAttribute
+    public class UCExpectedExceptionAttribute : ExpectedExceptionBaseAttribute
     {
         public UCenterErrorCode[] ExpectedCodes { get; private set; }
 
-        public UCExceptionExpectedAttribute(params UCenterErrorCode[] expectedCodes)
+        public UCExpectedExceptionAttribute(params UCenterErrorCode[] expectedCodes)
             : base()
         {
             this.ExpectedCodes = expectedCodes;

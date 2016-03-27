@@ -5,9 +5,9 @@ using System.Web.Http.Filters;
 
 namespace GF.UCenter.Common
 {
-    public class TraceExceptionFilter : ExceptionFilterAttribute, ITraceIdentifier
+    public class TraceExceptionFilterAttribute : ExceptionFilterAttribute, ITraceIdentifier
     {
-        public TraceExceptionFilter(string traceIdentifier)
+        public TraceExceptionFilterAttribute(string traceIdentifier)
         {
             TraceIdentifier = traceIdentifier;
         }

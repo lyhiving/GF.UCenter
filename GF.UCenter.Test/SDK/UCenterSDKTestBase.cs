@@ -9,7 +9,10 @@ namespace GF.UCenter.Test
     {
         protected const string TestAppId = "utapp";
         protected const string TestAppSecret = "#pA554&3321#";
-        protected const string ValidPassword = "#pA554&3321#";
+        protected const string InvalidAppSecret = "";
+        protected const string ValidAccountPassword = "#pA554&3321#";
+        protected const string InValidAccountPassword = "";
+        protected const string InValidAccountToken = "";
 
         protected readonly string host;
         protected SDK.AppClient.UCenterClient cClient;
@@ -27,8 +30,8 @@ namespace GF.UCenter.Test
             var info = new AccountRegisterInfo()
             {
                 AccountName = GenerateRandomString(),
-                Password = ValidPassword,
-                SuperPassword = ValidPassword,
+                Password = ValidAccountPassword,
+                SuperPassword = ValidAccountPassword,
                 Name = GenerateRandomString(),
                 IdentityNum = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),

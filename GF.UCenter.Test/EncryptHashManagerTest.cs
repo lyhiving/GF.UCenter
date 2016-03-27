@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GF.UCenter.Test
 {
     [TestClass]
-    public class HashEncryptManagerTest
+    public class EncryptHashManagerTest
     {
         [TestMethod]
         public void TestEncryptAndCompare()

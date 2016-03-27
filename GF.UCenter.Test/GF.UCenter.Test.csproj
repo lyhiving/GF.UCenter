@@ -71,7 +71,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CoushBaseContextTest.cs" />
-    <Compile Include="HashEncryptManagerTest.cs" />
+    <Compile Include="EncryptHashManagerTest.cs" />
     <Compile Include="SDK\UCenterSDKAppServerTest.cs" />
     <Compile Include="SDK\UCenterSDKAppClientTest.cs" />
     <Compile Include="SDK\UCenterSDKTestBase.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Clients\WebContext.cs" />
     <Compile Include="UCenterTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UCExceptionExpected.cs" />
+    <Compile Include="Attributes\UCExpectedExceptionAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GF.UCenter.Common.Portable\GF.UCenter.Common.Portable.csproj">
