@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using GF.Common;
 using GF.UCenter.Common.Portable;
@@ -10,6 +11,7 @@ public delegate void OnUCenterLogin(UCenterResponseStatus status, AccountLoginRe
 public delegate void OnUCenterGuestLogin(UCenterResponseStatus status, AccountGuestLoginResponse response, UCenterError error);
 public delegate void OnUCenterConvert(UCenterResponseStatus status, AccountConvertResponse response, UCenterError error);
 public delegate void OnUCenterResetPassword(UCenterResponseStatus status, AccountResetPasswordResponse response, UCenterError error);
+public delegate void OnUCenterUploadProfileImage(UCenterResponseStatus status, AccountUploadProfileImageResponse response, UCenterError error);
 
 public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK, new()
 {
@@ -21,11 +23,13 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
     public WWW WWWGuestLogin { get; private set; }
     public WWW WWWConvert { get; private set; }
     public WWW WWWResetPassword { get; private set; }
+    public WWW WWWUploadProfileImage { get; private set; }
     Action<UCenterResponseStatus, AccountRegisterResponse, UCenterError> RegisterHandler { get; set; }
     Action<UCenterResponseStatus, AccountLoginResponse, UCenterError> LoginHandler { get; set; }
     Action<UCenterResponseStatus, AccountGuestLoginResponse, UCenterError> GuestLoginHandler { get; set; }
     Action<UCenterResponseStatus, AccountConvertResponse, UCenterError> ConvertHandler { get; set; }
     Action<UCenterResponseStatus, AccountResetPasswordResponse, UCenterError> ResetPasswordHandler { get; set; }
+    Action<UCenterResponseStatus, AccountUploadProfileImageResponse, UCenterError> UploadProfileImageHandler { get; set; }
 
     //-------------------------------------------------------------------------
     public override void init()
@@ -60,10 +64,22 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
             GuestLoginHandler = null;
         }
 
+        if (_checkResponse<AccountConvertResponse>(WWWConvert, ConvertHandler))
+        {
+            WWWConvert = null;
+            ConvertHandler = null;
+        }
+
         if (_checkResponse<AccountResetPasswordResponse>(WWWResetPassword, ResetPasswordHandler))
         {
             WWWResetPassword = null;
             ResetPasswordHandler = null;
+        }
+
+        if (_checkResponse<AccountUploadProfileImageResponse>(WWWUploadProfileImage, UploadProfileImageHandler))
+        {
+            WWWUploadProfileImage = null;
+            UploadProfileImageHandler = null;
         }
     }
 
@@ -113,7 +129,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
     }
 
     //-------------------------------------------------------------------------
-    public void guestLogin(OnUCenterGuestLogin handler)
+    public void guest(OnUCenterGuestLogin handler)
     {
         if (WWWGuestLogin != null)
         {
@@ -124,9 +140,14 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         string http_url = _genUrl("guest");
 
-        Dictionary<string, string> headers = _genHeader(0);
+        WWWForm form = new WWWForm();
+        form.AddField("Accept", "application/x-www-form-urlencoded");
+        form.AddField("Content-Type", "application/json; charset=utf-8");
+        form.AddField("Content-Length", 0);
+        form.AddField("Host", UCenterDomain);
+        form.AddField("User-Agent", "");
 
-        WWWGuestLogin = new WWW(http_url, null, headers);
+        WWWGuestLogin = new WWW(http_url, form);
     }
 
     //-------------------------------------------------------------------------
@@ -146,7 +167,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 
         Dictionary<string, string> headers = _genHeader(bytes.Length);
 
-        WWWConvert = new WWW(http_url, null, headers);
+        WWWConvert = new WWW(http_url, bytes, headers);
     }
 
     //-------------------------------------------------------------------------
@@ -170,6 +191,25 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
     }
 
     //-------------------------------------------------------------------------
+    public void uploadProfileImage(string account_id, MemoryStream stream, OnUCenterUploadProfileImage handler)
+    {
+        if (WWWUploadProfileImage != null)
+        {
+            return;
+        }
+
+        UploadProfileImageHandler = new Action<UCenterResponseStatus, AccountUploadProfileImageResponse, UCenterError>(handler);
+
+        string http_url = _genUrl("upload/" + account_id);
+
+        byte[] bytes = stream.ToArray();
+
+        Dictionary<string, string> headers = _genHeader(bytes.Length);
+
+        WWWUploadProfileImage = new WWW(http_url, bytes, headers);
+    }
+
+    //-------------------------------------------------------------------------
     Dictionary<string, string> _genHeader(int content_len)
     {
         Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -178,11 +218,6 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         headers["Content-Length"] = content_len.ToString();
         headers["Host"] = UCenterDomain;
         headers["User-Agent"] = "";
-
-        //headers["Content-Type"] = "application/json";
-        //headers["Connection"] = "Keep-Alive";
-        //headers["Accept-Encoding"] = "";
-        //headers["X-Unity-Version"] = "";
 
         return headers;
     }
@@ -222,10 +257,13 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                     }
                     catch (Exception ex)
                     {
+
                         EbLog.Error("ClientUCenterSDK.update() UCenterResponse Error");
                         EbLog.Error(ex.ToString());
                     }
                 }
+
+                www = null;
 
                 if (handler != null)
                 {
@@ -235,13 +273,14 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
                     }
                     else
                     {
-                        handler(UCenterResponseStatus.Error, default(TResponse), null);
+                        var error = new UCenterError();
+                        error.ErrorCode = UCenterErrorCode.Failed;
+                        error.Message = "";
+                        handler(UCenterResponseStatus.Error, default(TResponse), error);
                     }
 
                     handler = null;
                 }
-
-                www = null;
 
                 return true;
             }
