@@ -193,11 +193,8 @@ namespace GF.UCenter.Web.ApiControllers
         {
             logger.Info($"AppClient请求访客账号转正式账号AccountName={info.AccountName}");
 
-            var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
-            if (account == null)
-            {
-                throw new UCenterException(UCenterErrorCode.AccountNotExist);
-            }
+            var account = await GetAndVerifyAccount(info.AccountId);
+
             if (!EncryptHashManager.VerifyHash(info.OldPassword, account.Password))
             {
                 await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
@@ -225,12 +222,9 @@ namespace GF.UCenter.Web.ApiControllers
         {
             logger.Info($"AppClient请求重置密码AccountId={info.AccountId}");
 
-            var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
-            if (account == null)
-            {
-                throw new UCenterException(UCenterErrorCode.AccountNotExist);
-            }
-            else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
+            var account = await GetAndVerifyAccount(info.AccountId);
+
+            if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
                 await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The super password provided is incorrect");
                 throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
@@ -244,15 +238,12 @@ namespace GF.UCenter.Web.ApiControllers
             }
         }
 
+        //---------------------------------------------------------------------
         [HttpPost]
         [Route("upload/{accountId}")]
         public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId)
         {
-            var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId);
-            if (account == null)
-            {
-                throw new UCenterException(UCenterErrorCode.AccountNotExist);
-            }
+            var account = await GetAndVerifyAccount(accountId);
 
             logger.Info("Uploading raw profile image to azure storage");
             using (Stream stream = await this.Request.Content.ReadAsStreamAsync())
@@ -303,6 +294,17 @@ namespace GF.UCenter.Web.ApiControllers
             };
 
             await this.db.Bucket.InsertSlimAsync(record, throwIfFailed: false);
+        }
+
+        private async Task<AccountEntity> GetAndVerifyAccount(string accountId)
+        {
+            var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId, throwIfFailed: false);
+            if (account == null)
+            {
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
+            }
+
+            return account;
         }
 
         //---------------------------------------------------------------------

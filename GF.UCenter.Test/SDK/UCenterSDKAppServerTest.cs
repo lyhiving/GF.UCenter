@@ -35,6 +35,44 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
+        [UCExpectedException(UCenterErrorCode.AccountNotExist)]
+        public async Task SDK_AppServer_VerifyAccount_AccountNotExist_Test()
+        {
+            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            {
+                AppId = TestAppId,
+                AppSecret = TestAppSecret,
+                AccountId = "___Test_Account_No_Exist___",
+                AccountToken = ValidAccountPassword
+            };
+
+            await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+        }
+
+        [TestMethod]
+        [UCExpectedException(UCenterErrorCode.AppNotExit)]
+        public async Task SDK_AppServer_VerifyAccount_AppNotExist_Test()
+        {
+            var registerResponse = await CreateTestAccount();
+
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            {
+                AccountName = registerResponse.AccountName,
+                Password = ValidAccountPassword
+            });
+
+            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            {
+                AppId = "___Test_App_No_Exist___",
+                AppSecret = TestAppSecret,
+                AccountId = registerResponse.AccountId,
+                AccountToken = loginResponse.Token
+            };
+
+            await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+        }
+
+        [TestMethod]
         [UCExpectedException(UCenterErrorCode.AppAuthFailedSecretNotMatch)]
         public async Task SDK_AppServer_VerifyAccount_IncorrectAppSecret_Test()
         {
