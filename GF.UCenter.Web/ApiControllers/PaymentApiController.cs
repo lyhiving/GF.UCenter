@@ -18,6 +18,8 @@ namespace GF.UCenter.Web.ApiControllers
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/payment")]
+    [ValidateModel]
+    [ValidateResponse]
     [TraceExceptionFilter("PaymentApiController")]
     public class PaymentApiController : ApiControllerBase
     {
@@ -67,7 +69,7 @@ namespace GF.UCenter.Web.ApiControllers
             catch (Exception ex)
             {
                 logger.Error(ex, "创建Charge失败");
-                return CreateErrorResult(UCenterErrorCode.PaymentCreateChargeFailed, ex.Message);
+                throw new UCenterException(UCenterErrorCode.PaymentCreateChargeFailed, ex.Message);
             }
         }
 

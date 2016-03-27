@@ -47,25 +47,17 @@ namespace GF.UCenter.Common
             var response = await this.SendAsync<TContent, UCenterResponse<TResult>>(method, url, content);
             if (response.Status == UCenterResponseStatus.Success)
             {
-                return response.Content;
+                return response.Result;
             }
             else
             {
                 if (response.Error != null)
                 {
-                    throw UCenterExceptionManager.FromError(new UCenterError
-                    {
-                        ErrorCode = response.Error.ErrorCode,
-                        Message = response.Error.Message
-                    });
+                    throw new UCenterException(response.Error.ErrorCode, response.Error.Message);
                 }
                 else
                 {
-                    throw UCenterExceptionManager.FromError(new UCenterError
-                    {
-                        ErrorCode = UCenterErrorCode.Failed,
-                        Message = "Error occurred when sending http request"
-                    });
+                    throw new UCenterException(UCenterErrorCode.Failed, "Error occurred when sending http request");
                 }
             }
         }

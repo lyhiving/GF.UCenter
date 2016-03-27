@@ -16,6 +16,7 @@ namespace GF.UCenter.Web.ApiControllers
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/account")]
     [ValidateModel]
+    [ValidateResponse]
     [TraceExceptionFilter("AccountApiController")]
     public class AccountApiController : ApiControllerBase
     {
@@ -43,7 +44,7 @@ namespace GF.UCenter.Web.ApiControllers
                 var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName, throwIfFailed: false);
                 if (account != null)
                 {
-                    return CreateErrorResult(UCenterErrorCode.AccountRegisterFailedAlreadyExist, "The account already exists.");
+                    throw new UCenterException(UCenterErrorCode.AccountRegisterFailedAlreadyExist);
                 }
 
                 account = new AccountEntity()
@@ -79,6 +80,7 @@ namespace GF.UCenter.Web.ApiControllers
                 }
 
                 await this.db.Bucket.InsertSlimAsync(account);
+
                 return CreateSuccessResult(ToResponse<AccountRegisterResponse>(account));
             }
             catch (Exception ex)
@@ -89,11 +91,11 @@ namespace GF.UCenter.Web.ApiControllers
                     var status = (ex as CouchBaseException).Result as IDocumentResult<AccountResourceEntity>;
                     if (status != null)
                     {
-                        return CreateErrorResult(UCenterErrorCode.AccountRegisterFailedAlreadyExist, "The account already exists.");
+                        throw new UCenterException(UCenterErrorCode.AccountRegisterFailedAlreadyExist, ex);
                     }
                 }
 
-                return CreateErrorResult(UCenterErrorCode.Failed, ex.Message);
+                throw;
             }
             finally
             {
@@ -130,12 +132,13 @@ namespace GF.UCenter.Web.ApiControllers
 
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
             else if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
             {
                 await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
+
+                throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
             else
             {
@@ -192,12 +195,12 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
             if (!EncryptHashManager.VerifyHash(info.OldPassword, account.Password))
             {
                 await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
+                throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
 
             account.AccountName = info.AccountName;
@@ -224,12 +227,12 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
             else if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
                 await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The super password provided is incorrect");
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The super password provided is incorrect");
+                throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
             else
             {
@@ -239,7 +242,7 @@ namespace GF.UCenter.Web.ApiControllers
                 return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
             }
         }
-                
+
         [HttpPost]
         [Route("upload/{accountId}")]
         public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId)
@@ -247,7 +250,7 @@ namespace GF.UCenter.Web.ApiControllers
             var account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
 
             logger.Info("Uploading raw profile image to azure storage");

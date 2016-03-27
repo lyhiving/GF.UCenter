@@ -12,6 +12,8 @@ namespace GF.UCenter.Web.ApiControllers
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/app")]
+    [ValidateModel]
+    [ValidateResponse]
     [TraceExceptionFilter("AppApiController")]
     public class AppApiController : ApiControllerBase
     {
@@ -62,18 +64,18 @@ namespace GF.UCenter.Web.ApiControllers
             var appAuthResult = await VerifyApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
-                return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
+                throw new UCenterException(UCenterErrorCode.AppNotExit);
 
             }
             else if (appAuthResult == UCenterErrorCode.AppAuthFailedSecretNotMatch)
             {
-                return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
+                throw new UCenterException(UCenterErrorCode.AppAuthFailedSecretNotMatch);
             }
 
             var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId, throwIfFailed: false);
             if (account == null || account.Token != info.AccountToken)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountLoginFailedTokenNotMatch, "Account and token do not match");
+                throw new UCenterException(UCenterErrorCode.AccountLoginFailedTokenNotMatch);
             }
 
             result.AccountId = account.Id;
@@ -95,17 +97,17 @@ namespace GF.UCenter.Web.ApiControllers
             var appAuthResult = await VerifyApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
-                return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
+                throw new UCenterException(UCenterErrorCode.AppNotExit);
             }
             if (appAuthResult == UCenterErrorCode.AppAuthFailedSecretNotMatch)
             {
-                return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
+                throw new UCenterException(UCenterErrorCode.AppAuthFailedSecretNotMatch);
             }
 
             var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId, throwIfFailed: false);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
 
             string dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
@@ -131,17 +133,17 @@ namespace GF.UCenter.Web.ApiControllers
             var appAuthResult = await VerifyApp(info.AppId, info.AppSecret);
             if (appAuthResult == UCenterErrorCode.AppNotExit)
             {
-                return CreateErrorResult(UCenterErrorCode.AppNotExit, "App does not exist");
+                throw new UCenterException(UCenterErrorCode.AppNotExit);
             }
             if (appAuthResult == UCenterErrorCode.AppAuthFailedSecretNotMatch)
             {
-                return CreateErrorResult(UCenterErrorCode.AppAuthFailedSecretNotMatch, "App and secret do not match");
+                throw new UCenterException(UCenterErrorCode.AppAuthFailedSecretNotMatch);
             }
 
             var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(info.AccountId);
             if (account == null)
             {
-                return CreateErrorResult(UCenterErrorCode.AccountNotExist, "Account does not exist");
+                throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
 
             string dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);

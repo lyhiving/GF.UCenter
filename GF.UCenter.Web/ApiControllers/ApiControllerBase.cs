@@ -49,30 +49,9 @@ namespace GF.UCenter.Web.ApiControllers
             }
         }
 
-        //---------------------------------------------------------------------
-        protected IHttpActionResult CreateSuccessResult(object result)
+        protected IHttpActionResult CreateSuccessResult<TResult>(TResult result)
         {
-            return Ok(new { Status = "success", Result = result });
-        }
-
-        //---------------------------------------------------------------------
-        protected IHttpActionResult CreateErrorResult(UCenterErrorCode code, string message)
-        {
-            logger.Info($"[UCenterError] Code={code}, Message={message}");
-            return Ok(new { Status = "error", Error = new { Code = code, Message = message } });
-        }
-
-        //---------------------------------------------------------------------
-        public IHttpActionResult CreateResponse<T>(IDocumentResult<T> result)
-        {
-            if (result.Success)
-            {
-                return CreateSuccessResult(result.Content);
-            }
-            else
-            {
-                return CreateErrorResult(UCenterErrorCode.CouchBaseError, result.Message);
-            }
+            return Ok(new UCenterResponse<TResult>() { Status = UCenterResponseStatus.Success, Result = result });
         }
     }
 }

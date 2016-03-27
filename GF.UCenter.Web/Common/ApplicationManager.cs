@@ -16,6 +16,7 @@ namespace GF.UCenter.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             configuration.Filters.Add(new ValidateModelAttribute());
+            configuration.Filters.Add(new ValidateResponseAttribute());
             RegisterMefDepencency(configuration, exportProvider);
             InitializeSettings(exportProvider);
         }
