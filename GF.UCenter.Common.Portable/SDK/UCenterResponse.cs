@@ -4,14 +4,6 @@ using Newtonsoft.Json.Linq;
 
 namespace GF.UCenter.Common.Portable
 {
-    //public class UCenterResponse<T> : UCenterResponse
-    //{
-    //    public T Content
-    //    {
-    //        get { return base.As<T>(); }
-    //    }
-    //}
-
     [DataContract]
     public class UCenterResponse<TResult> : UCenterResponse
     {

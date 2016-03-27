@@ -24,7 +24,7 @@ namespace GF.UCenter.Test
             this.cClient = new SDK.AppClient.UCenterClient(host);
             this.sClient = new SDK.AppServer.UCenterClient(host);
         }
-        
+
         protected async Task<AccountRegisterResponse> CreateTestAccount()
         {
             var info = new AccountRegisterInfo()
@@ -45,7 +45,7 @@ namespace GF.UCenter.Test
             Assert.AreEqual(registerResponse.Name, info.Name);
             Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
             Assert.AreEqual(registerResponse.Sex, info.Sex);
-            
+
             return registerResponse;
         }
     }

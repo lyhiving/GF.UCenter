@@ -13,20 +13,8 @@ namespace GF.UCenter.Common.Portable
         }
 
         public UCenterException(UCenterErrorCode errorCode, Exception innerException = null)
-            : this(errorCode, GenerateErrorMessage(errorCode), innerException)
+            : this(errorCode, UCenterResourceManager.GetErrorMessage(errorCode), innerException)
         {
-        }
-
-        private static string GenerateErrorMessage(UCenterErrorCode errorCode)
-        {
-            try
-            {
-                return UCResource.ResourceManager.GetString("Msg_" + errorCode.ToString());
-            }
-            catch (Exception)
-            {
-                return UCResource.ResourceManager.GetString("Msg_General");
-            }
         }
     }
 }

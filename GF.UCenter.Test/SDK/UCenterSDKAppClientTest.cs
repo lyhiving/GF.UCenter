@@ -56,7 +56,7 @@ namespace GF.UCenter.Test
                 Name = GenerateRandomString(),
                 IdentityNum = GenerateRandomString(),
                 PhoneNum = GenerateRandomString(),
-                Email = GenerateRandomString(),
+                Email = "abc@abc.com",
                 Sex = Sex.Female
             };
 

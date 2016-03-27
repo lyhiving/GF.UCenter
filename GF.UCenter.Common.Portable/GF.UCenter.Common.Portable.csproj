@@ -78,20 +78,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SDK\UCenterResponse.cs" />
     <Compile Include="SDK\UCenterResponseStatus.cs" />
-    <Compile Include="UCResource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UCResource.resx</DependentUpon>
-    </Compile>
+    <Compile Include="UCenterResourceManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UCResource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>UCResource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

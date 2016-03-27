@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Couchbase;
 using GF.UCenter.Common;
+using GF.UCenter.Common.Models;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
 using Microsoft.WindowsAzure.Storage;
@@ -33,7 +34,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info)
+        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info)
         {
             logger.Info($"AppClient请求登录请求注册\nAccoundName={info.AccountName}");
 
