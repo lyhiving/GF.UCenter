@@ -24,11 +24,10 @@ namespace GF.UCenter.Test
         public WebContext(ExportProvider exportProvider, Settings settings)
         {
             this.settings = settings;
-            this.BaseAddress = $"http://{this.settings.ServerHost}:{this.settings.ServerPort }";
+            this.BaseAddress = $"http://{this.settings.ServerHost}:{this.settings.ServerPort}";
 
             this.configuration = new HttpSelfHostConfiguration(this.BaseAddress);
             this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            this.configuration.Services.Replace(typeof(IAssembliesResolver), new TestAssemblyResolver(typeof(AppApiController)));
             this.configuration.MapHttpAttributeRoutes();
             ApplicationManager.InitializeApplication(configuration, exportProvider);
 
@@ -48,26 +47,6 @@ namespace GF.UCenter.Test
             if (this.server != null)
             {
                 this.server.Dispose();
-            }
-        }
-
-        public class TestAssemblyResolver : IAssembliesResolver
-        {
-            private readonly Type controllerType;
-
-            public TestAssemblyResolver(Type controllerType)
-            {
-                this.controllerType = controllerType;
-            }
-
-            public ICollection<Assembly> GetAssemblies()
-            {
-                List<Assembly> baseAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
-
-                if (!baseAssemblies.Contains(controllerType.Assembly))
-                    baseAssemblies.Add(controllerType.Assembly);
-
-                return baseAssemblies;
             }
         }
     }

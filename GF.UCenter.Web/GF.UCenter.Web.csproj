@@ -184,7 +184,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Common\MEFControllerFactory.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -219,6 +218,7 @@
     <None Include="Properties\PublishProfiles\cragonucenter - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\cragonucenterdev - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\ucenter-westus - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />

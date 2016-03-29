@@ -9,9 +9,7 @@ using GF.UCenter.Common;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
 using Newtonsoft.Json.Linq;
-using NLog;
 using pingpp;
-using Logger = NLog.Logger;
 
 namespace GF.UCenter.Web.ApiControllers
 {
@@ -20,7 +18,6 @@ namespace GF.UCenter.Web.ApiControllers
     [RoutePrefix("api/payment")]
     [ValidateModel]
     [ValidateResponse]
-    [TraceExceptionFilter("PaymentApiController")]
     public class PaymentApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------

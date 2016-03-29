@@ -14,7 +14,6 @@ namespace GF.UCenter.Web.ApiControllers
     [RoutePrefix("api/app")]
     [ValidateModel]
     [ValidateResponse]
-    [TraceExceptionFilter("AppApiController")]
     public class AppApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------
