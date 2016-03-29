@@ -11,7 +11,6 @@ namespace GF.UCenter.Web
     {
         public static void InitializeApplication(HttpConfiguration configuration, ExportProvider exportProvider)
         {
-            // UnityConfig.RegisterComponents();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

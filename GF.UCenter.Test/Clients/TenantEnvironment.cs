@@ -16,10 +16,5 @@ namespace GF.UCenter.Test
             this.WebContext = webContext;
             this.HttpClient = new HttpClient();
         }
-
-        protected ObjectContent<T> BuildContent<T>(T data)
-        {
-            return new ObjectContent<T>(data, new JsonMediaTypeFormatter());
-        }
     }
 }

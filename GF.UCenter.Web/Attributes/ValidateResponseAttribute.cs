@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Web;
 using System.Web.Http.Filters;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NLog;
 
 namespace GF.UCenter.Web
@@ -26,9 +21,7 @@ namespace GF.UCenter.Web
                 UCenterError error = new UCenterError();
                 if (context.Exception is UCenterException)
                 {
-                    var uex = context.Exception as UCenterException;
                     error.ErrorCode = (context.Exception as UCenterException).ErrorCode;
-
                 }
                 else if (context.Exception is CouchBaseException)
                 {

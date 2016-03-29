@@ -18,7 +18,6 @@ namespace GF.UCenter.Web.ApiControllers
     [RoutePrefix("api/account")]
     [ValidateModel]
     [ValidateResponse]
-    [TraceExceptionFilter("AccountApiController")]
     public class AccountApiController : ApiControllerBase
     {
         private readonly Settings settings;
