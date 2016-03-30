@@ -27,7 +27,7 @@ namespace GF.UCenter.Test
             try
             {
                 action();
-                Assert.Fail($"Expected IoT Exception, but no expection happened");
+                Assert.Fail($"Expected {typeof(UCenterException)} Exception, but no expection happened");
             }
             catch (UCenterException ex)
             {
@@ -59,7 +59,7 @@ namespace GF.UCenter.Test
             try
             {
                 await func();
-                Assert.Fail("Expected IoT Exception, but no expection happened");
+                Assert.Fail("Expected {typeof(UCenterException)}, but no expection happened");
             }
             catch (UCenterException ex)
             {
