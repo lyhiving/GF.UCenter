@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Couchbase;
 using GF.UCenter.Common;
-using GF.UCenter.Common.Models;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
 using Microsoft.WindowsAzure.Storage;
@@ -20,6 +19,7 @@ namespace GF.UCenter.Web.ApiControllers
     [ValidateResponse]
     public class AccountApiController : ApiControllerBase
     {
+        //---------------------------------------------------------------------
         private readonly Settings settings;
 
         //---------------------------------------------------------------------
@@ -33,9 +33,9 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info)
+        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info)
         {
-            logger.Info($"AppClient请求登录请求注册\nAccoundName={info.AccountName}");
+            logger.Info($"account.register AccountName={info.AccountName}");
 
             var removeTempsIfError = new List<AccountResourceEntity>();
             var error = false;
@@ -85,6 +85,9 @@ namespace GF.UCenter.Web.ApiControllers
             }
             catch (Exception ex)
             {
+                logger.Info($"account.register异常：AccoundName={info.AccountName}");
+                logger.Info(ex.ToString());
+
                 error = true;
                 if (ex is CouchBaseException)
                 {
@@ -114,7 +117,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
         {
-            logger.Info($"AppClient请求登录\nAccountName={info.AccountName}");
+            logger.Info($"account.login AccountName={info.AccountName}");
 
             var accountResourceByName = await this.db.Bucket.GetByEntityIdSlimAsync<AccountResourceEntity>(AccountResourceEntity.GenerateResourceId(AccountResourceType.AccountName, info.AccountName), false);
             AccountEntity account = null;
@@ -156,7 +159,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("guest")]
         public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
         {
-            logger.Info("AppClient请求访客登录");
+            logger.Info($"account.guest");
 
             var r = new Random();
             string accountNamePostfix = r.Next(0, 1000000).ToString("D6");
@@ -190,7 +193,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("convert")]
         public async Task<IHttpActionResult> Convert([FromBody]AccountConvertInfo info)
         {
-            logger.Info($"AppClient请求访客账号转正式账号AccountName={info.AccountName}");
+            logger.Info($"account.convert AccountName={info.AccountName}");
 
             var account = await GetAndVerifyAccount(info.AccountId);
 
@@ -219,7 +222,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("resetpassword")]
         public async Task<IHttpActionResult> ResetPassword([FromBody]AccountResetPasswordInfo info)
         {
-            logger.Info($"AppClient请求重置密码AccountId={info.AccountId}");
+            logger.Info($"account.resetpassword AccountName={info.AccountId}");
 
             var account = await GetAndVerifyAccount(info.AccountId);
 
@@ -242,9 +245,10 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("upload/{accountId}")]
         public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId)
         {
+            logger.Info($"account.upload.accountId AccountId={accountId}");
+
             var account = await GetAndVerifyAccount(accountId);
 
-            logger.Info("Uploading raw profile image to azure storage");
             using (Stream stream = await this.Request.Content.ReadAsStreamAsync())
             {
                 string blobName = $"profile_l_{accountId}.jpg";
@@ -269,11 +273,9 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("test")]
         public async Task<IHttpActionResult> Test(AccountLoginInfo info)
         {
-            logger.Info("in account controller, test method");
+            logger.Info($"account.test");
+
             var accounts = await this.db.Bucket.QueryAsync<AccountEntity>(a => a.AccountName == "Ny7IBHtK");
-            //// var accounts = bucket.Query<AccountEntity>("select id, accountName,phoneNum from ucenter as c where c.accountName='Ny7IBHtK'");
-            //var context = new BucketContext(bucket);
-            //var accounts = from a in context.Query<TestAccountEntity>() select a;
 
             return await Task.FromResult<IHttpActionResult>(CreateSuccessResult(accounts));
         }
@@ -295,6 +297,7 @@ namespace GF.UCenter.Web.ApiControllers
             await this.db.Bucket.InsertSlimAsync(record, throwIfFailed: false);
         }
 
+        //---------------------------------------------------------------------
         private async Task<AccountEntity> GetAndVerifyAccount(string accountId)
         {
             var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId, throwIfFailed: false);

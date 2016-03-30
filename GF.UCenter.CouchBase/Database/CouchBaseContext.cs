@@ -29,7 +29,7 @@ namespace GF.UCenter.CouchBase
                 .ToList();
 
             var bucketConfigs = new Dictionary<string, BucketConfiguration>();
-            var configs = new string[] { this.settings.BucketName, this.settings.TempBucketName }
+            var configs = new string[] { this.settings.BucketName }
                 .Select(b => new BucketConfiguration
                 {
                     BucketName = b,
@@ -78,14 +78,6 @@ namespace GF.UCenter.CouchBase
             get
             {
                 return ClusterHelper.GetBucket(this.settings.BucketName);
-            }
-        }
-
-        public IBucket TempBucket
-        {
-            get
-            {
-                return ClusterHelper.GetBucket(this.settings.TempBucketName);
             }
         }
 
