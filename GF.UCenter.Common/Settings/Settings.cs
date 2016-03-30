@@ -6,11 +6,8 @@ namespace GF.UCenter.Common
     [Export]
     public class Settings
     {
-        [DefaultValue("ucenter")]
+        [DefaultValue("UCenter")]
         public string BucketName { get; set; }
-
-        [DefaultValue("ucenter-temp")]
-        public string TempBucketName { get; set; }
 
         [DefaultValue("http://127.0.0.1:8091")]
         public string ServerUris { get; set; }
