@@ -26,16 +26,25 @@ namespace GF.UCenter.Test
             this.settings = settings;
             this.BaseAddress = $"http://{this.settings.ServerHost}:{this.settings.ServerPort}";
 
-            this.configuration = new HttpSelfHostConfiguration(this.BaseAddress);
-            this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-            this.configuration.MapHttpAttributeRoutes();
-            ApplicationManager.InitializeApplication(configuration, exportProvider);
+            if (UseSelfHost())
+            {
+                this.configuration = new HttpSelfHostConfiguration(this.BaseAddress);
+                this.configuration.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+                this.configuration.MapHttpAttributeRoutes();
+                ApplicationManager.InitializeApplication(configuration, exportProvider);
 
-            this.server = new HttpSelfHostServer(configuration);
-            this.server.OpenAsync().Wait();
+                this.server = new HttpSelfHostServer(configuration);
+                this.server.OpenAsync().Wait();
+            }
         }
 
         public string BaseAddress { get; private set; }
+
+        private bool UseSelfHost()
+        {
+            return BaseAddress.IndexOf("localhost", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                BaseAddress.Contains("127.0.0.1");
+        }
 
         protected override void DisposeInternal()
         {
