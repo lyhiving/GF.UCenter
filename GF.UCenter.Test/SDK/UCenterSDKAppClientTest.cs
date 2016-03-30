@@ -32,20 +32,21 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
         public async Task SDK_AppClient_Login_Incorrect_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
 
-            await cClient.AccountLoginAsync(new AccountLoginInfo()
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, async () =>
             {
-                AccountName = registerResponse.AccountName,
-                Password = InValidAccountPassword
+                await cClient.AccountLoginAsync(new AccountLoginInfo()
+                {
+                    AccountName = registerResponse.AccountName,
+                    Password = InValidAccountPassword
+                });
             });
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AccountRegisterFailedAlreadyExist)]
         public async Task SDK_AppClient_Register_Twice_Test()
         {
             var info = new AccountRegisterInfo()
@@ -62,7 +63,10 @@ namespace GF.UCenter.Test
 
             await cClient.AccountRegisterAsync(info);
 
-            await cClient.AccountRegisterAsync(info);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountRegisterFailedAlreadyExist, async () =>
+            {
+                await cClient.AccountRegisterAsync(info);
+            });
         }
 
         [TestMethod]
@@ -103,7 +107,6 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch)]
         public async Task SDK_AppClient_Reset_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -123,7 +126,10 @@ namespace GF.UCenter.Test
                 Password = ValidAccountPassword
             };
 
-            await cClient.AccountLoginAsync(loginInfo);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, async () =>
+            {
+                await cClient.AccountLoginAsync(loginInfo);
+            });
         }
 
         [TestMethod]

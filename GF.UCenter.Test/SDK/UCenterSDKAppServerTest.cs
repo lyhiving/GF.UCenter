@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using System.Threading;
 using GF.UCenter.Common.Portable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -35,7 +34,6 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AccountNotExist)]
         public async Task SDK_AppServer_VerifyAccount_AccountNotExist_Test()
         {
             var appVerifyAccountInfo = new AppVerifyAccountInfo()
@@ -46,11 +44,13 @@ namespace GF.UCenter.Test
                 AccountToken = ValidAccountPassword
             };
 
-            await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountNotExist, async () =>
+            {
+                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            });
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AppNotExit)]
         public async Task SDK_AppServer_VerifyAccount_AppNotExist_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -69,11 +69,13 @@ namespace GF.UCenter.Test
                 AccountToken = loginResponse.Token
             };
 
-            await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppNotExit, async () =>
+            {
+                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            });
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AppAuthFailedSecretNotMatch)]
         public async Task SDK_AppServer_VerifyAccount_IncorrectAppSecret_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -92,11 +94,13 @@ namespace GF.UCenter.Test
                 AccountToken = ValidAccountPassword
             };
 
-            await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch, async () =>
+            {
+                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            });
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AccountLoginFailedTokenNotMatch)]
         public async Task SDK_AppServer_VerifyAccount_IncorrectAccountToken_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -115,7 +119,10 @@ namespace GF.UCenter.Test
                 AccountToken = InValidAccountToken
             };
 
-            await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedTokenNotMatch, async () =>
+            {
+                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
+            });
         }
 
         [TestMethod]
@@ -148,7 +155,6 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AppAuthFailedSecretNotMatch)]
         public async Task SDK_AppServer_ReadAccountData_IncorrectAppSecret_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -166,11 +172,13 @@ namespace GF.UCenter.Test
                 AccountId = loginResponse.AccountId,
             };
 
-            await sClient.AppReadAccountDataAsync(accountData);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch, async () =>
+            {
+                await sClient.AppReadAccountDataAsync(accountData);
+            });
         }
 
         [TestMethod]
-        [UCExpectedException(UCenterErrorCode.AppAuthFailedSecretNotMatch)]
         public async Task SDK_AppServer_WriteAccountData_InvalidAppSecret_Test()
         {
             var registerResponse = await CreateTestAccount();
@@ -190,7 +198,10 @@ namespace GF.UCenter.Test
                 Data = data
             };
 
-            await sClient.AppWriteAccountDataAsync(accountData);
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch, async () =>
+            {
+                await sClient.AppWriteAccountDataAsync(accountData);
+            });
         }
 
         [TestMethod]
