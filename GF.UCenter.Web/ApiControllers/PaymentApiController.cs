@@ -16,8 +16,6 @@ namespace GF.UCenter.Web.ApiControllers
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/payment")]
-    [ValidateModel]
-    [ValidateResponse]
     public class PaymentApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------

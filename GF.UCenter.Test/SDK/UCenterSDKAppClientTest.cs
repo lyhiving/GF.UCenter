@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using GF.UCenter.Common.Portable;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,6 +30,34 @@ namespace GF.UCenter.Test
             Assert.AreEqual(loginResponse.Sex, registerResponse.Sex);
             Assert.IsNotNull(loginResponse.LastLoginDateTime);
             Assert.IsNotNull(loginResponse.Token);
+        }
+
+        [TestMethod]
+        public async Task SDK_AppClient_Register_ParallelTest()
+        {
+            try
+            {
+                await Task.WhenAll(ParallelEnumerable.Range(0, 10)
+                    .Select(async idx =>
+                    {
+                        string random = GenerateRandomString() + idx.ToString();
+                        var info = new AccountRegisterInfo()
+                        {
+                            AccountName = random,
+                            Password = ValidAccountPassword,
+                            SuperPassword = ValidAccountPassword,
+                            Name = random,
+                            IdentityNum = random,
+                            PhoneNum = random,
+                            Sex = Sex.Female
+                        };
+                        await this.CreateTestAccount(info);
+                    }));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.ToString());
+            }
         }
 
         [TestMethod]

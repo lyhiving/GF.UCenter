@@ -6,17 +6,17 @@ namespace GF.UCenter.Common.Portable
     public class AccountRegisterInfo
     {
         [DataMember]
-        public string AccountName { get; set; }
+        public virtual string AccountName { get; set; }
         [DataMember]
-        public string Password { get; set; }
+        public virtual string Password { get; set; }
         [DataMember]
-        public string SuperPassword { get; set; }
+        public virtual string SuperPassword { get; set; }
         [DataMember]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
         [DataMember]
-        public string PhoneNum { get; set; }
+        public virtual string PhoneNum { get; set; }
         [DataMember]
-        public string Email { get; set; }
+        public virtual string Email { get; set; }
         [DataMember]
         public string IdentityNum { get; set; }
         [DataMember]

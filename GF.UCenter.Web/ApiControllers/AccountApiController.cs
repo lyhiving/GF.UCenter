@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Couchbase;
 using GF.UCenter.Common;
+using GF.UCenter.Common.Models;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
 using Microsoft.WindowsAzure.Storage;
@@ -15,8 +16,6 @@ namespace GF.UCenter.Web.ApiControllers
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/account")]
-    [ValidateModel]
-    [ValidateResponse]
     public class AccountApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------
@@ -33,7 +32,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterInfo info)
+        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info)
         {
             logger.Info($"account.register AccountName={info.AccountName}");
 

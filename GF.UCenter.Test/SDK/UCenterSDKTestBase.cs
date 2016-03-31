@@ -25,19 +25,21 @@ namespace GF.UCenter.Test
             this.sClient = new SDK.AppServer.UCenterClient(host);
         }
 
-        protected async Task<AccountRegisterResponse> CreateTestAccount()
+        protected async Task<AccountRegisterResponse> CreateTestAccount(AccountRegisterInfo info = null)
         {
-            var info = new AccountRegisterInfo()
+            if (info == null)
             {
-                AccountName = GenerateRandomString(),
-                Password = ValidAccountPassword,
-                SuperPassword = ValidAccountPassword,
-                Name = GenerateRandomString(),
-                IdentityNum = GenerateRandomString(),
-                PhoneNum = GenerateRandomString(),
-                Sex = Sex.Female
-            };
-
+                info = new AccountRegisterInfo()
+                {
+                    AccountName = GenerateRandomString(),
+                    Password = ValidAccountPassword,
+                    SuperPassword = ValidAccountPassword,
+                    Name = GenerateRandomString(),
+                    IdentityNum = GenerateRandomString(),
+                    PhoneNum = GenerateRandomString(),
+                    Sex = Sex.Female
+                };
+            }
             var registerResponse = await cClient.AccountRegisterAsync(info);
             Assert.IsNotNull(registerResponse.AccountId);
             Assert.AreEqual(registerResponse.AccountName, info.AccountName);

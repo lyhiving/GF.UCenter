@@ -179,6 +179,7 @@
     <Compile Include="ApiControllers\AppApiController.cs" />
     <Compile Include="ApiControllers\AccountApiController.cs" />
     <Compile Include="ApiControllers\PaymentApiController.cs" />
+    <Compile Include="Attributes\ActionExecutionFilterAttribute.cs" />
     <Compile Include="Common\ApplicationManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -190,8 +191,6 @@
     </Compile>
     <Compile Include="Common\MefDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Attributes\ValidateModelAttribute.cs" />
-    <Compile Include="Attributes\ValidateResponseAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

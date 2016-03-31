@@ -12,8 +12,6 @@ namespace GF.UCenter.Web.ApiControllers
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/app")]
-    [ValidateModel]
-    [ValidateResponse]
     public class AppApiController : ApiControllerBase
     {
         //---------------------------------------------------------------------

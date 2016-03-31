@@ -12,6 +12,7 @@ using NLog;
 namespace GF.UCenter.Web.ApiControllers
 {
     [Export]
+    [ActionExecutionFilter]
     public class ApiControllerBase : ApiController
     {
         //---------------------------------------------------------------------
