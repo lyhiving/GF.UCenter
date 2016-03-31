@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using GF.UCenter.Common;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
 using Newtonsoft.Json.Linq;
 using NLog;
-using GF.UCenter.Common;
 
 namespace GF.UCenter.Web
 {
@@ -23,7 +23,7 @@ namespace GF.UCenter.Web
 
         public override async Task OnActionExecutingAsync(HttpActionContext context, CancellationToken token)
         {
-            await this.LogIncomingRequest(context, token);
+            this.LogIncomingRequest(context);
 
             if (!context.ModelState.IsValid)
             {
@@ -66,24 +66,16 @@ namespace GF.UCenter.Web
             base.OnActionExecuted(context);
         }
 
-        private async Task LogIncomingRequest(HttpActionContext context, CancellationToken token)
+        private void LogIncomingRequest(HttpActionContext context)
         {
             try
             {
-                var body = await context.Request.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(body))
-                {
-                    JToken jtoken = JToken.Parse(body);
-                    jtoken.Where(j => j is JProperty)
-                        .Select(j => j as JProperty)
-                        .Where(j => j.Name.Contains("Password"))
-                        .ToList()
-                        .ForEach(j => j.Value = $"<--{j.Name}-->");
+                string request = context.Request.ToString();
 
-                    body = jtoken.ToString();
-                }
+                string arguments = context.ActionArguments.Select(a => $"{a.Value.DumpToString(a.Key)}")
+                    .JoinToString(",");
 
-                string message = $"Incoming Request\n\t{context.Request.ToString()}\n\t BODY:{body}";
+                string message = $"Incoming Request\n\t{request}\n\n\t Arguments:{arguments}";
                 logger.Info(message);
             }
             catch (Exception ex)

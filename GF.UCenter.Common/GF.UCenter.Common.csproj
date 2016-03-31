@@ -64,11 +64,15 @@
   <ItemGroup>
     <Compile Include="CompositionContainerFactory.cs" />
     <Compile Include="DisposableObjectSlim.cs" />
+    <Compile Include="Dumper\DebugWritter.cs" />
+    <Compile Include="Dumper\DumperToAttribute.cs" />
+    <Compile Include="Dumper\ObjectDumperExtension.cs" />
     <Compile Include="EncryptHashManager.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="Extensions\RSACryptoServiceProviderExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\AccountRegisterRequestInfo.cs" />
+    <Compile Include="Dumper\ObjectDumper.cs" />
     <Compile Include="SDK\UCenterHttpClient.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />

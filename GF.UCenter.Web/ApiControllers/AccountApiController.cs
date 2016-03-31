@@ -34,7 +34,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("register")]
         public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info)
         {
-            logger.Info($"account.register AccountName={info.AccountName}");
+            logger.Info($"Account.Register AccountName={info.AccountName}");
 
             var removeTempsIfError = new List<AccountResourceEntity>();
             var error = false;
@@ -84,7 +84,7 @@ namespace GF.UCenter.Web.ApiControllers
             }
             catch (Exception ex)
             {
-                logger.Info($"account.register异常：AccoundName={info.AccountName}");
+                logger.Info($"Account.Register Exception：AccoundName={info.AccountName}");
                 logger.Info(ex.ToString());
 
                 error = true;
@@ -116,7 +116,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("login")]
         public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
         {
-            logger.Info($"account.login AccountName={info.AccountName}");
+            logger.Info($"Account.Login AccountName={info.AccountName}");
 
             var accountResourceByName = await this.db.Bucket.GetByEntityIdSlimAsync<AccountResourceEntity>(AccountResourceEntity.GenerateResourceId(AccountResourceType.AccountName, info.AccountName), false);
             AccountEntity account = null;
@@ -158,7 +158,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("guest")]
         public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
         {
-            logger.Info($"account.guest");
+            logger.Info("Account.GuestLogin");
 
             var r = new Random();
             string accountNamePostfix = r.Next(0, 1000000).ToString("D6");
@@ -192,7 +192,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("convert")]
         public async Task<IHttpActionResult> Convert([FromBody]AccountConvertInfo info)
         {
-            logger.Info($"account.convert AccountName={info.AccountName}");
+            logger.Info($"Account.Convert AccountName={info.AccountName}");
 
             var account = await GetAndVerifyAccount(info.AccountId);
 
@@ -221,7 +221,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("resetpassword")]
         public async Task<IHttpActionResult> ResetPassword([FromBody]AccountResetPasswordInfo info)
         {
-            logger.Info($"account.resetpassword AccountName={info.AccountId}");
+            logger.Info($"Account.ResetPassword AccountName={info.AccountId}");
 
             var account = await GetAndVerifyAccount(info.AccountId);
 
@@ -244,7 +244,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("upload/{accountId}")]
         public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId)
         {
-            logger.Info($"account.upload.accountId AccountId={accountId}");
+            logger.Info($"Account.UploadProfileImage AccountId={accountId}");
 
             var account = await GetAndVerifyAccount(accountId);
 
@@ -272,7 +272,7 @@ namespace GF.UCenter.Web.ApiControllers
         [Route("test")]
         public async Task<IHttpActionResult> Test(AccountLoginInfo info)
         {
-            logger.Info($"account.test");
+            logger.Info($"Account.Test");
 
             var accounts = await this.db.Bucket.QueryAsync<AccountEntity>(a => a.AccountName == "Ny7IBHtK");
 

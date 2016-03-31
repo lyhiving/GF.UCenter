@@ -2,10 +2,9 @@
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using System.Web.Http;
-using GF.UCenter.Common;
+using GF.UCenter.Common.Models;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
-using NLog;
 
 namespace GF.UCenter.Web.ApiControllers
 {
@@ -24,9 +23,9 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("create")]
-        public async Task<IHttpActionResult> Create([FromBody]AppInfo info)
+        public async Task<IHttpActionResult> Create([FromBody]AppRequestInfo info)
         {
-            logger.Info("AppServer请求创建App\nAppId={0}", info.AppId);
+            logger.Info("App.Create AppId={0}", info.AppId);
 
             var app = await this.db.Bucket.GetByEntityIdSlimAsync<AppEntity>(info.AppId, throwIfFailed: false);
 
@@ -52,9 +51,9 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("verifyaccount")]
-        public async Task<IHttpActionResult> VerifyAccount(AppVerifyAccountInfo info)
+        public async Task<IHttpActionResult> VerifyAccount(AppVerifyAccountRequestInfo info)
         {
-            logger.Info($"AppServer请求验证Account\nAppId={info.AppId}\nAccountId={info.AccountId}");
+            logger.Info($"App.VerifyAccount AppId={info.AppId} AccountId={info.AccountId}");
 
             await VerifyApp(info.AppId, info.AppSecret);
             var account = await this.GetAndVerifyAccount(info.AccountId, info.AccountToken);
@@ -72,9 +71,9 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("readdata")]
-        public async Task<IHttpActionResult> ReadAppAccountData(AppAccountDataInfo info)
+        public async Task<IHttpActionResult> ReadAppAccountData(AppAccountDataRequestInfo info)
         {
-            logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
+            logger.Info($"App.ReadAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
 
             await VerifyApp(info.AppId, info.AppSecret);
 
@@ -95,9 +94,9 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("writedata")]
-        public async Task<IHttpActionResult> WriteAppAccountData(AppAccountDataInfo info)
+        public async Task<IHttpActionResult> WriteAppAccountData(AppAccountDataRequestInfo info)
         {
-            logger.Info($"AppServer请求读取AccountData\nAppId={info.AppId}\nAccountId={info.AccountId}");
+            logger.Info($"App.WriteAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
 
             await VerifyApp(info.AppId, info.AppSecret);
 

@@ -7,14 +7,14 @@ namespace GF.UCenter.Common.Portable
     public class AppVerifyAccountResponse
     {
         [DataMember]
-        public string AccountId;
+        public string AccountId { get; set; }
         [DataMember]
-        public string AccountName;
+        public string AccountName { get; set; }
         [DataMember]
-        public string AccountToken;
+        public string AccountToken { get; set; }
         [DataMember]
-        public DateTime LastLoginDateTime;
+        public DateTime LastLoginDateTime { get; set; }
         [DataMember]
-        public DateTime LastVerifyDateTime;
+        public DateTime LastVerifyDateTime { get; set; }
     }
 }

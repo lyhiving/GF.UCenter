@@ -7,10 +7,10 @@ namespace GF.UCenter.Common.Portable
     public class AppAccountDataResponse
     {
         [DataMember]
-        public string AccountId;
+        public string AccountId { get; set; }
         [DataMember]
-        public string AppId;
+        public string AppId { get; set; }
         [DataMember]
-        public string Data;
+        public string Data { get; set; }
     }
 }

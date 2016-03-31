@@ -22,11 +22,13 @@ namespace GF.UCenter.Common.Models
         [DataMember]
         // [RegularExpression(UCenterModelRules.PasswordRule)]
         [Required]
+        [DumperTo("<--Passowrd-->")]
         public override string Password { get; set; }
 
         [DataMember]
         // [RegularExpression(UCenterModelRules.PasswordRule)]
         [Required]
+        [DumperTo("<--SuperPassword-->")]
         public override string SuperPassword { get; set; }
 
         [DataMember]

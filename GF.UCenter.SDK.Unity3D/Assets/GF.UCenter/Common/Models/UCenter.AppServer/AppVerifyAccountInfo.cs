@@ -7,12 +7,12 @@ namespace GF.UCenter.Common.Portable
     public class AppVerifyAccountInfo
     {
         [DataMember]
-        public string AppId;
+        public virtual string AppId { get; set; }
         [DataMember]
-        public string AppSecret;
+        public virtual string AppSecret { get; set; }
         [DataMember]
-        public string AccountId;
+        public virtual string AccountId { get; set; }
         [DataMember]
-        public string AccountToken;
+        public virtual string AccountToken { get; set; }
     }
 }
