@@ -73,6 +73,9 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\AccountRegisterRequestInfo.cs" />
     <Compile Include="Dumper\ObjectDumper.cs" />
+    <Compile Include="Models\AppAccountDataRequestInfo.cs" />
+    <Compile Include="Models\AppRequestInfo.cs" />
+    <Compile Include="Models\AppVerifyAccountRequestInfo.cs" />
     <Compile Include="SDK\UCenterHttpClient.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />
