@@ -45,9 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Pingplusplus\ChargeResponse.cs" />
-    <Compile Include="Models\Pingplusplus\Refund.cs" />
-    <Compile Include="Models\Pingplusplus\RefundList.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountUploadProfileImageResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountConvertInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountLoginInfo.cs" />
@@ -55,22 +52,13 @@
     <Compile Include="Models\UCenter.AppClient\AccountConvertResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordInfo.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResourceType.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppAccountDataInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppInfo.cs" />
-    <Compile Include="Models\Pingplusplus\ChargeInfo.cs" />
-    <Compile Include="Models\Pingplusplus\Charge.cs" />
-    <Compile Include="Models\Pingplusplus\ChargeList.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountGuestLoginResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountLoginResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountRegisterResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountRequestResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResetPasswordResponse.cs" />
     <Compile Include="Models\UCenter.AppClient\AccountResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppAccountDataResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppVerifyAccountInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppVerifyAccountResponse.cs" />
-    <Compile Include="Models\Sex.cs" />
+    <Compile Include="Models\UCenter.AppClient\Sex.cs" />
     <Compile Include="Contracts\UCenterError.cs" />
     <Compile Include="Contracts\UCenterErrorCode.cs" />
     <Compile Include="Exceptions\UCenterException.cs" />

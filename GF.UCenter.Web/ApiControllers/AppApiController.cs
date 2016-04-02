@@ -23,7 +23,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("create")]
-        public async Task<IHttpActionResult> Create([FromBody]AppRequestInfo info)
+        public async Task<IHttpActionResult> Create([FromBody]AppInfo info)
         {
             logger.Info("App.Create AppId={0}", info.AppId);
 
@@ -51,7 +51,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("verifyaccount")]
-        public async Task<IHttpActionResult> VerifyAccount(AppVerifyAccountRequestInfo info)
+        public async Task<IHttpActionResult> VerifyAccount(AppVerifyAccountInfo info)
         {
             logger.Info($"App.VerifyAccount AppId={info.AppId} AccountId={info.AccountId}");
 
@@ -71,7 +71,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("readdata")]
-        public async Task<IHttpActionResult> ReadAppAccountData(AppAccountDataRequestInfo info)
+        public async Task<IHttpActionResult> ReadAppAccountData(AppAccountDataInfo info)
         {
             logger.Info($"App.ReadAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
 
@@ -94,7 +94,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("writedata")]
-        public async Task<IHttpActionResult> WriteAppAccountData(AppAccountDataRequestInfo info)
+        public async Task<IHttpActionResult> WriteAppAccountData(AppAccountDataInfo info)
         {
             logger.Info($"App.WriteAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
 

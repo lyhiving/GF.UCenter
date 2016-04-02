@@ -8,6 +8,7 @@ namespace GF.UCenter.Common.Portable
         [DataMember]
         public virtual string AppId { get; set; }
         [DataMember]
+        [DumperTo("<--AppSecret-->")]
         public virtual string AppSecret { get; set; }
     }
 }

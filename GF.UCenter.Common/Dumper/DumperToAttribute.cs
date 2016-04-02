@@ -8,6 +8,7 @@ namespace GF.UCenter.Common
 {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
     public class DumperToAttribute : Attribute
+
     {
         public DumperToAttribute(string value)
         {
