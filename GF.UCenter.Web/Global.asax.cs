@@ -8,8 +8,14 @@
     using UCenter.Common;
     using UCenter.Common.Settings;
 
+    /// <summary>
+    /// MVC Application
+    /// </summary>
     public class MvcApplication : HttpApplication
     {
+        /// <summary>
+        /// The application start event
+        /// </summary>
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -17,7 +23,9 @@
             ExportProvider exportProvider = CompositionContainerFactory.Create();
 
             ApplicationManager.InitializeApplication(GlobalConfiguration.Configuration, exportProvider);
-            SettingsInitializer.Initialize<Settings>(exportProvider, SettingsDefaultValueProvider<Settings>.Default,
+            SettingsInitializer.Initialize<Settings>(
+                exportProvider,
+                SettingsDefaultValueProvider<Settings>.Default,
                 AppConfigurationValueProvider.Default);
         }
     }

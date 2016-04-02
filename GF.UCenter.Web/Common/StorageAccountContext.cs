@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Web.Common
 {
     using System.ComponentModel.Composition;
     using System.IO;
@@ -13,7 +13,7 @@
         private readonly CloudBlobContainer container;
 
         [ImportingConstructor]
-        public StorageAccountContext(Settings.Settings settings)
+        public StorageAccountContext(UCenter.Common.Settings.Settings settings)
         {
             var account = CloudStorageAccount.Parse(settings.UCStorageConnectionString);
             var client = account.CreateCloudBlobClient();

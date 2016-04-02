@@ -38,7 +38,7 @@
         }
 
         [TestMethod]
-        public async Task E2E_AppServer_VerifyAccount_AccountNotExist_Test()
+        public void E2E_AppServer_VerifyAccount_AccountNotExist_Test()
         {
             var appVerifyAccountInfo = new AppVerifyAccountInfo
             {

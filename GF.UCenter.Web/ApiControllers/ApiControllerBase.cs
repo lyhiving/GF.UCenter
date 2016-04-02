@@ -1,7 +1,6 @@
 ﻿/// <summary>
 /// UCenter base api controller
 /// </summary>
-
 namespace GF.UCenter.Web.ApiControllers
 {
     using System.ComponentModel.Composition;
@@ -46,7 +45,7 @@ namespace GF.UCenter.Web.ApiControllers
         /// <returns>Http Action result</returns>
         protected IHttpActionResult CreateSuccessResult<TResult>(TResult result)
         {
-            return this.Ok(new UCenterResponse<TResult> {Status = UCenterResponseStatus.Success, Result = result});
+            return this.Ok(new UCenterResponse<TResult> { Status = UCenterResponseStatus.Success, Result = result });
         }
     }
 }

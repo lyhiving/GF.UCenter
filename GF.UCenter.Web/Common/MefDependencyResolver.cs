@@ -46,7 +46,9 @@
         public object GetService(Type serviceType)
         {
             if (serviceType == null)
+            {
                 throw new ArgumentNullException("serviceType");
+            }
 
             var contractName = AttributedModelServices.GetContractName(serviceType);
             var export = this.exportProvider.GetExportedValueOrDefault<object>(contractName);
@@ -61,7 +63,9 @@
         public IEnumerable<object> GetServices(Type serviceType)
         {
             if (serviceType == null)
+            {
                 throw new ArgumentNullException("serviceType");
+            }
 
             var exports =
                 this.exportProvider.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));

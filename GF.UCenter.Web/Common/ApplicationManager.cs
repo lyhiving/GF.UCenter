@@ -30,7 +30,9 @@
 
         private static void InitializeSettings(ExportProvider exportProvider)
         {
-            SettingsInitializer.Initialize<Settings>(exportProvider, SettingsDefaultValueProvider<Settings>.Default,
+            SettingsInitializer.Initialize<Settings>(
+                exportProvider, 
+                SettingsDefaultValueProvider<Settings>.Default,
                 AppConfigurationValueProvider.Default);
         }
 

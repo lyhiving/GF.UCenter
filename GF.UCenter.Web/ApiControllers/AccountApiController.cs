@@ -26,6 +26,7 @@ namespace GF.UCenter.Web.ApiControllers
     using UCenter.Common.Portable.Exceptions;
     using UCenter.Common.Portable.Models.AppClient;
     using UCenter.Common.Settings;
+    using StorageAccountContext = Common.StorageAccountContext;
 
     /// <summary>
     ///     UCenter account api controller
@@ -383,11 +384,11 @@ namespace GF.UCenter.Web.ApiControllers
             if (sourceImage.Width > this.settings.MaxThumbnailWidth ||
                 sourceImage.Height > this.settings.MaxThumbnailHeight)
             {
-                var radio = Math.Min((double) this.settings.MaxThumbnailWidth/sourceImage.Width,
-                    (double) this.settings.MaxThumbnailHeight/sourceImage.Height);
+                var radio = Math.Min((double)this.settings.MaxThumbnailWidth / sourceImage.Width,
+                    (double)this.settings.MaxThumbnailHeight / sourceImage.Height);
 
-                var twidth = (int) (sourceImage.Width*radio);
-                var theigth = (int) (sourceImage.Height*radio);
+                var twidth = (int)(sourceImage.Width * radio);
+                var theigth = (int)(sourceImage.Height * radio);
                 var thumbnail = sourceImage.GetThumbnailImage(twidth, theigth, null, IntPtr.Zero);
 
                 thumbnail.Save(stream, sourceImage.RawFormat);
@@ -407,11 +408,11 @@ namespace GF.UCenter.Web.ApiControllers
 
             if (request.Properties.ContainsKey("MS_HttpContext"))
             {
-                return ((HttpContextWrapper) request.Properties["MS_HttpContext"]).Request.UserHostAddress;
+                return ((HttpContextWrapper)request.Properties["MS_HttpContext"]).Request.UserHostAddress;
             }
             if (request.Properties.ContainsKey(RemoteEndpointMessageProperty.Name))
             {
-                var prop = (RemoteEndpointMessageProperty) request.Properties[RemoteEndpointMessageProperty.Name];
+                var prop = (RemoteEndpointMessageProperty)request.Properties[RemoteEndpointMessageProperty.Name];
                 return prop.Address;
             }
             if (HttpContext.Current != null)
