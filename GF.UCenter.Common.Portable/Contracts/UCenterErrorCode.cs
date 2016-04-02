@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common.Portable.Contracts
+﻿namespace GF.UCenter.Common.Portable
 {
     public enum UCenterErrorCode : short
     {

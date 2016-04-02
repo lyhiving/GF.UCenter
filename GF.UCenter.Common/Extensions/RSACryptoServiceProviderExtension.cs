@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common.Extensions
+﻿namespace GF.UCenter.Common
 {
     using System;
     using System.ComponentModel;

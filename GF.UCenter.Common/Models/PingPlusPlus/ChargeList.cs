@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common.Models.PingPlusPlus
+﻿namespace GF.UCenter.Common
 {
     using System.Collections.Generic;
     using System.Runtime.Serialization;

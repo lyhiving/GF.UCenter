@@ -1,8 +1,7 @@
-﻿namespace GF.UCenter.CouchBase.Entities
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
-    using Attributes;
-    using Common.Portable.Models.AppClient;
+    using Common.Portable;
 
     [DocumentType("Account")]
     public class AccountEntity : BaseEntity<AccountEntity>

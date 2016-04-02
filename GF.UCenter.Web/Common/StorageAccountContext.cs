@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Web.Common
+﻿namespace GF.UCenter.Web
 {
     using System.ComponentModel.Composition;
     using System.IO;

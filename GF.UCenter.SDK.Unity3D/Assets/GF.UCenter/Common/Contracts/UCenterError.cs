@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common.Portable.Contracts
+﻿namespace GF.UCenter.Common.Portable
 {
     using System.Runtime.Serialization;
     using Newtonsoft.Json;

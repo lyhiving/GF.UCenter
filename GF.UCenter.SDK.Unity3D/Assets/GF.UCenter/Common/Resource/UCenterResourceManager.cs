@@ -1,7 +1,7 @@
 ﻿namespace GF.UCenter.Common.Portable.Resource
 {
     using System.Collections.Generic;
-    using Contracts;
+    using Portable;
 
     internal static class UCenterResourceManager
     {

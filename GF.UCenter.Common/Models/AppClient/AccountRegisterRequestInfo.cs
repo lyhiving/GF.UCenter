@@ -1,9 +1,9 @@
-﻿namespace GF.UCenter.Common.Models.AppClient
+﻿namespace GF.UCenter.Comomn
 {
     using System.ComponentModel.DataAnnotations;
     using System.Runtime.Serialization;
-    using Dumper;
-    using Portable.Models.AppClient;
+    using Common;
+    using Common.Portable;
 
     [DataContract]
     public class AccountRegisterRequestInfo : AccountRegisterInfo

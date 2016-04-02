@@ -1,9 +1,8 @@
-﻿namespace GF.UCenter.CouchBase.Database
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
     using System.Linq.Expressions;
-    using Common.Extensions;
-    using Expressions;
+    using Common;
 
     internal class CouchQueryTranslator : QueryTranslator
     {

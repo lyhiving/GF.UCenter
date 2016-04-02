@@ -6,7 +6,7 @@
     [Export]
     public class Settings
     {
-        [DefaultValue("ucenter")]
+        [DefaultValue("UCenter")]
         public string BucketName { get; set; }
 
         [DefaultValue("http://127.0.0.1:8091")]

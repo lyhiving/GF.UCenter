@@ -1,7 +1,6 @@
-﻿namespace GF.UCenter.CouchBase.Entities
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
-    using Attributes;
 
     [Serializable]
     [DocumentType("AppAccountData")]

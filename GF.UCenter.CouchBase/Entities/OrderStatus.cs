@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.CouchBase.Entities
+﻿namespace GF.UCenter.CouchBase
 {
     public enum OrderStatus
     {

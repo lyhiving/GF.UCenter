@@ -1,14 +1,14 @@
 ﻿/// <summary>
 /// UCenter base api controller
 /// </summary>
-namespace GF.UCenter.Web.ApiControllers
+namespace GF.UCenter.Web
 {
     using System.ComponentModel.Composition;
     using System.Web.Http;
     using Attributes;
-    using CouchBase.Database;
+    using CouchBase;
     using NLog;
-    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable;
 
     /// <summary>
     ///     API controller base class

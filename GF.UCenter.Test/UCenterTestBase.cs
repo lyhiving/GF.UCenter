@@ -5,7 +5,6 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
     using System.Threading;
-    using Clients;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using UCenter.Common;
     using UCenter.Common.Settings;

@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Test.Clients
+﻿namespace GF.UCenter.Test
 {
     using System;
     using System.ComponentModel.Composition;
@@ -6,7 +6,7 @@
     using System.Web.Http;
     using System.Web.Http.SelfHost;
     using UCenter.Common;
-    using Web.Common;
+    using Web;
 
     [Export]
     public class WebContext : DisposableObjectSlim

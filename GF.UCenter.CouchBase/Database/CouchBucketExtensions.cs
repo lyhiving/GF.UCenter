@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.CouchBase.Database
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
     using System.Collections.Generic;
@@ -7,8 +7,6 @@
     using System.Threading.Tasks;
     using Couchbase.Core;
     using Couchbase.N1QL;
-    using Entities;
-    using Exceptions;
 
     public static class CouchBucketExtensions
     {

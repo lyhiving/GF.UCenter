@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common.Models.AppServer
+﻿namespace GF.UCenter.Common
 {
     using System.Runtime.Serialization;
 

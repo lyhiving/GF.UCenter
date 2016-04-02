@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Test.Clients
+﻿namespace GF.UCenter.Test
 {
     using System.ComponentModel.Composition;
     using System.Net.Http;

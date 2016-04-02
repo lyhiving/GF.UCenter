@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.CouchBase.Attributes
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
 

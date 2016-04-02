@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////
 
 
-namespace GF.UCenter.Common.Dumper
+namespace GF.UCenter.Common
 {
     using System.Diagnostics;
     using System.Globalization;

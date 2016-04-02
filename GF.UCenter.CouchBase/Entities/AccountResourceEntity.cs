@@ -1,7 +1,6 @@
-﻿namespace GF.UCenter.CouchBase.Entities
+﻿namespace GF.UCenter.CouchBase
 {
-    using Attributes;
-    using Common.Portable.Models.AppClient;
+    using Common.Portable;
 
     [DocumentType("AccountResource")]
     public class AccountResourceEntity : BaseEntity<AccountResourceEntity>

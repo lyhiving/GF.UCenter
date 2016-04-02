@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Common.Portable.Models.AppClient
+﻿namespace GF.UCenter.Common.Portable
 {
     public enum AccountResourceType
     {

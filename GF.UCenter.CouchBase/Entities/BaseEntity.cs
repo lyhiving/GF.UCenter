@@ -1,8 +1,7 @@
-﻿namespace GF.UCenter.CouchBase.Entities
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
     using System.Reflection;
-    using Attributes;
     using Couchbase;
 
     public abstract class BaseEntity<TEntity> : IBaseEntity, IBaseEntity<TEntity> where TEntity : class, IBaseEntity

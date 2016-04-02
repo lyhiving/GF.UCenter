@@ -2,7 +2,7 @@
 /// UCenter account api controller
 /// </summary>
 
-namespace GF.UCenter.Web.ApiControllers
+namespace GF.UCenter.Web
 {
     using System;
     using System.Collections.Generic;
@@ -15,18 +15,12 @@ namespace GF.UCenter.Web.ApiControllers
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Http;
+    using Common;
+    using Common.Portable;
+    using Common.Settings;
+    using Comomn;
     using Couchbase;
-    using CouchBase.Database;
-    using CouchBase.Entities;
-    using CouchBase.Exceptions;
-    using UCenter.Common;
-    using UCenter.Common.Extensions;
-    using UCenter.Common.Models.AppClient;
-    using UCenter.Common.Portable.Contracts;
-    using UCenter.Common.Portable.Exceptions;
-    using UCenter.Common.Portable.Models.AppClient;
-    using UCenter.Common.Settings;
-    using StorageAccountContext = Common.StorageAccountContext;
+    using CouchBase;
 
     /// <summary>
     ///     UCenter account api controller

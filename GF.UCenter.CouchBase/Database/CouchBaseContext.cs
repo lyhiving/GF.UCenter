@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.CouchBase.Database
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
     using System.Collections.Concurrent;
@@ -9,7 +9,6 @@
     using Couchbase;
     using Couchbase.Configuration.Client;
     using Couchbase.Core;
-    using Entities;
 
     [Export]
     public class CouchBaseContext

@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.CouchBase.Expressions
+﻿namespace GF.UCenter.CouchBase
 {
     using System.Collections.Generic;
 

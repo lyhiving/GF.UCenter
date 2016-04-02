@@ -1,13 +1,11 @@
-﻿namespace GF.UCenter.Test.E2ETest
+﻿namespace GF.UCenter.Test
 {
     using System;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using UCenter.Common.Portable.Contracts;
-    using UCenter.Common.Portable.Models.AppClient;
+    using UCenter.Common.Portable;
 
     [TestClass]
     public class UCenterE2EAppClientTest : UCenterE2ETestBase

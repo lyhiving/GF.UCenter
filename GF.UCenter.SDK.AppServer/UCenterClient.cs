@@ -2,8 +2,7 @@
 {
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Common.Models.AppServer;
-    using Common.Models.PingPlusPlus;
+    using Common;
     using Common.SDK;
 
     public class UCenterClient

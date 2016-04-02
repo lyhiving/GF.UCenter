@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.CouchBase.Exceptions
+﻿namespace GF.UCenter.CouchBase
 {
     using System;
     using Couchbase;

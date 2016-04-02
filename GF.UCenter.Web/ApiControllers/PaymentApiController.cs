@@ -1,4 +1,4 @@
-﻿namespace GF.UCenter.Web.ApiControllers
+﻿namespace GF.UCenter.Web
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,11 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Web.Http;
-    using CouchBase.Database;
+    using CouchBase;
     using Newtonsoft.Json.Linq;
     using pingpp;
-    using UCenter.Common.Extensions;
-    using UCenter.Common.Models.PingPlusPlus;
-    using UCenter.Common.Portable.Contracts;
-    using UCenter.Common.Portable.Exceptions;
+    using UCenter.Common;
+    using UCenter.Common.Portable;
     using UCenter.Common.Settings;
 
     /// <summary>

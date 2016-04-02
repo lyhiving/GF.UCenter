@@ -1,14 +1,12 @@
-﻿namespace GF.UCenter.Web.ApiControllers
+﻿namespace GF.UCenter.Web
 {
     using System;
     using System.ComponentModel.Composition;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using CouchBase.Database;
-    using CouchBase.Entities;
-    using UCenter.Common.Models.AppServer;
-    using UCenter.Common.Portable.Contracts;
-    using UCenter.Common.Portable.Exceptions;
+    using CouchBase;
+    using UCenter.Common;
+    using UCenter.Common.Portable;
 
     /// <summary>
     ///     UCenter app api controller

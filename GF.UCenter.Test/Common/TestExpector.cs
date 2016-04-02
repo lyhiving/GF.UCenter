@@ -1,11 +1,10 @@
-﻿namespace GF.UCenter.Test.Common
+﻿namespace GF.UCenter.Test
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using UCenter.Common.Portable.Contracts;
-    using UCenter.Common.Portable.Exceptions;
+    using UCenter.Common.Portable;
 
     public static class TestExpector
     {

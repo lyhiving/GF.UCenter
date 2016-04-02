@@ -8,7 +8,6 @@
     using System.Linq;
     using System.Reflection;
     using System.Web.Hosting;
-    using Extensions;
 
     public static class CompositionContainerFactory
     {
