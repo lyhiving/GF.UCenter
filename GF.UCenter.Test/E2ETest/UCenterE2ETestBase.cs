@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GF.UCenter.Test
 {
     [TestClass]
-    public class UCenterSDKTestBase : UCenterTestBase
+    public class UCenterE2ETestBase : UCenterTestBase
     {
         protected const string TestAppId = "utapp";
         protected const string TestAppSecret = "#pA554&3321#";
@@ -18,7 +18,7 @@ namespace GF.UCenter.Test
         protected SDK.AppClient.UCenterClient cClient;
         protected SDK.AppServer.UCenterClient sClient;
 
-        public UCenterSDKTestBase()
+        public UCenterE2ETestBase()
         {
             this.host = "http://localhost:8888/";
             this.cClient = new SDK.AppClient.UCenterClient(host);

@@ -73,9 +73,9 @@
     <Compile Include="Common\TestExpector.cs" />
     <Compile Include="CoushBaseContextTest.cs" />
     <Compile Include="EncryptHashManagerTest.cs" />
-    <Compile Include="SDK\UCenterSDKAppServerTest.cs" />
-    <Compile Include="SDK\UCenterSDKAppClientTest.cs" />
-    <Compile Include="SDK\UCenterSDKTestBase.cs" />
+    <Compile Include="E2ETest\UCenterE2EAppServerTest.cs" />
+    <Compile Include="E2ETest\UCenterE2EAppClientTest.cs" />
+    <Compile Include="E2ETest\UCenterE2ETestBase.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Clients\TenantEnvironment.cs" />
     <Compile Include="Clients\WebContext.cs" />

@@ -5,10 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GF.UCenter.Test
 {
     [TestClass]
-    public class UCenterSDKAppServerTest : UCenterSDKTestBase
+    public class UCenterE2EAppServerTest : UCenterE2ETestBase
     {
         [TestMethod]
-        public async Task SDK_AppServer_VerifyAccount_Test()
+        public async Task E2E_AppServer_VerifyAccount_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -34,7 +34,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_VerifyAccount_AccountNotExist_Test()
+        public async Task E2E_AppServer_VerifyAccount_AccountNotExist_Test()
         {
             var appVerifyAccountInfo = new AppVerifyAccountInfo()
             {
@@ -51,7 +51,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_VerifyAccount_AppNotExist_Test()
+        public async Task E2E_AppServer_VerifyAccount_AppNotExist_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -76,7 +76,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_VerifyAccount_IncorrectAppSecret_Test()
+        public async Task E2E_AppServer_VerifyAccount_IncorrectAppSecret_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -101,7 +101,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_VerifyAccount_IncorrectAccountToken_Test()
+        public async Task E2E_AppServer_VerifyAccount_IncorrectAccountToken_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -126,7 +126,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_ReadAccountData_And_WriteAccountData_Test()
+        public async Task E2E_AppServer_ReadAccountData_And_WriteAccountData_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -155,7 +155,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_ReadAccountData_IncorrectAppSecret_Test()
+        public async Task E2E_AppServer_ReadAccountData_IncorrectAppSecret_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -179,7 +179,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_WriteAccountData_InvalidAppSecret_Test()
+        public async Task E2E_AppServer_WriteAccountData_InvalidAppSecret_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -205,7 +205,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppServer_Create_Charge_Test()
+        public async Task E2E_AppServer_Create_Charge_Test()
         {
             var registerResponse = await CreateTestAccount();
 

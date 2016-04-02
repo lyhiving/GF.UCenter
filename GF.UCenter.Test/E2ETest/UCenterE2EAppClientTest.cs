@@ -8,10 +8,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace GF.UCenter.Test
 {
     [TestClass]
-    public class UCenterSDKAppClientTest : UCenterSDKTestBase
+    public class UCenterE2EAppClientTest : UCenterE2ETestBase
     {
         [TestMethod]
-        public async Task SDK_AppClient_Register_And_Login_Test()
+        public async Task E2E_AppClient_Register_And_Login_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -35,7 +35,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Register_ParallelTest()
+        public async Task E2E_AppClient_Register_ParallelTest()
         {
             try
             {
@@ -63,7 +63,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Login_Incorrect_Password_Test()
+        public async Task E2E_AppClient_Login_Incorrect_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -78,7 +78,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Register_Twice_Test()
+        public async Task E2E_AppClient_Register_Twice_Test()
         {
             var info = new AccountRegisterInfo()
             {
@@ -101,7 +101,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Guest_Login_And_Convert_Test()
+        public async Task E2E_AppClient_Guest_Login_And_Convert_Test()
         {
             var loginResponse = await cClient.AccountGuestLoginAsync();
 
@@ -137,7 +137,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Reset_Password_Test()
+        public async Task E2E_AppClient_Reset_Password_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -163,7 +163,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Upload_Profile_Image_By_Path_Test()
+        public async Task E2E_AppClient_Upload_Profile_Image_By_Path_Test()
         {
             var registerResponse = await CreateTestAccount();
 
@@ -180,7 +180,7 @@ namespace GF.UCenter.Test
         }
 
         [TestMethod]
-        public async Task SDK_AppClient_Upload_Profile_Image_By_Stream_Test()
+        public async Task E2E_AppClient_Upload_Profile_Image_By_Stream_Test()
         {
             var registerResponse = await CreateTestAccount();
 
