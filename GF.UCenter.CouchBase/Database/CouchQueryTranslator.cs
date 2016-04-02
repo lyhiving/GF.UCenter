@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq.Expressions;
-using GF.UCenter.Common;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Database
 {
+    using System;
+    using System.Linq.Expressions;
+    using Common.Extensions;
+    using Expressions;
+
     internal class CouchQueryTranslator : QueryTranslator
     {
         protected override Expression VisitMember(MemberExpression node)

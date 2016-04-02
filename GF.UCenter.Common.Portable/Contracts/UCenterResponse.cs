@@ -1,9 +1,8 @@
-﻿using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace GF.UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Portable.Contracts
 {
+    using System.Runtime.Serialization;
+    using Newtonsoft.Json;
+
     [DataContract]
     public class UCenterResponse<TResult> : UCenterResponse
     {

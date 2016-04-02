@@ -1,15 +1,16 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using GF.UCenter.Common;
-using GF.UCenter.Common.Portable;
-
-namespace GF.UCenter.SDK.AppServer
+﻿namespace GF.UCenter.SDK.AppServer
 {
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Common.Models.AppServer;
+    using Common.Models.PingPlusPlus;
+    using Common.SDK;
+
     public class UCenterClient
     {
+        private readonly string host;
         //---------------------------------------------------------------------
         private readonly UCenterHttpClient httpClient;
-        private readonly string host;
 
         //---------------------------------------------------------------------
         public UCenterClient(string host)
@@ -30,7 +31,10 @@ namespace GF.UCenter.SDK.AppServer
         public async Task<AppVerifyAccountResponse> AppVerifyAccountAsync(AppVerifyAccountInfo info)
         {
             string url = GenerateApiEndpoint("app", "verifyaccount");
-            var response = await httpClient.SendAsyncWithException<AppVerifyAccountInfo, AppVerifyAccountResponse>(HttpMethod.Post, url, info);
+            var response =
+                await
+                    httpClient.SendAsyncWithException<AppVerifyAccountInfo, AppVerifyAccountResponse>(HttpMethod.Post,
+                        url, info);
             return response;
         }
 
@@ -38,7 +42,10 @@ namespace GF.UCenter.SDK.AppServer
         public async Task<AppAccountDataResponse> AppReadAccountDataAsync(AppAccountDataInfo info)
         {
             string url = GenerateApiEndpoint("app", "readdata");
-            var response = await httpClient.SendAsyncWithException<AppAccountDataInfo, AppAccountDataResponse>(HttpMethod.Post, url, info);
+            var response =
+                await
+                    httpClient.SendAsyncWithException<AppAccountDataInfo, AppAccountDataResponse>(HttpMethod.Post, url,
+                        info);
             return response;
         }
 
@@ -46,7 +53,10 @@ namespace GF.UCenter.SDK.AppServer
         public async Task<AppAccountDataResponse> AppWriteAccountDataAsync(AppAccountDataInfo info)
         {
             string url = GenerateApiEndpoint("app", "writedata");
-            var response = await httpClient.SendAsyncWithException<AppAccountDataInfo, AppAccountDataResponse>(HttpMethod.Post, url, info);
+            var response =
+                await
+                    httpClient.SendAsyncWithException<AppAccountDataInfo, AppAccountDataResponse>(HttpMethod.Post, url,
+                        info);
             return response;
         }
 

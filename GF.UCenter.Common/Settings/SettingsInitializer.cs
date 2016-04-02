@@ -1,16 +1,17 @@
-﻿using System;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Reflection;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common.Settings
 {
+    using System;
+    using System.ComponentModel.Composition.Hosting;
+    using System.Linq;
+    using System.Reflection;
+
     public static class SettingsInitializer
     {
-        public static TSettings Initialize<TSettings>(ExportProvider exportProvider, params ISettingsValueProvider[] providers)
+        public static TSettings Initialize<TSettings>(ExportProvider exportProvider,
+            params ISettingsValueProvider[] providers)
         {
             var settings = exportProvider.GetExportedValue<TSettings>();
-            var properties = typeof(TSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var properties = typeof (TSettings).GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var provider in providers)
             {
                 provider.SettingValues.AsParallel()

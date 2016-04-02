@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.Composition;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test.Clients
 {
+    using System.ComponentModel.Composition;
+    using System.Net.Http;
+
     [Export]
     public class TenantEnvironment
     {
-        protected readonly WebContext WebContext;
         protected readonly HttpClient HttpClient;
+        protected readonly WebContext WebContext;
 
         [ImportingConstructor]
         public TenantEnvironment(WebContext webContext)

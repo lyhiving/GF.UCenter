@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Expressions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Text;
+
     public abstract class QueryTranslator : ExpressionVisitor
     {
-        private readonly StringBuilder sb;
         private readonly List<QueryParameter> parameters;
-        private int parameterIndexer = 0;
+        private readonly StringBuilder sb;
+        private int parameterIndexer;
 
         internal QueryTranslator()
         {
@@ -27,12 +27,12 @@ namespace GF.UCenter.CouchBase
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (node.Method.DeclaringType == typeof(Queryable) && node.Method.Name == "Where")
+            if (node.Method.DeclaringType == typeof (Queryable) && node.Method.Name == "Where")
             {
                 this.Write("SELECT * FROM (");
                 this.Visit(node.Arguments[0]);
                 this.Write(") AS T WHERE ");
-                LambdaExpression lambda = (LambdaExpression)StripQuotes(node.Arguments[1]);
+                var lambda = (LambdaExpression) StripQuotes(node.Arguments[1]);
                 this.Visit(lambda.Body);
                 return node;
             }
@@ -48,7 +48,8 @@ namespace GF.UCenter.CouchBase
                     this.Visit(node.Operand);
                     break;
                 default:
-                    throw new NotSupportedException(string.Format("The unary operator '{0}' is not supported", node.NodeType));
+                    throw new NotSupportedException(string.Format("The unary operator '{0}' is not supported",
+                        node.NodeType));
             }
             return node;
         }
@@ -84,7 +85,7 @@ namespace GF.UCenter.CouchBase
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            IQueryable q = node.Value as IQueryable;
+            var q = node.Value as IQueryable;
             if (q != null)
             {
                 // assume constant nodes w/ IQueryables are table references
@@ -95,19 +96,21 @@ namespace GF.UCenter.CouchBase
             {
                 this.Write("NULL");
             }
-            else {
+            else
+            {
                 var typeCode = Type.GetTypeCode(node.Value.GetType());
                 switch (typeCode)
                 {
                     case TypeCode.Boolean:
-                        this.Write(((bool)node.Value) ? 1 : 0);
+                        this.Write((bool) node.Value ? 1 : 0);
                         break;
                     case TypeCode.String:
                     case TypeCode.DateTime:
                         this.WriteWithParameter(typeCode, node.Value);
                         break;
                     case TypeCode.Object:
-                        throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", node.Value));
+                        throw new NotSupportedException(string.Format("The constant for '{0}' is not supported",
+                            node.Value));
                     default:
                         this.Write(node.Value);
                         break;
@@ -196,7 +199,7 @@ namespace GF.UCenter.CouchBase
         {
             string name = $"{prefix}{++this.parameterIndexer}";
             this.Write(name);
-            this.parameters.Add(new QueryParameter() { Name = name, Value = value, TypeCode = code });
+            this.parameters.Add(new QueryParameter {Name = name, Value = value, TypeCode = code});
         }
 
         private void Clear()
@@ -210,10 +213,9 @@ namespace GF.UCenter.CouchBase
         {
             while (node.NodeType == ExpressionType.Quote)
             {
-                node = ((UnaryExpression)node).Operand;
+                node = ((UnaryExpression) node).Operand;
             }
             return node;
         }
-
     }
 }

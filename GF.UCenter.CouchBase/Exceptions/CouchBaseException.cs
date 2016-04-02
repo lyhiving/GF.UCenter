@@ -1,8 +1,8 @@
-﻿using System;
-using Couchbase;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Exceptions
 {
+    using System;
+    using Couchbase;
+
     public class CouchBaseException : Exception
     {
         public readonly IResult Result;

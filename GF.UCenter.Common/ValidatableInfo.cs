@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
     // todo: 由于无法跨平台，所以暂时移除
     public abstract class ValidatableInfo
     {
-        public ICollection<ValidationResult> Errors { get; private set; } = new List<ValidationResult>();
+        public ICollection<ValidationResult> Errors { get; } = new List<ValidationResult>();
 
         public virtual bool Validate()
         {
-            var context = new ValidationContext(this, serviceProvider: null, items: null);
+            var context = new ValidationContext(this, null, null);
             this.Errors.Clear();
-            return Validator.TryValidateObject(this, context, this.Errors, validateAllProperties: true);
+            return Validator.TryValidateObject(this, context, this.Errors, true);
         }
     }
 }

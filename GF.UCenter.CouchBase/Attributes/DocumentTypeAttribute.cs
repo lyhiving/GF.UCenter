@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    using System;
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class DocumentTypeAttribute : Attribute
     {
         public DocumentTypeAttribute(string type)

@@ -1,12 +1,12 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.Composition;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common.Settings
 {
+    using System.ComponentModel;
+    using System.ComponentModel.Composition;
+
     [Export]
     public class Settings
     {
-        [DefaultValue("UCenter")]
+        [DefaultValue("ucenter")]
         public string BucketName { get; set; }
 
         [DefaultValue("http://127.0.0.1:8091")]
@@ -18,7 +18,7 @@ namespace GF.UCenter.Common
         [DefaultValue(true)]
         public bool EnableTcpKeepAlives { get; set; }
 
-        [DefaultValue(1000 * 60 * 60)]
+        [DefaultValue(1000*60*60)]
         public uint TcpKeepAliveTime { get; set; }
 
         [DefaultValue(1000)]

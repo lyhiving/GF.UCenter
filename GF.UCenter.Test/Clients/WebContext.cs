@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Reflection;
-using System.Web.Http;
-using System.Web.Http.Dispatcher;
-using System.Web.Http.SelfHost;
-using GF.UCenter.Common;
-using GF.UCenter.Web;
-using GF.UCenter.Web.ApiControllers;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test.Clients
 {
+    using System;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
+    using System.Web.Http;
+    using System.Web.Http.SelfHost;
+    using UCenter.Common;
+    using Web.Common;
+
     [Export]
     public class WebContext : DisposableObjectSlim
     {
-        private readonly Settings settings;
-        private readonly HttpSelfHostServer server;
         private readonly HttpSelfHostConfiguration configuration;
+        private readonly HttpSelfHostServer server;
+        private readonly Settings settings;
 
         [ImportingConstructor]
         public WebContext(ExportProvider exportProvider, Settings settings)
@@ -38,12 +33,12 @@ namespace GF.UCenter.Test
             }
         }
 
-        public string BaseAddress { get; private set; }
+        public string BaseAddress { get; }
 
         private bool UseSelfHost()
         {
             return BaseAddress.IndexOf("localhost", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                BaseAddress.Contains("127.0.0.1");
+                   BaseAddress.Contains("127.0.0.1");
         }
 
         protected override void DisposeInternal()

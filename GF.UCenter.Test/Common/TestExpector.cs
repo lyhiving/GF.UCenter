@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using GF.UCenter.Common.Portable;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test.Common
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable.Exceptions;
+
     public static class TestExpector
     {
         public static void ExpectException<TExpection>(Action action)
@@ -14,7 +15,7 @@ namespace GF.UCenter.Test
             try
             {
                 action();
-                Assert.Fail($"Expect {typeof(TExpection)} exception, but no expection happened");
+                Assert.Fail($"Expect {typeof (TExpection)} exception, but no expection happened");
             }
             catch (TExpection)
             {
@@ -27,7 +28,7 @@ namespace GF.UCenter.Test
             try
             {
                 action();
-                Assert.Fail($"Expected {typeof(UCenterException)} Exception, but no expection happened");
+                Assert.Fail($"Expected {typeof (UCenterException)} Exception, but no expection happened");
             }
             catch (UCenterException ex)
             {
@@ -49,7 +50,7 @@ namespace GF.UCenter.Test
                 }
                 if (actual.ErrorCode != expectedErrorCode)
                 {
-                    Assert.Fail($"Expect ErrorCode: {expectedErrorCode} but actual: {(actual as UCenterException).ErrorCode}");
+                    Assert.Fail($"Expect ErrorCode: {expectedErrorCode} but actual: {actual.ErrorCode}");
                 }
             }
         }
@@ -68,7 +69,6 @@ namespace GF.UCenter.Test
                     Assert.Fail($"Expect ErrorCode: {expectedErrorCode} but actual: {ex.ErrorCode}");
                 }
             }
-
         }
     }
 }

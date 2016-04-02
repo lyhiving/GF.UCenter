@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,20 +97,19 @@
     <Compile Include="Extensions\DisposableExtensions.cs" />
     <Compile Include="Extensions\RSACryptoServiceProviderExtension.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountRegisterRequestInfo.cs" />
+    <Compile Include="Models\AppClient\AccountRegisterRequestInfo.cs" />
     <Compile Include="Dumper\ObjectDumper.cs" />
     <Compile Include="Models\PingPlusPlus\Charge.cs" />
     <Compile Include="Models\PingPlusPlus\ChargeInfo.cs" />
     <Compile Include="Models\PingPlusPlus\ChargeList.cs" />
-    <Compile Include="Models\PingPlusPlus\ChargeResponse.cs" />
     <Compile Include="Models\PingPlusPlus\Refund.cs" />
     <Compile Include="Models\PingPlusPlus\RefundList.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppAccountDataInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppAccountDataResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppResponse.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppVerifyAccountInfo.cs" />
-    <Compile Include="Models\UCenter.AppServer\AppVerifyAccountResponse.cs" />
+    <Compile Include="Models\AppServer\AppAccountDataInfo.cs" />
+    <Compile Include="Models\AppServer\AppAccountDataResponse.cs" />
+    <Compile Include="Models\AppServer\AppInfo.cs" />
+    <Compile Include="Models\AppServer\AppResponse.cs" />
+    <Compile Include="Models\AppServer\AppVerifyAccountInfo.cs" />
+    <Compile Include="Models\AppServer\AppVerifyAccountResponse.cs" />
     <Compile Include="SDK\UCenterHttpClient.cs" />
     <Compile Include="Settings\AppConfigurationValueProvider.cs" />
     <Compile Include="Settings\ISettingsValueProvider.cs" />
@@ -133,13 +134,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\StyleCop.MSBuild.4.7.50.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.50.0\build\StyleCop.MSBuild.Targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\StyleCop.MSBuild.4.7.50.0\build\StyleCop.MSBuild.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.MSBuild.4.7.50.0\build\StyleCop.MSBuild.Targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

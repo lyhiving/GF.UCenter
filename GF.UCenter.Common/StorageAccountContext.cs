@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common
 {
+    using System.ComponentModel.Composition;
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
+
     [Export]
     public class StorageAccountContext
     {
         private readonly CloudBlobContainer container;
 
         [ImportingConstructor]
-        public StorageAccountContext(Settings settings)
+        public StorageAccountContext(Settings.Settings settings)
         {
             var account = CloudStorageAccount.Parse(settings.UCStorageConnectionString);
             var client = account.CreateCloudBlobClient();

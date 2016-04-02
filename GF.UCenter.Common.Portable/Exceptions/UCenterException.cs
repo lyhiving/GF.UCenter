@@ -1,11 +1,11 @@
-﻿using System;
-
-namespace GF.UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Portable.Exceptions
 {
+    using System;
+    using Contracts;
+    using Resource;
+
     public class UCenterException : ApplicationException
     {
-        public UCenterErrorCode ErrorCode { get; private set; }
-
         public UCenterException(UCenterErrorCode errorCode, string message, Exception innerException = null)
             : base(message, innerException)
         {
@@ -16,5 +16,7 @@ namespace GF.UCenter.Common.Portable
             : this(errorCode, UCenterResourceManager.GetErrorMessage(errorCode), innerException)
         {
         }
+
+        public UCenterErrorCode ErrorCode { get; private set; }
     }
 }

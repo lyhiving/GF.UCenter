@@ -1,46 +1,53 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Threading.Tasks;
-using System.Web.Http;
-using GF.UCenter.Common.Models;
-using GF.UCenter.Common.Portable;
-using GF.UCenter.CouchBase;
-
-namespace GF.UCenter.Web.ApiControllers
+﻿namespace GF.UCenter.Web.ApiControllers
 {
+    using System;
+    using System.ComponentModel.Composition;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using CouchBase.Database;
+    using CouchBase.Entities;
+    using UCenter.Common.Models.AppServer;
+    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable.Exceptions;
+
+    /// <summary>
+    ///     UCenter app api controller
+    /// </summary>
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/app")]
     public class AppApiController : ApiControllerBase
     {
-        //---------------------------------------------------------------------
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ImportingConstructor" /> class.
+        /// </summary>
+        /// <param name="db">The couch base context.</param>
         [ImportingConstructor]
         public AppApiController(CouchBaseContext db)
             : base(db)
         {
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("create")]
-        public async Task<IHttpActionResult> Create([FromBody]AppInfo info)
+        public async Task<IHttpActionResult> Create([FromBody] AppInfo info)
         {
-            logger.Info("App.Create AppId={0}", info.AppId);
+            Logger.Info("App.Create AppId={0}", info.AppId);
 
-            var app = await this.db.Bucket.GetByEntityIdSlimAsync<AppEntity>(info.AppId, throwIfFailed: false);
+            var app = await this.DatabaseContext.Bucket.GetByEntityIdSlimAsync<AppEntity>(info.AppId, false);
 
             if (app == null)
             {
-                var appEntity = new AppEntity()
+                var appEntity = new AppEntity
                 {
                     Id = info.AppId,
                     AppSecret = info.AppSecret
                 };
 
-                await this.db.Bucket.InsertSlimAsync<AppEntity>(appEntity);
+                await this.DatabaseContext.Bucket.InsertSlimAsync(appEntity);
             }
 
-            var response = new AppResponse()
+            var response = new AppResponse
             {
                 AppId = info.AppId,
                 AppSecret = info.AppSecret
@@ -48,12 +55,11 @@ namespace GF.UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("verifyaccount")]
         public async Task<IHttpActionResult> VerifyAccount(AppVerifyAccountInfo info)
         {
-            logger.Info($"App.VerifyAccount AppId={info.AppId} AccountId={info.AccountId}");
+            Logger.Info($"App.VerifyAccount AppId={info.AppId} AccountId={info.AccountId}");
 
             await VerifyApp(info.AppId, info.AppSecret);
             var account = await this.GetAndVerifyAccount(info.AccountId, info.AccountToken);
@@ -68,20 +74,19 @@ namespace GF.UCenter.Web.ApiControllers
             return CreateSuccessResult(result);
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("readdata")]
         public async Task<IHttpActionResult> ReadAppAccountData(AppAccountDataInfo info)
         {
-            logger.Info($"App.ReadAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
+            Logger.Info($"App.ReadAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
 
             await VerifyApp(info.AppId, info.AppSecret);
 
             var account = await this.GetAndVerifyAccount(info.AccountId);
-            string dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
-            var accountData = await db.Bucket.GetByEntityIdSlimAsync<AppAccountDataEntity>(dataId);
+            var dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
+            var accountData = await DatabaseContext.Bucket.GetByEntityIdSlimAsync<AppAccountDataEntity>(dataId);
 
-            var response = new AppAccountDataResponse()
+            var response = new AppAccountDataResponse
             {
                 AppId = info.AppId,
                 AccountId = info.AccountId,
@@ -91,26 +96,25 @@ namespace GF.UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("writedata")]
         public async Task<IHttpActionResult> WriteAppAccountData(AppAccountDataInfo info)
         {
-            logger.Info($"App.WriteAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
+            Logger.Info($"App.WriteAppAccountData AppId={info.AppId} AccountId={info.AccountId}");
 
             await VerifyApp(info.AppId, info.AppSecret);
 
             var account = await this.GetAndVerifyAccount(info.AccountId);
 
-            string dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
-            var accountData = await db.Bucket.GetByEntityIdSlimAsync<AppAccountDataEntity>(dataId);
+            var dataId = this.CreateAppAccountDataId(info.AppId, info.AccountId);
+            var accountData = await DatabaseContext.Bucket.GetByEntityIdSlimAsync<AppAccountDataEntity>(dataId);
             if (accountData != null)
             {
                 accountData.Data = info.Data;
             }
             else
             {
-                accountData = new AppAccountDataEntity()
+                accountData = new AppAccountDataEntity
                 {
                     Id = dataId,
                     AppId = info.AppId,
@@ -119,9 +123,9 @@ namespace GF.UCenter.Web.ApiControllers
                 };
             }
 
-            await db.Bucket.UpsertSlimAsync<AppAccountDataEntity>(accountData);
+            await DatabaseContext.Bucket.UpsertSlimAsync(accountData);
 
-            var response = new AppAccountDataResponse()
+            var response = new AppAccountDataResponse
             {
                 AppId = info.AppId,
                 AccountId = info.AccountId,
@@ -131,10 +135,9 @@ namespace GF.UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
-        //---------------------------------------------------------------------
         private async Task VerifyApp(string appId, string appSecret)
         {
-            var app = await this.db.Bucket.GetByEntityIdSlimAsync<AppEntity>(appId);
+            var app = await this.DatabaseContext.Bucket.GetByEntityIdSlimAsync<AppEntity>(appId);
             if (app == null)
             {
                 throw new UCenterException(UCenterErrorCode.AppNotExit);
@@ -147,7 +150,7 @@ namespace GF.UCenter.Web.ApiControllers
 
         private async Task<AccountEntity> GetAndVerifyAccount(string accountId)
         {
-            var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId, throwIfFailed: false);
+            var account = await DatabaseContext.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId, false);
             if (account == null)
             {
                 throw new UCenterException(UCenterErrorCode.AccountNotExist);

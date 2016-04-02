@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
-using GF.UCenter.Common.Portable;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test.E2ETest
 {
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using SDK.AppClient;
+    using UCenter.Common.Portable.Models.AppClient;
+
     [TestClass]
     public class UCenterE2ETestBase : UCenterTestBase
     {
@@ -15,13 +16,13 @@ namespace GF.UCenter.Test
         protected const string InValidAccountToken = "";
 
         protected readonly string host;
-        protected SDK.AppClient.UCenterClient cClient;
+        protected UCenterClient cClient;
         protected SDK.AppServer.UCenterClient sClient;
 
         public UCenterE2ETestBase()
         {
             this.host = "http://localhost:8888/";
-            this.cClient = new SDK.AppClient.UCenterClient(host);
+            this.cClient = new UCenterClient(host);
             this.sClient = new SDK.AppServer.UCenterClient(host);
         }
 
@@ -29,7 +30,7 @@ namespace GF.UCenter.Test
         {
             if (info == null)
             {
-                info = new AccountRegisterInfo()
+                info = new AccountRegisterInfo
                 {
                     AccountName = GenerateRandomString(),
                     Password = ValidAccountPassword,

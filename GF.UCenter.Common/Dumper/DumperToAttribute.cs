@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common.Dumper
 {
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = true)]
-    public class DumperToAttribute : Attribute
+    using System;
 
+    [AttributeUsage(AttributeTargets.All)]
+    public class DumperToAttribute : Attribute
     {
         public DumperToAttribute(string value)
         {

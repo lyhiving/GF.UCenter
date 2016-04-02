@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+
     public static class StringExtensions
     {
         public static string MapNullToEmpty(this string str)
@@ -29,10 +29,10 @@ namespace GF.UCenter.Common
 
         public static string FirstCharacterToLower(this string str)
         {
-            if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
+            if (string.IsNullOrEmpty(str) || char.IsLower(str, 0))
                 return str;
 
-            return Char.ToLowerInvariant(str[0]) + str.Substring(1);
+            return char.ToLowerInvariant(str[0]) + str.Substring(1);
         }
     }
 }

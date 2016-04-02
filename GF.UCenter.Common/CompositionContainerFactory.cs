@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Web.Hosting;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Web.Hosting;
+    using Extensions;
+
     public static class CompositionContainerFactory
     {
-        private const CompositionOptions ContainerOptions = CompositionOptions.IsThreadSafe | CompositionOptions.DisableSilentRejection;
+        private const CompositionOptions ContainerOptions =
+            CompositionOptions.IsThreadSafe | CompositionOptions.DisableSilentRejection;
 
         private static readonly AggregateCatalog Catalog = CreateAggregateCatalog();
 
@@ -59,7 +61,6 @@ namespace GF.UCenter.Common
                 }
                 catch (Exception)
                 {
-
                 }
             }
 
@@ -75,7 +76,7 @@ namespace GF.UCenter.Common
             }
             else
             {
-                directory = Path.GetDirectoryName(typeof(CompositionContainerFactory).Assembly.Location);
+                directory = Path.GetDirectoryName(typeof (CompositionContainerFactory).Assembly.Location);
             }
 
             var dlls = Directory.EnumerateFiles(directory, "*.dll", SearchOption.AllDirectories);

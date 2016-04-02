@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
-using GF.UCenter.Common.Portable;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test.E2ETest
 {
+    using System.Threading.Tasks;
+    using Common;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UCenter.Common.Models.AppServer;
+    using UCenter.Common.Models.PingPlusPlus;
+    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable.Models.AppClient;
+
     [TestClass]
     public class UCenterE2EAppServerTest : UCenterE2ETestBase
     {
@@ -12,13 +16,13 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            var appVerifyAccountInfo = new AppVerifyAccountInfo
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
@@ -36,7 +40,7 @@ namespace GF.UCenter.Test
         [TestMethod]
         public async Task E2E_AppServer_VerifyAccount_AccountNotExist_Test()
         {
-            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            var appVerifyAccountInfo = new AppVerifyAccountInfo
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
@@ -44,10 +48,8 @@ namespace GF.UCenter.Test
                 AccountToken = ValidAccountPassword
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountNotExist, async () =>
-            {
-                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountNotExist,
+                async () => { await sClient.AppVerifyAccountAsync(appVerifyAccountInfo); });
         }
 
         [TestMethod]
@@ -55,13 +57,13 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            var appVerifyAccountInfo = new AppVerifyAccountInfo
             {
                 AppId = "___Test_App_No_Exist___",
                 AppSecret = TestAppSecret,
@@ -69,10 +71,8 @@ namespace GF.UCenter.Test
                 AccountToken = loginResponse.Token
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppNotExit, async () =>
-            {
-                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppNotExit,
+                async () => { await sClient.AppVerifyAccountAsync(appVerifyAccountInfo); });
         }
 
         [TestMethod]
@@ -80,13 +80,13 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            var appVerifyAccountInfo = new AppVerifyAccountInfo
             {
                 AppId = TestAppId,
                 AppSecret = InvalidAppSecret,
@@ -94,10 +94,8 @@ namespace GF.UCenter.Test
                 AccountToken = ValidAccountPassword
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch, async () =>
-            {
-                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch,
+                async () => { await sClient.AppVerifyAccountAsync(appVerifyAccountInfo); });
         }
 
         [TestMethod]
@@ -105,13 +103,13 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            var appVerifyAccountInfo = new AppVerifyAccountInfo()
+            var appVerifyAccountInfo = new AppVerifyAccountInfo
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
@@ -119,10 +117,8 @@ namespace GF.UCenter.Test
                 AccountToken = InValidAccountToken
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedTokenNotMatch, async () =>
-            {
-                await sClient.AppVerifyAccountAsync(appVerifyAccountInfo);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedTokenNotMatch,
+                async () => { await sClient.AppVerifyAccountAsync(appVerifyAccountInfo); });
         }
 
         [TestMethod]
@@ -130,14 +126,14 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            string data = @"{ 'id': 1, 'name': 'abc'}";
-            var accountData = new AppAccountDataInfo()
+            var data = @"{ 'id': 1, 'name': 'abc'}";
+            var accountData = new AppAccountDataInfo
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
@@ -159,23 +155,21 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            var accountData = new AppAccountDataInfo()
+            var accountData = new AppAccountDataInfo
             {
                 AppId = TestAppId,
                 AppSecret = InvalidAppSecret,
-                AccountId = loginResponse.AccountId,
+                AccountId = loginResponse.AccountId
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch, async () =>
-            {
-                await sClient.AppReadAccountDataAsync(accountData);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch,
+                async () => { await sClient.AppReadAccountDataAsync(accountData); });
         }
 
         [TestMethod]
@@ -183,14 +177,14 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            string data = @"{ 'id': 1, 'name': 'abc'}";
-            var accountData = new AppAccountDataInfo()
+            var data = @"{ 'id': 1, 'name': 'abc'}";
+            var accountData = new AppAccountDataInfo
             {
                 AppId = TestAppId,
                 AppSecret = InvalidAppSecret,
@@ -198,10 +192,8 @@ namespace GF.UCenter.Test
                 Data = data
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch, async () =>
-            {
-                await sClient.AppWriteAccountDataAsync(accountData);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AppAuthFailedSecretNotMatch,
+                async () => { await sClient.AppWriteAccountDataAsync(accountData); });
         }
 
         [TestMethod]
@@ -209,13 +201,13 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             });
 
-            var chargeInfo = new ChargeInfo()
+            var chargeInfo = new ChargeInfo
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret,
@@ -246,7 +238,7 @@ namespace GF.UCenter.Test
 
         private async Task InitializeAsync()
         {
-            var appInfo = new AppInfo()
+            var appInfo = new AppInfo
             {
                 AppId = TestAppId,
                 AppSecret = TestAppSecret

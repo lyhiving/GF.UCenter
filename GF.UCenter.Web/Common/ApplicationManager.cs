@@ -1,14 +1,23 @@
-﻿using System.ComponentModel.Composition.Hosting;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
-using GF.UCenter.Common;
-
-namespace GF.UCenter.Web
+﻿namespace GF.UCenter.Web.Common
 {
+    using System.ComponentModel.Composition.Hosting;
+    using System.Web.Http;
+    using System.Web.Mvc;
+    using System.Web.Optimization;
+    using System.Web.Routing;
+    using Attributes;
+    using UCenter.Common.Settings;
+
+    /// <summary>
+    ///     The UCenter web application manager
+    /// </summary>
     public static class ApplicationManager
     {
+        /// <summary>
+        ///     Initialize the web application
+        /// </summary>
+        /// <param name="configuration">The http configuration</param>
+        /// <param name="exportProvider">The export provider</param>
         public static void InitializeApplication(HttpConfiguration configuration, ExportProvider exportProvider)
         {
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -21,12 +30,13 @@ namespace GF.UCenter.Web
 
         private static void InitializeSettings(ExportProvider exportProvider)
         {
-            SettingsInitializer.Initialize<Settings>(exportProvider, SettingsDefaultValueProvider<Settings>.Default, AppConfigurationValueProvider.Default);
+            SettingsInitializer.Initialize<Settings>(exportProvider, SettingsDefaultValueProvider<Settings>.Default,
+                AppConfigurationValueProvider.Default);
         }
 
         private static void RegisterMefDepencency(HttpConfiguration configuration, ExportProvider exportProvider)
         {
-            MefDependencyResolver dependency = new MefDependencyResolver(exportProvider);
+            var dependency = new MefDependencyResolver(exportProvider);
             configuration.DependencyResolver = dependency;
         }
     }

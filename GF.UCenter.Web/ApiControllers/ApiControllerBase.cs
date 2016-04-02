@@ -1,58 +1,52 @@
-﻿using System.ComponentModel.Composition;
-using System.Net.Http;
-using System.ServiceModel.Channels;
-using System.Web;
-using System.Web.Http;
-using Couchbase;
-using GF.UCenter.Common;
-using GF.UCenter.Common.Portable;
-using GF.UCenter.CouchBase;
-using NLog;
+﻿/// <summary>
+/// UCenter base api controller
+/// </summary>
 
 namespace GF.UCenter.Web.ApiControllers
 {
+    using System.ComponentModel.Composition;
+    using System.Web.Http;
+    using Attributes;
+    using CouchBase.Database;
+    using NLog;
+    using UCenter.Common.Portable.Contracts;
+
+    /// <summary>
+    ///     API controller base class
+    /// </summary>
     [Export]
     [ActionExecutionFilter]
     public class ApiControllerBase : ApiController
     {
-        //---------------------------------------------------------------------
-        protected readonly CouchBaseContext db;
-        protected readonly Logger logger = LogManager.GetCurrentClassLogger();
+        /// <summary>
+        ///     Couch database context
+        /// </summary>
+        protected readonly CouchBaseContext DatabaseContext;
 
-        //---------------------------------------------------------------------
+        /// <summary>
+        ///     The logger
+        /// </summary>
+        protected readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ApiControllerBase" /> class.
+        /// </summary>
+        /// <param name="db">The couch base context</param>
         [ImportingConstructor]
         public ApiControllerBase(CouchBaseContext db)
         {
-            this.db = db;
+            this.DatabaseContext = db;
         }
 
-        //---------------------------------------------------------------------
-        protected string GetClientIp(HttpRequestMessage request)
-        {
-            request = request ?? Request;
-
-            if (request.Properties.ContainsKey("MS_HttpContext"))
-            {
-                return ((HttpContextWrapper)request.Properties["MS_HttpContext"]).Request.UserHostAddress;
-            }
-            else if (request.Properties.ContainsKey(RemoteEndpointMessageProperty.Name))
-            {
-                RemoteEndpointMessageProperty prop = (RemoteEndpointMessageProperty)request.Properties[RemoteEndpointMessageProperty.Name];
-                return prop.Address;
-            }
-            else if (HttpContext.Current != null)
-            {
-                return HttpContext.Current.Request.UserHostAddress;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
+        /// <summary>
+        ///     Create success result
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result</typeparam>
+        /// <param name="result">The content of the result</param>
+        /// <returns>Http Action result</returns>
         protected IHttpActionResult CreateSuccessResult<TResult>(TResult result)
         {
-            return Ok(new UCenterResponse<TResult>() { Status = UCenterResponseStatus.Success, Result = result });
+            return this.Ok(new UCenterResponse<TResult> {Status = UCenterResponseStatus.Success, Result = result});
         }
     }
 }

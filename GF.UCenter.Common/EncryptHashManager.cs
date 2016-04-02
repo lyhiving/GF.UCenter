@@ -1,9 +1,9 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common
 {
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+
     public static class EncryptHashManager
     {
         private const int MinSaltSize = 32;
@@ -42,7 +42,7 @@ namespace GF.UCenter.Common
         {
             byte[] hashBytes = Convert.FromBase64String(hash);
 
-            var hashSize = HashSizeInBits / 8;
+            var hashSize = HashSizeInBits/8;
 
             if (hashBytes.Length < hashSize)
                 return false;
@@ -64,20 +64,20 @@ namespace GF.UCenter.Common
 
         private static byte[] GenerateSalt(int minSize = MinSaltSize, int maxSize = MaxSaltSize)
         {
-            Random random = new Random();
+            var random = new Random();
             int saltSize = random.Next(minSize, maxSize);
             var saltBytes = new byte[saltSize];
 
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            var rng = new RNGCryptoServiceProvider();
             rng.GetNonZeroBytes(saltBytes);
 
             return saltBytes;
         }
 
         /// <summary>
-        /// A slow compare function to make the encrypted password string compare almost with the same time
-        /// Even there are difference at the first n chars. This can avoid some attach based on remote timing
-        /// https://crypto.stanford.edu/~dabo/papers/ssl-timing.pdf
+        ///     A slow compare function to make the encrypted password string compare almost with the same time
+        ///     Even there are difference at the first n chars. This can avoid some attach based on remote timing
+        ///     https://crypto.stanford.edu/~dabo/papers/ssl-timing.pdf
         /// </summary>
         /// <param name="str1">String 1</param>
         /// <param name="str2">String 2</param>

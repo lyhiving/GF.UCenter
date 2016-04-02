@@ -45,20 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\UCenter.AppClient\AccountUploadProfileImageResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountConvertInfo.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountLoginInfo.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountRegisterInfo.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountConvertResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountResetPasswordInfo.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountResourceType.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountGuestLoginResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountLoginResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountRegisterResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountRequestResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountResetPasswordResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\AccountResponse.cs" />
-    <Compile Include="Models\UCenter.AppClient\Sex.cs" />
+    <Compile Include="Models\AppClient\AccountUploadProfileImageResponse.cs" />
+    <Compile Include="Models\AppClient\AccountConvertInfo.cs" />
+    <Compile Include="Models\AppClient\AccountLoginInfo.cs" />
+    <Compile Include="Models\AppClient\AccountRegisterInfo.cs" />
+    <Compile Include="Models\AppClient\AccountConvertResponse.cs" />
+    <Compile Include="Models\AppClient\AccountResetPasswordInfo.cs" />
+    <Compile Include="Models\AppClient\AccountResourceType.cs" />
+    <Compile Include="Models\AppClient\AccountGuestLoginResponse.cs" />
+    <Compile Include="Models\AppClient\AccountLoginResponse.cs" />
+    <Compile Include="Models\AppClient\AccountRegisterResponse.cs" />
+    <Compile Include="Models\AppClient\AccountRequestResponse.cs" />
+    <Compile Include="Models\AppClient\AccountResetPasswordResponse.cs" />
+    <Compile Include="Models\AppClient\AccountResponse.cs" />
+    <Compile Include="Models\AppClient\Sex.cs" />
     <Compile Include="Contracts\UCenterError.cs" />
     <Compile Include="Contracts\UCenterErrorCode.cs" />
     <Compile Include="Exceptions\UCenterException.cs" />

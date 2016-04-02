@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Expressions
 {
+    using System.Collections.Generic;
+
     internal class QueryCommand
     {
         public QueryCommand(string command, ICollection<QueryParameter> parameters)

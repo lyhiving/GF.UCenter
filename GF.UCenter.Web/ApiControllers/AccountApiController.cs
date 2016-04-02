@@ -1,29 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Drawing;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Couchbase;
-using GF.UCenter.Common;
-using GF.UCenter.Common.Models;
-using GF.UCenter.Common.Portable;
-using GF.UCenter.CouchBase;
+﻿/// <summary>
+/// UCenter account api controller
+/// </summary>
 
 namespace GF.UCenter.Web.ApiControllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.Drawing;
+    using System.IO;
+    using System.Net.Http;
+    using System.ServiceModel.Channels;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Web;
+    using System.Web.Http;
+    using Couchbase;
+    using CouchBase.Database;
+    using CouchBase.Entities;
+    using CouchBase.Exceptions;
+    using UCenter.Common;
+    using UCenter.Common.Extensions;
+    using UCenter.Common.Models.AppClient;
+    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable.Exceptions;
+    using UCenter.Common.Portable.Models.AppClient;
+    using UCenter.Common.Settings;
+
+    /// <summary>
+    ///     UCenter account api controller
+    /// </summary>
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     [RoutePrefix("api/account")]
     public class AccountApiController : ApiControllerBase
     {
-        //---------------------------------------------------------------------
         private readonly Settings settings;
         private readonly StorageAccountContext storageContext;
 
-        //---------------------------------------------------------------------
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AccountApiController" /> class.
+        /// </summary>
+        /// <param name="db">The couch base context.</param>
+        /// <param name="settings">The UCenter settings.</param>
+        /// <param name="storageContext">The storage account context.</param>
         [ImportingConstructor]
         public AccountApiController(CouchBaseContext db, Settings settings, StorageAccountContext storageContext)
             : base(db)
@@ -32,24 +52,27 @@ namespace GF.UCenter.Web.ApiControllers
             this.storageContext = storageContext;
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info, CancellationToken token)
+        public async Task<IHttpActionResult> Register([FromBody] AccountRegisterRequestInfo info,
+            CancellationToken token)
         {
-            logger.Info($"Account.Register AccountName={info.AccountName}");
+            this.Logger.Info($"Account.Register AccountName={info.AccountName}");
 
             var removeTempsIfError = new List<AccountResourceEntity>();
             var error = false;
             try
             {
-                var account = await db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName, throwIfFailed: false);
+                var account =
+                    await
+                        DatabaseContext.Bucket.FirstOrDefaultAsync<AccountEntity>(
+                            a => a.AccountName == info.AccountName, false);
                 if (account != null)
                 {
                     throw new UCenterException(UCenterErrorCode.AccountRegisterFailedAlreadyExist);
                 }
 
-                account = new AccountEntity()
+                account = new AccountEntity
                 {
                     AccountName = info.AccountName,
                     IsGuest = false,
@@ -65,41 +88,45 @@ namespace GF.UCenter.Web.ApiControllers
                 if (!string.IsNullOrEmpty(account.AccountName))
                 {
                     var namePointer = new AccountResourceEntity(account, AccountResourceType.AccountName);
-                    await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(namePointer);
+                    await this.DatabaseContext.Bucket.InsertSlimAsync(namePointer);
                     removeTempsIfError.Add(namePointer);
                 }
                 if (!string.IsNullOrEmpty(account.PhoneNum))
                 {
                     var phonePointer = new AccountResourceEntity(account, AccountResourceType.Phone);
-                    await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(phonePointer);
+                    await this.DatabaseContext.Bucket.InsertSlimAsync(phonePointer);
                     removeTempsIfError.Add(phonePointer);
                 }
                 else if (!string.IsNullOrEmpty(account.Email))
                 {
                     var emailPointer = new AccountResourceEntity(account, AccountResourceType.Email);
-                    await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(emailPointer);
+                    await this.DatabaseContext.Bucket.InsertSlimAsync(emailPointer);
                     removeTempsIfError.Add(emailPointer);
                 }
 
                 // set the default profiles
                 account.ProfileImage = await this.storageContext.CopyBlobAsync(
-                    account.Sex == Sex.Female ? this.settings.DefaultProfileImageForFemaleBlobName : this.settings.DefaultProfileImageForMaleBlobName,
+                    account.Sex == Sex.Female
+                        ? this.settings.DefaultProfileImageForFemaleBlobName
+                        : this.settings.DefaultProfileImageForMaleBlobName,
                     this.settings.ProfileImageForBlobNameTemplate.FormatInvariant(account.Id),
                     token);
 
                 account.ProfileThumbnail = await this.storageContext.CopyBlobAsync(
-                    account.Sex == Sex.Female ? this.settings.DefaultProfileThumbnailForFemaleBlobName : this.settings.DefaultProfileThumbnailForMaleBlobName,
+                    account.Sex == Sex.Female
+                        ? this.settings.DefaultProfileThumbnailForFemaleBlobName
+                        : this.settings.DefaultProfileThumbnailForMaleBlobName,
                     this.settings.ProfileThumbnailForBlobNameTemplate.FormatInvariant(account.Id),
                     token);
 
-                await this.db.Bucket.InsertSlimAsync(account);
+                await this.DatabaseContext.Bucket.InsertSlimAsync(account);
 
                 return CreateSuccessResult(ToResponse<AccountRegisterResponse>(account));
             }
             catch (Exception ex)
             {
-                logger.Info($"Account.Register Exception：AccoundName={info.AccountName}");
-                logger.Info(ex.ToString());
+                this.Logger.Info($"Account.Register Exception：AccoundName={info.AccountName}");
+                this.Logger.Info(ex.ToString());
 
                 error = true;
                 if (ex is CouchBaseException)
@@ -119,60 +146,67 @@ namespace GF.UCenter.Web.ApiControllers
                 {
                     foreach (var item in removeTempsIfError)
                     {
-                        this.db.Bucket.Remove<AccountResourceEntity>(item.ToDocument());
+                        this.DatabaseContext.Bucket.Remove(item.ToDocument());
                     }
                 }
             }
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("login")]
-        public async Task<IHttpActionResult> Login([FromBody]AccountLoginInfo info)
+        public async Task<IHttpActionResult> Login([FromBody] AccountLoginInfo info)
         {
-            logger.Info($"Account.Login AccountName={info.AccountName}");
+            Logger.Info($"Account.Login AccountName={info.AccountName}");
 
-            var accountResourceByName = await this.db.Bucket.GetByEntityIdSlimAsync<AccountResourceEntity>(AccountResourceEntity.GenerateResourceId(AccountResourceType.AccountName, info.AccountName), false);
+            var accountResourceByName =
+                await
+                    this.DatabaseContext.Bucket.GetByEntityIdSlimAsync<AccountResourceEntity>(
+                        AccountResourceEntity.GenerateResourceId(AccountResourceType.AccountName, info.AccountName),
+                        false);
             AccountEntity account = null;
             if (accountResourceByName != null)
             {
                 // this means the temp value still exists, we can directly get the account by account id.
-                account = await this.db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountResourceByName.AccountId);
+                account =
+                    await
+                        this.DatabaseContext.Bucket.GetByEntityIdSlimAsync<AccountEntity>(
+                            accountResourceByName.AccountId);
             }
             else
             {
                 // this means the temp value not exists any more, meanwhile, it have passed a period after the account created
                 // so the index should be already created and we can query the entity by query string
-                account = await this.db.Bucket.FirstOrDefaultAsync<AccountEntity>(a => a.AccountName == info.AccountName);
+                account =
+                    await
+                        this.DatabaseContext.Bucket.FirstOrDefaultAsync<AccountEntity>(
+                            a => a.AccountName == info.AccountName);
             }
 
             if (account == null)
             {
                 throw new UCenterException(UCenterErrorCode.AccountNotExist);
             }
-            else if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
+            if (!EncryptHashManager.VerifyHash(info.Password, account.Password))
             {
-                await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
+                await
+                    this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch,
+                        "The account name and password do not match");
 
                 throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
-            else
-            {
-                account.LastLoginDateTime = DateTime.UtcNow;
-                account.Token = EncryptHashManager.GenerateToken();
-                await this.db.Bucket.UpsertSlimAsync(account);
-                await this.RecordLogin(account, UCenterErrorCode.Success);
+            account.LastLoginDateTime = DateTime.UtcNow;
+            account.Token = EncryptHashManager.GenerateToken();
+            await this.DatabaseContext.Bucket.UpsertSlimAsync(account);
+            await this.RecordLogin(account, UCenterErrorCode.Success);
 
-                return CreateSuccessResult(ToResponse<AccountLoginResponse>(account));
-            }
+            return CreateSuccessResult(ToResponse<AccountLoginResponse>(account));
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("guest")]
-        public async Task<IHttpActionResult> GuestLogin([FromBody]AccountLoginInfo info)
+        public async Task<IHttpActionResult> GuestLogin([FromBody] AccountLoginInfo info)
         {
-            logger.Info("Account.GuestLogin");
+            Logger.Info("Account.GuestLogin");
 
             var r = new Random();
             string accountNamePostfix = r.Next(0, 1000000).ToString("D6");
@@ -180,7 +214,7 @@ namespace GF.UCenter.Web.ApiControllers
             string token = EncryptHashManager.GenerateToken();
             string password = Guid.NewGuid().ToString();
 
-            var account = new AccountEntity()
+            var account = new AccountEntity
             {
                 AccountName = accountName,
                 IsGuest = true,
@@ -189,9 +223,9 @@ namespace GF.UCenter.Web.ApiControllers
                 CreatedDateTime = DateTime.UtcNow
             };
 
-            await this.db.Bucket.InsertSlimAsync(account);
+            await this.DatabaseContext.Bucket.InsertSlimAsync(account);
 
-            var response = new AccountGuestLoginResponse()
+            var response = new AccountGuestLoginResponse
             {
                 AccountId = account.Id,
                 AccountName = accountName,
@@ -201,18 +235,19 @@ namespace GF.UCenter.Web.ApiControllers
             return CreateSuccessResult(response);
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("convert")]
-        public async Task<IHttpActionResult> Convert([FromBody]AccountConvertInfo info)
+        public async Task<IHttpActionResult> Convert([FromBody] AccountConvertInfo info)
         {
-            logger.Info($"Account.Convert AccountName={info.AccountName}");
+            Logger.Info($"Account.Convert AccountName={info.AccountName}");
 
             var account = await GetAndVerifyAccount(info.AccountId);
 
             if (!EncryptHashManager.VerifyHash(info.OldPassword, account.Password))
             {
-                await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The account name and password do not match");
+                await
+                    this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch,
+                        "The account name and password do not match");
                 throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
 
@@ -225,78 +260,74 @@ namespace GF.UCenter.Web.ApiControllers
             account.PhoneNum = info.PhoneNum;
             account.Email = info.Email;
             account.Sex = info.Sex;
-            await this.db.Bucket.UpsertSlimAsync<AccountEntity>(account);
+            await this.DatabaseContext.Bucket.UpsertSlimAsync(account);
             await this.RecordLogin(account, UCenterErrorCode.Success, "Account converted successfully.");
             return CreateSuccessResult(ToResponse<AccountRegisterResponse>(account));
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("resetpassword")]
-        public async Task<IHttpActionResult> ResetPassword([FromBody]AccountResetPasswordInfo info)
+        public async Task<IHttpActionResult> ResetPassword([FromBody] AccountResetPasswordInfo info)
         {
-            logger.Info($"Account.ResetPassword AccountName={info.AccountId}");
+            Logger.Info($"Account.ResetPassword AccountName={info.AccountId}");
 
             var account = await GetAndVerifyAccount(info.AccountId);
 
             if (!EncryptHashManager.VerifyHash(info.SuperPassword, account.SuperPassword))
             {
-                await this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch, "The super password provided is incorrect");
+                await
+                    this.RecordLogin(account, UCenterErrorCode.AccountLoginFailedPasswordNotMatch,
+                        "The super password provided is incorrect");
                 throw new UCenterException(UCenterErrorCode.AccountLoginFailedPasswordNotMatch);
             }
-            else
-            {
-                account.Password = EncryptHashManager.ComputeHash(info.Password);
-                await this.db.Bucket.UpsertSlimAsync<AccountEntity>(account);
-                await this.RecordLogin(account, UCenterErrorCode.Success, "Reset password successfully.");
-                return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
-            }
+            account.Password = EncryptHashManager.ComputeHash(info.Password);
+            await this.DatabaseContext.Bucket.UpsertSlimAsync(account);
+            await this.RecordLogin(account, UCenterErrorCode.Success, "Reset password successfully.");
+            return CreateSuccessResult(ToResponse<AccountResetPasswordResponse>(account));
         }
 
-        //---------------------------------------------------------------------
         [HttpPost]
         [Route("upload/{accountId}")]
-        public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId, CancellationToken token)
+        public async Task<IHttpActionResult> UploadProfileImage([FromUri] string accountId, CancellationToken token)
         {
-            logger.Info($"Account.UploadProfileImage AccountId={accountId}");
+            this.Logger.Info($"Account.UploadProfileImage AccountId={accountId}");
 
             var account = await GetAndVerifyAccount(accountId);
 
-            using (Stream stream = await this.Request.Content.ReadAsStreamAsync())
+            using (var stream = await this.Request.Content.ReadAsStreamAsync())
             {
-                Image image = Image.FromStream(stream);
+                var image = Image.FromStream(stream);
                 using (var thumbnailStream = this.GetThumbprintStream(image))
                 {
-                    string smallProfileName = this.settings.ProfileThumbnailForBlobNameTemplate.FormatInvariant(accountId);
-                    account.ProfileThumbnail = await this.storageContext.UploadBlobAsync(smallProfileName, thumbnailStream, token);
+                    var smallProfileName = this.settings.ProfileThumbnailForBlobNameTemplate.FormatInvariant(accountId);
+                    account.ProfileThumbnail =
+                        await this.storageContext.UploadBlobAsync(smallProfileName, thumbnailStream, token);
                 }
 
                 string profileName = this.settings.ProfileImageForBlobNameTemplate.FormatInvariant(accountId);
                 stream.Seek(0, SeekOrigin.Begin);
                 account.ProfileImage = await this.storageContext.UploadBlobAsync(profileName, stream, token);
 
-                await this.db.Bucket.UpsertSlimAsync<AccountEntity>(account);
+                await this.DatabaseContext.Bucket.UpsertSlimAsync(account);
                 await this.RecordLogin(account, UCenterErrorCode.Success, "Profile image uploaded successfully.");
                 return CreateSuccessResult(ToResponse<AccountUploadProfileImageResponse>(account));
             }
         }
 
-        //---------------------------------------------------------------------
         [HttpGet]
         [Route("test")]
         public async Task<IHttpActionResult> Test(AccountLoginInfo info)
         {
-            logger.Info($"Account.Test");
+            Logger.Info($"Account.Test");
 
-            var accounts = await this.db.Bucket.QueryAsync<AccountEntity>(a => a.AccountName == "Ny7IBHtK");
+            var accounts = await this.DatabaseContext.Bucket.QueryAsync<AccountEntity>(a => a.AccountName == "Ny7IBHtK");
 
-            return await Task.FromResult<IHttpActionResult>(CreateSuccessResult(accounts));
+            return await Task.FromResult(CreateSuccessResult(accounts));
         }
 
-        //---------------------------------------------------------------------
         private async Task RecordLogin(AccountEntity account, UCenterErrorCode code, string comments = null)
         {
-            LoginRecordEntity record = new LoginRecordEntity()
+            var record = new LoginRecordEntity
             {
                 AccountName = account.AccountName,
                 AccountId = account.Id,
@@ -307,13 +338,12 @@ namespace GF.UCenter.Web.ApiControllers
                 Comments = comments
             };
 
-            await this.db.Bucket.InsertSlimAsync(record, throwIfFailed: false);
+            await this.DatabaseContext.Bucket.InsertSlimAsync(record, false);
         }
 
-        //---------------------------------------------------------------------
         private async Task<AccountEntity> GetAndVerifyAccount(string accountId)
         {
-            var account = await db.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId, throwIfFailed: false);
+            var account = await DatabaseContext.Bucket.GetByEntityIdSlimAsync<AccountEntity>(accountId, false);
             if (account == null)
             {
                 throw new UCenterException(UCenterErrorCode.AccountNotExist);
@@ -322,11 +352,9 @@ namespace GF.UCenter.Web.ApiControllers
             return account;
         }
 
-        //---------------------------------------------------------------------
-        // todo: clean up this later
         private TResponse ToResponse<TResponse>(AccountEntity entity) where TResponse : AccountRequestResponse
         {
-            var res = new AccountResponse()
+            var res = new AccountResponse
             {
                 AccountId = entity.Id,
                 AccountName = entity.AccountName,
@@ -352,13 +380,15 @@ namespace GF.UCenter.Web.ApiControllers
         private Stream GetThumbprintStream(Image sourceImage)
         {
             var stream = new MemoryStream();
-            if (sourceImage.Width > this.settings.MaxThumbnailWidth || sourceImage.Height > this.settings.MaxThumbnailHeight)
+            if (sourceImage.Width > this.settings.MaxThumbnailWidth ||
+                sourceImage.Height > this.settings.MaxThumbnailHeight)
             {
-                var radio = Math.Min((double)this.settings.MaxThumbnailWidth / sourceImage.Width, (double)this.settings.MaxThumbnailHeight / sourceImage.Height);
+                var radio = Math.Min((double) this.settings.MaxThumbnailWidth/sourceImage.Width,
+                    (double) this.settings.MaxThumbnailHeight/sourceImage.Height);
 
-                var twidth = (int)(sourceImage.Width * radio);
-                var theigth = (int)(sourceImage.Height * radio);
-                Image thumbnail = sourceImage.GetThumbnailImage(twidth, theigth, null, IntPtr.Zero);
+                var twidth = (int) (sourceImage.Width*radio);
+                var theigth = (int) (sourceImage.Height*radio);
+                var thumbnail = sourceImage.GetThumbnailImage(twidth, theigth, null, IntPtr.Zero);
 
                 thumbnail.Save(stream, sourceImage.RawFormat);
             }
@@ -369,6 +399,26 @@ namespace GF.UCenter.Web.ApiControllers
 
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
+        }
+
+        private string GetClientIp(HttpRequestMessage request)
+        {
+            request = request ?? this.Request;
+
+            if (request.Properties.ContainsKey("MS_HttpContext"))
+            {
+                return ((HttpContextWrapper) request.Properties["MS_HttpContext"]).Request.UserHostAddress;
+            }
+            if (request.Properties.ContainsKey(RemoteEndpointMessageProperty.Name))
+            {
+                var prop = (RemoteEndpointMessageProperty) request.Properties[RemoteEndpointMessageProperty.Name];
+                return prop.Address;
+            }
+            if (HttpContext.Current != null)
+            {
+                return HttpContext.Current.Request.UserHostAddress;
+            }
+            return null;
         }
     }
 }

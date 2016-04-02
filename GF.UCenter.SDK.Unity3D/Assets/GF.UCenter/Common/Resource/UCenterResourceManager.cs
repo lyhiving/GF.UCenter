@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GF.UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Portable.Resource
 {
+    using System.Collections.Generic;
+    using Contracts;
+
     internal static class UCenterResourceManager
     {
-        private static readonly Dictionary<UCenterErrorCode, string> errorMessages = new Dictionary<UCenterErrorCode, string>();
         private const string GeneralErrorMessage = "Internal server error.";
+
+        private static readonly Dictionary<UCenterErrorCode, string> errorMessages =
+            new Dictionary<UCenterErrorCode, string>();
+
         static UCenterResourceManager()
         {
-            errorMessages.Add(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, @"Account not exists or password is wrong.");
-            errorMessages.Add(UCenterErrorCode.AccountLoginFailedTokenNotMatch, @"Account not exists or password is wrong.");
+            errorMessages.Add(UCenterErrorCode.AccountLoginFailedPasswordNotMatch,
+                @"Account not exists or password is wrong.");
+            errorMessages.Add(UCenterErrorCode.AccountLoginFailedTokenNotMatch,
+                @"Account not exists or password is wrong.");
             errorMessages.Add(UCenterErrorCode.AccountNotExist, @"Account not exists.");
             errorMessages.Add(UCenterErrorCode.AccountRegisterFailedAlreadyExist, @"Account already exists.");
             errorMessages.Add(UCenterErrorCode.AppAuthFailedSecretNotMatch, @"App not exists or password is wrong.");
@@ -30,10 +35,7 @@ namespace GF.UCenter.Common.Portable
             {
                 return errorMessages[errorCode];
             }
-            else
-            {
-                return GeneralErrorMessage;
-            }
+            return GeneralErrorMessage;
         }
     }
 }

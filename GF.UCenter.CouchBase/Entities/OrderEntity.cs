@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Entities
 {
+    using Attributes;
+
     [DocumentType("Order")]
     public class OrderEntity : BaseEntity<OrderEntity>
     {

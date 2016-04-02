@@ -1,9 +1,9 @@
-﻿using System;
-using GF.UCenter.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test
 {
+    using System;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UCenter.Common;
+
     [TestClass]
     public class EncryptHashManagerTest
     {

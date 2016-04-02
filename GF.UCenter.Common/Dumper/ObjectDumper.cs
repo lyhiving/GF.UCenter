@@ -6,41 +6,40 @@
 /// 'Password', 'SupperPassword' in log.
 ///
 ////////////////////////////////////////////////////////////////
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Remoting;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GF.UCenter.Common
+namespace GF.UCenter.Common.Dumper
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Runtime.Remoting;
+    using System.Runtime.Serialization;
+    using System.Security.Principal;
+
     /// <summary>
-    /// This class implements the core dumping algorithm.
+    ///     This class implements the core dumping algorithm.
     /// </summary>
     public static class Dumper
     {
         /// <summary>
-        /// Dumps the specified value to the <see cref="TextWriter"/> using the
-        /// specified <paramref name="name"/>.
+        ///     Dumps the specified value to the <see cref="TextWriter" /> using the
+        ///     specified <paramref name="name" />.
         /// </summary>
         /// <param name="value">
-        /// The value to dump to the <paramref name="writer"/>.
+        ///     The value to dump to the <paramref name="writer" />.
         /// </param>
         /// <param name="name">
-        /// The name of the <paramref name="value"/> being dumped.
+        ///     The name of the <paramref name="value" /> being dumped.
         /// </param>
         /// <param name="writer">
-        /// The <see cref="TextWriter"/> to dump the <paramref name="value"/> to.
+        ///     The <see cref="TextWriter" /> to dump the <paramref name="value" /> to.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        /// <para><paramref name="name"/> is <c>null</c> or empty.</para>
-        /// <para>- or -</para>
-        /// <para><paramref name="writer"/> is <c>null</c>.</para>
+        ///     <para><paramref name="name" /> is <c>null</c> or empty.</para>
+        ///     <para>- or -</para>
+        ///     <para><paramref name="writer" /> is <c>null</c>.</para>
         /// </exception>
         public static void Dump(object value, string name, TextWriter writer)
         {
@@ -53,9 +52,10 @@ namespace GF.UCenter.Common
             InternalDump(0, name, value, writer, idGenerator, true);
         }
 
-        private static void InternalDump(int indentationLevel, string name, object value, TextWriter writer, ObjectIDGenerator idGenerator, bool recursiveDump)
+        private static void InternalDump(int indentationLevel, string name, object value, TextWriter writer,
+            ObjectIDGenerator idGenerator, bool recursiveDump)
         {
-            var indentation = new string(' ', indentationLevel * 3);
+            var indentation = new string(' ', indentationLevel*3);
 
             if (value == null)
             {
@@ -127,7 +127,7 @@ namespace GF.UCenter.Common
             if (type.FullName == "System.Reflection." + type.Name)
                 return;
 
-            if (value is System.Security.Principal.SecurityIdentifier)
+            if (value is SecurityIdentifier)
                 return;
 
             if (!recursiveDump)
@@ -135,9 +135,9 @@ namespace GF.UCenter.Common
 
             PropertyInfo[] properties =
                 (from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                 where property.GetIndexParameters().Length == 0
-                       && property.CanRead
-                 select property).ToArray();
+                    where property.GetIndexParameters().Length == 0
+                          && property.CanRead
+                    select property).ToArray();
 
             if (properties.Length == 0)
                 return;
@@ -146,12 +146,12 @@ namespace GF.UCenter.Common
             if (properties.Length > 0)
             {
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}", indentation));
-                foreach (PropertyInfo pi in properties)
+                foreach (var pi in properties)
                 {
                     try
                     {
                         var dumpto = pi.GetCustomAttribute<DumperToAttribute>();
-                        object propertyValue = dumpto == null ? pi.GetValue(value, null) : dumpto.Value;
+                        var propertyValue = dumpto == null ? pi.GetValue(value, null) : dumpto.Value;
                         InternalDump(indentationLevel + 2, pi.Name, propertyValue, writer, idGenerator, true);
                     }
                     catch (TargetInvocationException ex)

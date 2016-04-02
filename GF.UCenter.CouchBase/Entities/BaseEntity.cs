@@ -1,13 +1,13 @@
-﻿using System;
-using System.Reflection;
-using Couchbase;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Entities
 {
+    using System;
+    using System.Reflection;
+    using Attributes;
+    using Couchbase;
+
     public abstract class BaseEntity<TEntity> : IBaseEntity, IBaseEntity<TEntity> where TEntity : class, IBaseEntity
     {
-        public static readonly string DocumentType = typeof(TEntity).GetCustomAttribute<DocumentTypeAttribute>().Type;
-        private readonly string type = DocumentType;
+        public static readonly string DocumentType = typeof (TEntity).GetCustomAttribute<DocumentTypeAttribute>().Type;
         private string id;
 
         public virtual string Id
@@ -21,19 +21,10 @@ namespace GF.UCenter.CouchBase
 
                 return this.id;
             }
-            set
-            {
-                this.id = value;
-            }
+            set { this.id = value; }
         }
 
-        public string Type
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+        public string Type { get; } = DocumentType;
 
         public IDocument<TEntity> ToDocument()
         {

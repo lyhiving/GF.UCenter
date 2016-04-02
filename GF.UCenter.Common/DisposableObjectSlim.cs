@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common
 {
+    using System;
+    using System.Threading;
+
     public abstract class DisposableObjectSlim : IDisposable
     {
         private const int NotDisposed = 0;

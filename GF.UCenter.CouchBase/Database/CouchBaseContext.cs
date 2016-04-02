@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using Couchbase;
-using Couchbase.Configuration.Client;
-using Couchbase.Core;
-using GF.UCenter.Common;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Database
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.Linq;
+    using Common.Settings;
+    using Couchbase;
+    using Couchbase.Configuration.Client;
+    using Couchbase.Core;
+    using Entities;
+
     [Export]
     public class CouchBaseContext
     {
-        private readonly ClientConfiguration configuration;
         private readonly ConcurrentDictionary<Type, string> bucketNameMap = new ConcurrentDictionary<Type, string>();
-        private Settings settings;
+        private readonly ClientConfiguration configuration;
+        private readonly Settings settings;
 
         [ImportingConstructor]
         public CouchBaseContext(Settings settings)
@@ -24,12 +25,12 @@ namespace GF.UCenter.CouchBase
 
             var servers = this.settings
                 .ServerUris
-                .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => new Uri(s))
                 .ToList();
 
             var bucketConfigs = new Dictionary<string, BucketConfiguration>();
-            var configs = new string[] { this.settings.BucketName }
+            var configs = new[] {this.settings.BucketName}
                 .Select(b => new BucketConfiguration
                 {
                     BucketName = b,
@@ -63,6 +64,16 @@ namespace GF.UCenter.CouchBase
             ClusterHelper.Initialize(this.configuration);
         }
 
+        public IBucket Bucket
+        {
+            get { return ClusterHelper.GetBucket(this.settings.BucketName); }
+        }
+
+        public Cluster Cluster
+        {
+            get { return this.CreateCluster(); }
+        }
+
         internal Cluster CreateCluster()
         {
             return ClusterHelper.Get();
@@ -71,22 +82,6 @@ namespace GF.UCenter.CouchBase
         public IBucket GetBucket<TEntity>() where TEntity : IBaseEntity
         {
             return ClusterHelper.GetBucket(this.settings.BucketName);
-        }
-
-        public IBucket Bucket
-        {
-            get
-            {
-                return ClusterHelper.GetBucket(this.settings.BucketName);
-            }
-        }
-
-        public Cluster Cluster
-        {
-            get
-            {
-                return this.CreateCluster();
-            }
         }
     }
 }

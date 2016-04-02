@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
-using GF.UCenter.Common;
-using GF.UCenter.Common.Portable;
-using GF.UCenter.CouchBase;
-using Newtonsoft.Json.Linq;
-using NLog;
-
-namespace GF.UCenter.Web
+﻿namespace GF.UCenter.Web.Attributes
 {
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Formatting;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Web.Http.Controllers;
+    using System.Web.Http.Filters;
+    using CouchBase.Exceptions;
+    using NLog;
+    using UCenter.Common.Dumper;
+    using UCenter.Common.Extensions;
+    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable.Exceptions;
+
     public sealed class ActionExecutionFilterAttribute : ActionFilterAttribute
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -41,9 +40,10 @@ namespace GF.UCenter.Web
         {
             if (context.Exception != null)
             {
-                logger.Error(context.Exception, $"Execute request exception: url: {context.Request.RequestUri}", context.ActionContext.ActionArguments);
+                logger.Error(context.Exception, $"Execute request exception: url: {context.Request.RequestUri}",
+                    context.ActionContext.ActionArguments);
 
-                UCenterErrorCode errorCode = UCenterErrorCode.Failed;
+                var errorCode = UCenterErrorCode.Failed;
                 string errorMessage = null;
 
                 if (context.Exception is UCenterException)
@@ -80,17 +80,17 @@ namespace GF.UCenter.Web
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"Log Incoming Request Error: \n\t{context.Request.ToString()}");
+                logger.Error(ex, $"Log Incoming Request Error: \n\t{context.Request}");
             }
         }
 
         private HttpResponseMessage CreateErrorResponseMessage(UCenterErrorCode errorCode, string errorMessage)
         {
             var response = new HttpResponseMessage(HttpStatusCode.OK);
-            var content = new UCenterResponse<UCenterError>()
+            var content = new UCenterResponse<UCenterError>
             {
                 Status = UCenterResponseStatus.Error,
-                Error = new UCenterError() { ErrorCode = errorCode, Message = errorMessage }
+                Error = new UCenterError {ErrorCode = errorCode, Message = errorMessage}
             };
 
             response.Content = new ObjectContent<UCenterResponse<UCenterError>>(content, new JsonMediaTypeFormatter());

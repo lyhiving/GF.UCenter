@@ -1,12 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using GF.UCenter.Common.Portable;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test.E2ETest
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Common;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UCenter.Common.Portable.Contracts;
+    using UCenter.Common.Portable.Models.AppClient;
+
     [TestClass]
     public class UCenterE2EAppClientTest : UCenterE2ETestBase
     {
@@ -15,7 +17,7 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo()
+            var loginResponse = await cClient.AccountLoginAsync(new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
@@ -42,8 +44,8 @@ namespace GF.UCenter.Test
                 await Task.WhenAll(ParallelEnumerable.Range(0, 10)
                     .Select(async idx =>
                     {
-                        string random = GenerateRandomString() + idx.ToString();
-                        var info = new AccountRegisterInfo()
+                        var random = GenerateRandomString() + idx.ToString();
+                        var info = new AccountRegisterInfo
                         {
                             AccountName = random,
                             Password = ValidAccountPassword,
@@ -69,7 +71,7 @@ namespace GF.UCenter.Test
 
             TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, async () =>
             {
-                await cClient.AccountLoginAsync(new AccountLoginInfo()
+                await cClient.AccountLoginAsync(new AccountLoginInfo
                 {
                     AccountName = registerResponse.AccountName,
                     Password = InValidAccountPassword
@@ -80,7 +82,7 @@ namespace GF.UCenter.Test
         [TestMethod]
         public async Task E2E_AppClient_Register_Twice_Test()
         {
-            var info = new AccountRegisterInfo()
+            var info = new AccountRegisterInfo
             {
                 AccountName = GenerateRandomString(),
                 Password = ValidAccountPassword,
@@ -94,10 +96,8 @@ namespace GF.UCenter.Test
 
             await cClient.AccountRegisterAsync(info);
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountRegisterFailedAlreadyExist, async () =>
-            {
-                await cClient.AccountRegisterAsync(info);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountRegisterFailedAlreadyExist,
+                async () => { await cClient.AccountRegisterAsync(info); });
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace GF.UCenter.Test
             Assert.IsNotNull(loginResponse.Password);
             Assert.IsNotNull(loginResponse.Token);
 
-            var convertInfo = new AccountConvertInfo()
+            var convertInfo = new AccountConvertInfo
             {
                 AccountId = loginResponse.AccountId,
                 AccountName = GenerateRandomString(),
@@ -141,7 +141,7 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            var resetInfo = new AccountResetPasswordInfo()
+            var resetInfo = new AccountResetPasswordInfo
             {
                 AccountId = registerResponse.AccountId,
                 Password = "123456",
@@ -150,16 +150,14 @@ namespace GF.UCenter.Test
 
             var resetPasswordResponse = await cClient.AccountResetPasswordAsync(resetInfo);
 
-            var loginInfo = new AccountLoginInfo()
+            var loginInfo = new AccountLoginInfo
             {
                 AccountName = registerResponse.AccountName,
                 Password = ValidAccountPassword
             };
 
-            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedPasswordNotMatch, async () =>
-            {
-                await cClient.AccountLoginAsync(loginInfo);
-            });
+            TestExpector.ExpectUCenterErrorAsync(UCenterErrorCode.AccountLoginFailedPasswordNotMatch,
+                async () => { await cClient.AccountLoginAsync(loginInfo); });
         }
 
         [TestMethod]
@@ -167,8 +165,9 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            string testFileForUpload = @"TestData\github.png";
-            var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(registerResponse.AccountId, testFileForUpload);
+            var testFileForUpload = @"TestData\github.png";
+            var uploadProfileResponse =
+                await cClient.AccountUploadProfileImagesync(registerResponse.AccountId, testFileForUpload);
             Assert.AreEqual(registerResponse.AccountId, uploadProfileResponse.AccountId);
             Assert.AreEqual(registerResponse.AccountName, uploadProfileResponse.AccountName);
             Assert.AreEqual(registerResponse.Email, uploadProfileResponse.Email);
@@ -184,10 +183,11 @@ namespace GF.UCenter.Test
         {
             var registerResponse = await CreateTestAccount();
 
-            string testFileForUpload = @"TestData\github.png";
+            var testFileForUpload = @"TestData\github.png";
             using (var stream = new FileStream(testFileForUpload, FileMode.Open))
             {
-                var uploadProfileResponse = await cClient.AccountUploadProfileImagesync(registerResponse.AccountId, stream);
+                var uploadProfileResponse =
+                    await cClient.AccountUploadProfileImagesync(registerResponse.AccountId, stream);
                 Assert.AreEqual(registerResponse.AccountId, uploadProfileResponse.AccountId);
                 Assert.AreEqual(registerResponse.AccountName, uploadProfileResponse.AccountName);
                 Assert.AreEqual(registerResponse.Email, uploadProfileResponse.Email);

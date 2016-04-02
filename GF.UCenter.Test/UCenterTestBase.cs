@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
-using System.Threading;
-using GF.UCenter.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace GF.UCenter.Test
+﻿namespace GF.UCenter.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition.Hosting;
+    using System.Linq;
+    using System.Threading;
+    using Clients;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UCenter.Common;
+    using UCenter.Common.Settings;
+
     [TestClass]
     public class UCenterTestBase
     {
         private static readonly List<IDisposable> disposableList = new List<IDisposable>();
 
-        private static Lazy<List<char>> CharsPool = new Lazy<List<char>>(() =>
+        private static readonly Lazy<List<char>> CharsPool = new Lazy<List<char>>(() =>
         {
-            List<char> chars = new List<char>();
-            chars.AddRange(ParallelEnumerable.Range(48, 10).Select(i => (char)i));// 0-9
-            chars.AddRange(ParallelEnumerable.Range(65, 26).Select(i => (char)i));// A-Z
-            chars.AddRange(ParallelEnumerable.Range(97, 26).Select(i => (char)i));// a-z
+            var chars = new List<char>();
+            chars.AddRange(ParallelEnumerable.Range(48, 10).Select(i => (char) i)); // 0-9
+            chars.AddRange(ParallelEnumerable.Range(65, 26).Select(i => (char) i)); // A-Z
+            chars.AddRange(ParallelEnumerable.Range(97, 26).Select(i => (char) i)); // a-z
             return chars;
         }, LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -33,12 +35,12 @@ namespace GF.UCenter.Test
 
         protected string GenerateRandomString(int length = 8)
         {
-            Random random = new Random();
-            List<char> result = new List<char>();
+            var random = new Random();
+            var result = new List<char>();
             var maxIdx = CharsPool.Value.Count;
             result.Add(CharsPool.Value.ElementAt(random.Next(11, maxIdx)));
 
-            for (int idx = 0; idx < length - 1; idx++)
+            for (var idx = 0; idx < length - 1; idx++)
             {
                 result.Add(CharsPool.Value.ElementAt(random.Next(0, maxIdx)));
             }
@@ -51,8 +53,10 @@ namespace GF.UCenter.Test
         {
             ExportProvider = CompositionContainerFactory.Create();
 
-            SettingsInitializer.Initialize<Settings>(ExportProvider, SettingsDefaultValueProvider<Settings>.Default, AppConfigurationValueProvider.Default);
-            SettingsInitializer.Initialize<Common.Settings>(ExportProvider, SettingsDefaultValueProvider<Settings>.Default, AppConfigurationValueProvider.Default);
+            SettingsInitializer.Initialize<Settings>(ExportProvider, SettingsDefaultValueProvider<Settings>.Default,
+                AppConfigurationValueProvider.Default);
+            SettingsInitializer.Initialize<UCenter.Common.Settings.Settings>(ExportProvider,
+                SettingsDefaultValueProvider<Settings>.Default, AppConfigurationValueProvider.Default);
         }
 
         [AssemblyCleanup]

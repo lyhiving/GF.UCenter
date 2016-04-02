@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.Composition.Hosting;
-using System.Web.Http;
-using System.Web.Mvc;
-using GF.UCenter.Common;
-
-namespace GF.UCenter.Web
+﻿namespace GF.UCenter.Web
 {
-    public class MvcApplication : System.Web.HttpApplication
+    using System.ComponentModel.Composition.Hosting;
+    using System.Web;
+    using System.Web.Http;
+    using System.Web.Mvc;
+    using Common;
+    using UCenter.Common;
+    using UCenter.Common.Settings;
+
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -14,7 +17,8 @@ namespace GF.UCenter.Web
             ExportProvider exportProvider = CompositionContainerFactory.Create();
 
             ApplicationManager.InitializeApplication(GlobalConfiguration.Configuration, exportProvider);
-            SettingsInitializer.Initialize<Settings>(exportProvider, SettingsDefaultValueProvider<Settings>.Default, AppConfigurationValueProvider.Default);
+            SettingsInitializer.Initialize<Settings>(exportProvider, SettingsDefaultValueProvider<Settings>.Default,
+                AppConfigurationValueProvider.Default);
         }
     }
 }

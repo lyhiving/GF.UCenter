@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace GF.UCenter.Common.Portable
+﻿namespace GF.UCenter.Common.Models.PingPlusPlus
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     public class Refund
     {
         [JsonProperty("id")]
@@ -43,6 +43,5 @@ namespace GF.UCenter.Common.Portable
 
         [JsonProperty("charge")]
         public string Charge { get; set; }
-
     }
 }

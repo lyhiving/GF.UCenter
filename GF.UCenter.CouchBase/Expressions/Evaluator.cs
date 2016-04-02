@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Expressions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+
     public static class Evaluator
     {
         /// <summary>
-        /// Performs evaluation & replacement of independent sub-trees
+        ///     Performs evaluation & replacement of independent sub-trees
         /// </summary>
         /// <param name="expression">The root of the expression tree.</param>
-        /// <param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>
+        /// <param name="fnCanBeEvaluated">
+        ///     A function that decides whether a given expression node can be part of the local
+        ///     function.
+        /// </param>
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(Expression expression, Func<Expression, bool> fnCanBeEvaluated)
         {
@@ -18,13 +21,13 @@ namespace GF.UCenter.CouchBase
         }
 
         /// <summary>
-        /// Performs evaluation & replacement of independent sub-trees
+        ///     Performs evaluation & replacement of independent sub-trees
         /// </summary>
         /// <param name="expression">The root of the expression tree.</param>
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(Expression expression)
         {
-            return PartialEval(expression, Evaluator.CanBeEvaluatedLocally);
+            return PartialEval(expression, CanBeEvaluatedLocally);
         }
 
         private static bool CanBeEvaluatedLocally(Expression expression)
@@ -33,11 +36,11 @@ namespace GF.UCenter.CouchBase
         }
 
         /// <summary>
-        /// Evaluates & replaces sub-trees when first candidate is reached (top-down)
+        ///     Evaluates & replaces sub-trees when first candidate is reached (top-down)
         /// </summary>
-        class SubtreeEvaluator : ExpressionVisitor
+        private class SubtreeEvaluator : ExpressionVisitor
         {
-            HashSet<Expression> candidates;
+            private readonly HashSet<Expression> candidates;
 
             internal SubtreeEvaluator(HashSet<Expression> candidates)
             {
@@ -68,21 +71,21 @@ namespace GF.UCenter.CouchBase
                 {
                     return e;
                 }
-                LambdaExpression lambda = Expression.Lambda(e);
-                Delegate fn = lambda.Compile();
+                var lambda = Expression.Lambda(e);
+                var fn = lambda.Compile();
                 return Expression.Constant(fn.DynamicInvoke(null), e.Type);
             }
         }
 
         /// <summary>
-        /// Performs bottom-up analysis to determine which nodes can possibly
-        /// be part of an evaluated sub-tree.
+        ///     Performs bottom-up analysis to determine which nodes can possibly
+        ///     be part of an evaluated sub-tree.
         /// </summary>
-        class Nominator : ExpressionVisitor
+        private class Nominator : ExpressionVisitor
         {
-            Func<Expression, bool> fnCanBeEvaluated;
-            HashSet<Expression> candidates;
-            bool cannotBeEvaluated;
+            private readonly Func<Expression, bool> fnCanBeEvaluated;
+            private HashSet<Expression> candidates;
+            private bool cannotBeEvaluated;
 
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
@@ -100,7 +103,7 @@ namespace GF.UCenter.CouchBase
             {
                 if (expression != null)
                 {
-                    bool saveCannotBeEvaluated = this.cannotBeEvaluated;
+                    var saveCannotBeEvaluated = this.cannotBeEvaluated;
                     this.cannotBeEvaluated = false;
                     base.Visit(expression);
                     if (!this.cannotBeEvaluated)
@@ -109,7 +112,8 @@ namespace GF.UCenter.CouchBase
                         {
                             this.candidates.Add(expression);
                         }
-                        else {
+                        else
+                        {
                             this.cannotBeEvaluated = true;
                         }
                     }

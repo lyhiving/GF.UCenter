@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common.Settings
 {
+    using System.Collections.Generic;
+
     public interface ISettingsValueProvider
     {
         ICollection<SettingsValuePair> SettingValues { get; }

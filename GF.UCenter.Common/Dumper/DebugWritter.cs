@@ -6,23 +6,22 @@
 /// 'Password', 'SupperPassword' in log.
 ///
 ////////////////////////////////////////////////////////////////
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace GF.UCenter.Common
+
+namespace GF.UCenter.Common.Dumper
 {
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+
     /// <summary>
-    /// This class implements <see cref="TextWriter"/> by writing to <see cref="Debug"/>.
+    ///     This class implements <see cref="TextWriter" /> by writing to <see cref="Debug" />.
     /// </summary>
     public sealed class DebugWriter : TextWriter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DebugWriter"/> class.
+        ///     Initializes a new instance of the <see cref="DebugWriter" /> class.
         /// </summary>
         public DebugWriter()
             : base(CultureInfo.InvariantCulture)
@@ -31,24 +30,21 @@ namespace GF.UCenter.Common
         }
 
         /// <summary>
-        /// Returns the <see cref="Encoding"/> in which the output is written.
+        ///     Returns the <see cref="Encoding" /> in which the output is written.
         /// </summary>
         /// <returns>
-        /// The Encoding in which the output is written.
+        ///     The Encoding in which the output is written.
         /// </returns>
         public override Encoding Encoding
         {
-            get
-            {
-                return Encoding.Default;
-            }
+            get { return Encoding.Default; }
         }
 
         /// <summary>
-        /// Writes a character to the text stream.
+        ///     Writes a character to the text stream.
         /// </summary>
         /// <param name="value">
-        /// The character to write to the text stream. 
+        ///     The character to write to the text stream.
         /// </param>
         public override void Write(char value)
         {
@@ -56,10 +52,10 @@ namespace GF.UCenter.Common
         }
 
         /// <summary>
-        /// Writes a string to the text stream.
+        ///     Writes a string to the text stream.
         /// </summary>
         /// <param name="value">
-        /// The string to write. 
+        ///     The string to write.
         /// </param>
         public override void Write(string value)
         {

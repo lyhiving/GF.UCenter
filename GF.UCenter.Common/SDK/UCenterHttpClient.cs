@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using GF.UCenter.Common.Portable;
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common.SDK
 {
+    using System;
+    using System.Net.Http;
+    using System.Net.Http.Formatting;
+    using System.Threading.Tasks;
+    using Portable.Contracts;
+    using Portable.Exceptions;
+
     public class UCenterHttpClient
     {
         public Task<TResponse> SendAsync<TContent, TResponse>(HttpMethod method, string url, TContent content)
@@ -42,24 +41,19 @@ namespace GF.UCenter.Common
             }
         }
 
-        public async Task<TResult> SendAsyncWithException<TContent, TResult>(HttpMethod method, string url, TContent content)
+        public async Task<TResult> SendAsyncWithException<TContent, TResult>(HttpMethod method, string url,
+            TContent content)
         {
             var response = await this.SendAsync<TContent, UCenterResponse<TResult>>(method, url, content);
             if (response.Status == UCenterResponseStatus.Success)
             {
                 return response.Result;
             }
-            else
+            if (response.Error != null)
             {
-                if (response.Error != null)
-                {
-                    throw new UCenterException(response.Error.ErrorCode, response.Error.Message);
-                }
-                else
-                {
-                    throw new UCenterException(UCenterErrorCode.Failed, "Error occurred when sending http request");
-                }
+                throw new UCenterException(response.Error.ErrorCode, response.Error.Message);
             }
+            throw new UCenterException(UCenterErrorCode.Failed, "Error occurred when sending http request");
         }
 
         public HttpClient CreateHttpClient()

@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Couchbase.Core;
-using Couchbase.N1QL;
-
-namespace GF.UCenter.CouchBase
+﻿namespace GF.UCenter.CouchBase.Database
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+    using Couchbase.Core;
+    using Couchbase.N1QL;
+    using Entities;
+    using Exceptions;
+
     public static class CouchBucketExtensions
     {
-        public async static Task<IQueryResult<TEntity>> QueryAsync<TEntity>(this IBucket bucket, Expression<Func<TEntity, bool>> expression) where TEntity : class, IBaseEntity
+        public static async Task<IQueryResult<TEntity>> QueryAsync<TEntity>(this IBucket bucket,
+            Expression<Func<TEntity, bool>> expression) where TEntity : class, IBaseEntity
         {
             string condition = $"type='{BaseEntity<TEntity>.DocumentType}'";
             var request = new QueryRequest();
 
             if (expression != null)
             {
-                CouchQueryTranslator translator = new CouchQueryTranslator();
+                var translator = new CouchQueryTranslator();
                 var command = translator.Translate(expression);
                 condition = $"{command.Command} AND {condition}";
                 request.AddPositionalParameter(command.Parameters.Select(p => p.Value).ToArray());
@@ -30,9 +33,10 @@ namespace GF.UCenter.CouchBase
             return query;
         }
 
-        public async static Task<IEnumerable<TEntity>> QuerySlimAsync<TEntity>(this IBucket bucket, Expression<Func<TEntity, bool>> expression, bool throwIfFailed = true) where TEntity : class, IBaseEntity
+        public static async Task<IEnumerable<TEntity>> QuerySlimAsync<TEntity>(this IBucket bucket,
+            Expression<Func<TEntity, bool>> expression, bool throwIfFailed = true) where TEntity : class, IBaseEntity
         {
-            var result = await bucket.QueryAsync<TEntity>(expression);
+            var result = await bucket.QueryAsync(expression);
 
             if (result.Success)
             {
@@ -45,20 +49,15 @@ namespace GF.UCenter.CouchBase
                 {
                     throw result.Exception;
                 }
-                else // if (result.Errors != null && result.Errors.Count > 0)
-                {
-                    throw new CouchBaseException(result);
-                }
+                throw new CouchBaseException(result);
             }
-            else
-            {
-                return new List<TEntity>();
-            }
+            return new List<TEntity>();
         }
 
-        public async static Task<TEntity> InsertSlimAsync<TEntity>(this IBucket bucket, TEntity entity, bool throwIfFailed = true) where TEntity : BaseEntity<TEntity>, IBaseEntity
+        public static async Task<TEntity> InsertSlimAsync<TEntity>(this IBucket bucket, TEntity entity,
+            bool throwIfFailed = true) where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            var result = await bucket.InsertAsync<TEntity>(entity.ToDocument());
+            var result = await bucket.InsertAsync(entity.ToDocument());
 
             if (result.Success)
             {
@@ -73,9 +72,10 @@ namespace GF.UCenter.CouchBase
             return null;
         }
 
-        public async static Task<TEntity> UpsertSlimAsync<TEntity>(this IBucket bucket, TEntity entity, bool throwIfFailed = true) where TEntity : BaseEntity<TEntity>, IBaseEntity
+        public static async Task<TEntity> UpsertSlimAsync<TEntity>(this IBucket bucket, TEntity entity,
+            bool throwIfFailed = true) where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
-            var result = await bucket.UpsertAsync<TEntity>(entity.ToDocument());
+            var result = await bucket.UpsertAsync(entity.ToDocument());
 
             if (result.Success)
             {
@@ -90,7 +90,8 @@ namespace GF.UCenter.CouchBase
             return null;
         }
 
-        public async static Task<TEntity> GetSlimAsync<TEntity>(this IBucket bucket, string key, bool throwIfFailed = true) where TEntity : BaseEntity<TEntity>, IBaseEntity
+        public static async Task<TEntity> GetSlimAsync<TEntity>(this IBucket bucket, string key,
+            bool throwIfFailed = true) where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
             var result = await bucket.GetAsync<TEntity>(key);
 
@@ -107,14 +108,16 @@ namespace GF.UCenter.CouchBase
             return null;
         }
 
-        public static Task<TEntity> GetByEntityIdSlimAsync<TEntity>(this IBucket bucket, string entityId, bool throwIfFailed = false) where TEntity : BaseEntity<TEntity>, IBaseEntity
+        public static Task<TEntity> GetByEntityIdSlimAsync<TEntity>(this IBucket bucket, string entityId,
+            bool throwIfFailed = false) where TEntity : BaseEntity<TEntity>, IBaseEntity
         {
             var key = BaseEntity<TEntity>.GetDocumentId(entityId);
 
             return bucket.GetSlimAsync<TEntity>(key, throwIfFailed);
         }
 
-        public async static Task<TEntity> FirstOrDefaultAsync<TEntity>(this IBucket bucket, Expression<Func<TEntity, bool>> expression, bool throwIfFailed = true) where TEntity : class, IBaseEntity
+        public static async Task<TEntity> FirstOrDefaultAsync<TEntity>(this IBucket bucket,
+            Expression<Func<TEntity, bool>> expression, bool throwIfFailed = true) where TEntity : class, IBaseEntity
         {
             var result = await bucket.QuerySlimAsync(expression, throwIfFailed);
 
