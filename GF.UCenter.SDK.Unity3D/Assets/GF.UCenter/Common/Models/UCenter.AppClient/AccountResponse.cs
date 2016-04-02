@@ -23,6 +23,8 @@ namespace GF.UCenter.Common.Portable
         [DataMember]
         public string ProfileImage { get; set; }
         [DataMember]
+        public string ProfileThumbnail { get; set; }
+        [DataMember]
         public Sex Sex { get; set; }
         [DataMember]
         public string IdentityNum { get; set; }

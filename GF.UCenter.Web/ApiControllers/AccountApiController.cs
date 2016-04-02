@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Couchbase;
@@ -9,7 +11,6 @@ using GF.UCenter.Common;
 using GF.UCenter.Common.Models;
 using GF.UCenter.Common.Portable;
 using GF.UCenter.CouchBase;
-using Microsoft.WindowsAzure.Storage;
 
 namespace GF.UCenter.Web.ApiControllers
 {
@@ -20,19 +21,21 @@ namespace GF.UCenter.Web.ApiControllers
     {
         //---------------------------------------------------------------------
         private readonly Settings settings;
+        private readonly StorageAccountContext storageContext;
 
         //---------------------------------------------------------------------
         [ImportingConstructor]
-        public AccountApiController(CouchBaseContext db, Settings settings)
+        public AccountApiController(CouchBaseContext db, Settings settings, StorageAccountContext storageContext)
             : base(db)
         {
             this.settings = settings;
+            this.storageContext = storageContext;
         }
 
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("register")]
-        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info)
+        public async Task<IHttpActionResult> Register([FromBody]AccountRegisterRequestInfo info, CancellationToken token)
         {
             logger.Info($"Account.Register AccountName={info.AccountName}");
 
@@ -77,6 +80,17 @@ namespace GF.UCenter.Web.ApiControllers
                     await this.db.Bucket.InsertSlimAsync<AccountResourceEntity>(emailPointer);
                     removeTempsIfError.Add(emailPointer);
                 }
+
+                // set the default profiles
+                account.ProfileImage = await this.storageContext.CopyBlobAsync(
+                    account.Sex == Sex.Female ? this.settings.DefaultProfileImageForFemaleBlobName : this.settings.DefaultProfileImageForMaleBlobName,
+                    this.settings.ProfileImageForBlobNameTemplate.FormatInvariant(account.Id),
+                    token);
+
+                account.ProfileThumbnail = await this.storageContext.CopyBlobAsync(
+                    account.Sex == Sex.Female ? this.settings.DefaultProfileThumbnailForFemaleBlobName : this.settings.DefaultProfileThumbnailForMaleBlobName,
+                    this.settings.ProfileThumbnailForBlobNameTemplate.FormatInvariant(account.Id),
+                    token);
 
                 await this.db.Bucket.InsertSlimAsync(account);
 
@@ -242,7 +256,7 @@ namespace GF.UCenter.Web.ApiControllers
         //---------------------------------------------------------------------
         [HttpPost]
         [Route("upload/{accountId}")]
-        public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId)
+        public async Task<IHttpActionResult> UploadProfileImage([FromUri]string accountId, CancellationToken token)
         {
             logger.Info($"Account.UploadProfileImage AccountId={accountId}");
 
@@ -250,17 +264,17 @@ namespace GF.UCenter.Web.ApiControllers
 
             using (Stream stream = await this.Request.Content.ReadAsStreamAsync())
             {
-                string blobName = $"profile_l_{accountId}.jpg";
-                var storageAccount = CloudStorageAccount.Parse(this.settings.UCStorageConnectionString);
-                var blobClient = storageAccount.CreateCloudBlobClient();
-                var blobContainer = blobClient.GetContainerReference(this.settings.ImageContainerName);
-                var blob = blobContainer.GetBlockBlobReference(blobName);
+                Image image = Image.FromStream(stream);
+                using (var thumbnailStream = this.GetThumbprintStream(image))
+                {
+                    string smallProfileName = this.settings.ProfileThumbnailForBlobNameTemplate.FormatInvariant(accountId);
+                    account.ProfileThumbnail = await this.storageContext.UploadBlobAsync(smallProfileName, thumbnailStream, token);
+                }
 
-                // todo: retry if upload failed?
-                await blob.UploadFromStreamAsync(stream);
-                logger.Info($"Uploading successfully, url = {blob.Uri.AbsoluteUri}");
+                string profileName = this.settings.ProfileImageForBlobNameTemplate.FormatInvariant(accountId);
+                stream.Seek(0, SeekOrigin.Begin);
+                account.ProfileImage = await this.storageContext.UploadBlobAsync(profileName, stream, token);
 
-                account.ProfileImage = blob.Uri.AbsoluteUri;
                 await this.db.Bucket.UpsertSlimAsync<AccountEntity>(account);
                 await this.RecordLogin(account, UCenterErrorCode.Success, "Profile image uploaded successfully.");
                 return CreateSuccessResult(ToResponse<AccountUploadProfileImageResponse>(account));
@@ -310,7 +324,7 @@ namespace GF.UCenter.Web.ApiControllers
 
         //---------------------------------------------------------------------
         // todo: clean up this later
-        public TResponse ToResponse<TResponse>(AccountEntity entity) where TResponse : AccountRequestResponse
+        private TResponse ToResponse<TResponse>(AccountEntity entity) where TResponse : AccountRequestResponse
         {
             var res = new AccountResponse()
             {
@@ -322,6 +336,7 @@ namespace GF.UCenter.Web.ApiControllers
                 LastLoginDateTime = entity.LastLoginDateTime,
                 Name = entity.Name,
                 ProfileImage = entity.ProfileImage,
+                ProfileThumbnail = entity.ProfileThumbnail,
                 Sex = entity.Sex,
                 IdentityNum = entity.IdentityNum,
                 PhoneNum = entity.PhoneNum,
@@ -332,6 +347,28 @@ namespace GF.UCenter.Web.ApiControllers
             response.ApplyEntity(res);
 
             return response;
+        }
+
+        private Stream GetThumbprintStream(Image sourceImage)
+        {
+            var stream = new MemoryStream();
+            if (sourceImage.Width > this.settings.MaxThumbnailWidth || sourceImage.Height > this.settings.MaxThumbnailHeight)
+            {
+                var radio = Math.Min((double)this.settings.MaxThumbnailWidth / sourceImage.Width, (double)this.settings.MaxThumbnailHeight / sourceImage.Height);
+
+                var twidth = (int)(sourceImage.Width * radio);
+                var theigth = (int)(sourceImage.Height * radio);
+                Image thumbnail = sourceImage.GetThumbnailImage(twidth, theigth, null, IntPtr.Zero);
+
+                thumbnail.Save(stream, sourceImage.RawFormat);
+            }
+            else
+            {
+                sourceImage.Save(stream, sourceImage.RawFormat);
+            }
+
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
         }
     }
 }

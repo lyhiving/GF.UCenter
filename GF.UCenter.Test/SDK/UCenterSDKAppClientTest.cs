@@ -28,6 +28,8 @@ namespace GF.UCenter.Test
             Assert.AreEqual(loginResponse.PhoneNum, registerResponse.PhoneNum);
             Assert.AreEqual(loginResponse.Email, registerResponse.Email);
             Assert.AreEqual(loginResponse.Sex, registerResponse.Sex);
+            Assert.IsNotNull(loginResponse.ProfileImage);
+            Assert.IsNotNull(loginResponse.ProfileThumbnail);
             Assert.IsNotNull(loginResponse.LastLoginDateTime);
             Assert.IsNotNull(loginResponse.Token);
         }
@@ -125,7 +127,6 @@ namespace GF.UCenter.Test
             var convertResponse = await cClient.AccountConvertAsync(convertInfo);
 
             Assert.IsNotNull(convertResponse.AccountId);
-            Assert.IsNotNull(convertResponse.Token);
             Assert.IsNotNull(convertResponse.AccountId, convertInfo.AccountId);
             Assert.AreEqual(convertResponse.AccountName, convertInfo.AccountName);
             Assert.AreEqual(convertResponse.IdentityNum, convertInfo.IdentityNum);

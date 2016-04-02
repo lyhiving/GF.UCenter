@@ -14,6 +14,8 @@ namespace GF.UCenter.Common.Portable
         [DataMember]
         public string ProfileImage { get; set; }
         [DataMember]
+        public string ProfileThumbnail { get; set; }
+        [DataMember]
         public Sex Sex { get; set; }
         [DataMember]
         public string IdentityNum { get; set; }
@@ -28,6 +30,7 @@ namespace GF.UCenter.Common.Portable
             this.AccountName = account.AccountName;
             this.Name = account.Name;
             this.ProfileImage = account.ProfileImage;
+            this.ProfileThumbnail = account.ProfileThumbnail;
             this.Sex = account.Sex;
             this.IdentityNum = account.IdentityNum;
             this.PhoneNum = account.PhoneNum;

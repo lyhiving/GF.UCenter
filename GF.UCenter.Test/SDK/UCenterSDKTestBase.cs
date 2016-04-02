@@ -47,6 +47,8 @@ namespace GF.UCenter.Test
             Assert.AreEqual(registerResponse.Name, info.Name);
             Assert.AreEqual(registerResponse.PhoneNum, info.PhoneNum);
             Assert.AreEqual(registerResponse.Sex, info.Sex);
+            Assert.IsNotNull(registerResponse.ProfileImage);
+            Assert.IsNotNull(registerResponse.ProfileThumbnail);
 
             return registerResponse;
         }
