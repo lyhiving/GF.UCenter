@@ -1,9 +1,9 @@
 ﻿namespace GF.UCenter.Test
 {
     using System.Threading.Tasks;
+    using Common.Portable;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using SDK.AppClient;
-    using UCenter.Common.Portable;
 
     [TestClass]
     public class UCenterE2ETestBase : UCenterTestBase

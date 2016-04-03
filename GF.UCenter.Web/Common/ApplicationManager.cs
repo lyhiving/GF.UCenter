@@ -6,7 +6,7 @@
     using System.Web.Optimization;
     using System.Web.Routing;
     using Attributes;
-    using UCenter.Common.Settings;
+    using Common.Settings;
 
     /// <summary>
     ///     The UCenter web application manager
@@ -31,7 +31,7 @@
         private static void InitializeSettings(ExportProvider exportProvider)
         {
             SettingsInitializer.Initialize<Settings>(
-                exportProvider, 
+                exportProvider,
                 SettingsDefaultValueProvider<Settings>.Default,
                 AppConfigurationValueProvider.Default);
         }

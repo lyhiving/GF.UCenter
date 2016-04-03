@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+    using Common.Settings;
     using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -13,7 +14,7 @@
         private readonly CloudBlobContainer container;
 
         [ImportingConstructor]
-        public StorageAccountContext(UCenter.Common.Settings.Settings settings)
+        public StorageAccountContext(Settings settings)
         {
             var account = CloudStorageAccount.Parse(settings.UCStorageConnectionString);
             var client = account.CreateCloudBlobClient();

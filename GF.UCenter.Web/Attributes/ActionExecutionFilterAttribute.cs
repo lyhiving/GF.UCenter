@@ -9,10 +9,10 @@
     using System.Threading.Tasks;
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
+    using Common;
+    using Common.Portable;
     using CouchBase;
     using NLog;
-    using UCenter.Common;
-    using UCenter.Common.Portable;
 
     public sealed class ActionExecutionFilterAttribute : ActionFilterAttribute
     {

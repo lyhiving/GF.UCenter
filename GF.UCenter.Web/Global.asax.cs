@@ -4,16 +4,16 @@
     using System.Web;
     using System.Web.Http;
     using System.Web.Mvc;
-    using UCenter.Common;
-    using UCenter.Common.Settings;
+    using Common;
+    using Common.Settings;
 
     /// <summary>
-    /// MVC Application
+    ///     MVC Application
     /// </summary>
     public class MvcApplication : HttpApplication
     {
         /// <summary>
-        /// The application start event
+        ///     The application start event
         /// </summary>
         protected void Application_Start()
         {

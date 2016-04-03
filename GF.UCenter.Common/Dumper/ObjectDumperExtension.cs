@@ -1,11 +1,4 @@
-﻿////////////////////////////////////////////////////////////////
-///
-/// This class copied from ObjectDumper project inorder to add
-/// DumpToAttribute support.
-/// This attribute will hidden the sensitive inforation like 
-/// 'Password', 'SupperPassword' in log.
-///
-////////////////////////////////////////////////////////////////
+﻿
 
 namespace GF.UCenter.Common
 {
@@ -14,6 +7,15 @@ namespace GF.UCenter.Common
     using System.Globalization;
     using System.IO;
     using System.Text;
+
+    ////////////////////////////////////////////////////////////////
+    ///
+    /// This class copied from ObjectDumper project inorder to add
+    /// DumpToAttribute support.
+    /// This attribute will hidden the sensitive inforation like 
+    /// 'Password', 'SupperPassword' in log.
+    ///
+    ////////////////////////////////////////////////////////////////
 
     /// <summary>
     ///     This class adds extension methods to all types to facilitate dumping of

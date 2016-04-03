@@ -1,19 +1,18 @@
-﻿////////////////////////////////////////////////////////////////
-///
-/// This class copied from ObjectDumper project inorder to add
-/// DumpToAttribute support.
-/// This attribute will hidden the sensitive inforation like 
-/// 'Password', 'SupperPassword' in log.
-///
-////////////////////////////////////////////////////////////////
-
-
-namespace GF.UCenter.Common
+﻿namespace GF.UCenter.Common
 {
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Text;
+
+    ////////////////////////////////////////////////////////////////
+    ///
+    /// This class copied from ObjectDumper project inorder to add
+    /// DumpToAttribute support.
+    /// This attribute will hidden the sensitive inforation like 
+    /// 'Password', 'SupperPassword' in log.
+    ///
+    ////////////////////////////////////////////////////////////////
 
     /// <summary>
     ///     This class implements <see cref="TextWriter" /> by writing to <see cref="Debug" />.

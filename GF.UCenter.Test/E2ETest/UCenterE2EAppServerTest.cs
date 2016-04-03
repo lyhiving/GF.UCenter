@@ -2,8 +2,8 @@
 {
     using System.Threading.Tasks;
     using Common;
+    using Common.Portable;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using UCenter.Common.Portable;
 
     [TestClass]
     public class UCenterE2EAppServerTest : UCenterE2ETestBase

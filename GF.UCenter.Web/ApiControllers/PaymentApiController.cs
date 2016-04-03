@@ -8,12 +8,12 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Web.Http;
+    using Common;
+    using Common.Portable;
+    using Common.Settings;
     using CouchBase;
     using Newtonsoft.Json.Linq;
     using pingpp;
-    using UCenter.Common;
-    using UCenter.Common.Portable;
-    using UCenter.Common.Settings;
 
     /// <summary>
     ///     UCenter payment api controller

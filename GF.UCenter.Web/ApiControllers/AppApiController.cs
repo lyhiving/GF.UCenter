@@ -4,9 +4,9 @@
     using System.ComponentModel.Composition;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using Common;
+    using Common.Portable;
     using CouchBase;
-    using UCenter.Common;
-    using UCenter.Common.Portable;
 
     /// <summary>
     ///     UCenter app api controller

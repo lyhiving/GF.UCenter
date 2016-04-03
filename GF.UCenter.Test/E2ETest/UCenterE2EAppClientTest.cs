@@ -4,8 +4,8 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Common.Portable;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using UCenter.Common.Portable;
 
     [TestClass]
     public class UCenterE2EAppClientTest : UCenterE2ETestBase

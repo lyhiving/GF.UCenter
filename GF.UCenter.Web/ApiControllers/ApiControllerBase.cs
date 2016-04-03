@@ -1,14 +1,11 @@
-﻿/// <summary>
-/// UCenter base api controller
-/// </summary>
-namespace GF.UCenter.Web
+﻿namespace GF.UCenter.Web
 {
     using System.ComponentModel.Composition;
     using System.Web.Http;
     using Attributes;
+    using Common.Portable;
     using CouchBase;
     using NLog;
-    using UCenter.Common.Portable;
 
     /// <summary>
     ///     API controller base class
@@ -45,7 +42,7 @@ namespace GF.UCenter.Web
         /// <returns>Http Action result</returns>
         protected IHttpActionResult CreateSuccessResult<TResult>(TResult result)
         {
-            return this.Ok(new UCenterResponse<TResult> { Status = UCenterResponseStatus.Success, Result = result });
+            return this.Ok(new UCenterResponse<TResult> {Status = UCenterResponseStatus.Success, Result = result});
         }
     }
 }

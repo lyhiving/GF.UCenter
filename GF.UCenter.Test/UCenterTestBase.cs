@@ -5,9 +5,9 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
     using System.Threading;
+    using Common;
+    using Common.Settings;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using UCenter.Common;
-    using UCenter.Common.Settings;
 
     [TestClass]
     public class UCenterTestBase
@@ -54,7 +54,7 @@
 
             SettingsInitializer.Initialize<Settings>(ExportProvider, SettingsDefaultValueProvider<Settings>.Default,
                 AppConfigurationValueProvider.Default);
-            SettingsInitializer.Initialize<UCenter.Common.Settings.Settings>(ExportProvider,
+            SettingsInitializer.Initialize<Common.Settings.Settings>(ExportProvider,
                 SettingsDefaultValueProvider<Settings>.Default, AppConfigurationValueProvider.Default);
         }
 

@@ -5,7 +5,7 @@
     using System.ComponentModel.Composition.Hosting;
     using System.Web.Http;
     using System.Web.Http.SelfHost;
-    using UCenter.Common;
+    using Common;
     using Web;
 
     [Export]
