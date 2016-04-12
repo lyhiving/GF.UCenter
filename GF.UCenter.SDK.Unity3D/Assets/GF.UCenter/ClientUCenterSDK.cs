@@ -17,7 +17,6 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
 {
     //-------------------------------------------------------------------------
     public string UCenterDomain { get; set; }
-    public bool UseSsl { get; set; }
     public WWW WWWRegister { get; private set; }
     public WWW WWWLogin { get; private set; }
     public WWW WWWGuestLogin { get; private set; }
@@ -226,15 +225,13 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
     string _genUrl(string api)
     {
         string http_url = null;
-        if (UseSsl)
+        if (UCenterDomain.EndsWith("/"))
         {
-            http_url = string.Format("https://{0}/api/account/{1}",
-            UCenterDomain, api);
+            http_url = string.Format("{0}api/account/{1}", UCenterDomain, api);
         }
         else
         {
-            http_url = string.Format("http://{0}/api/account/{1}",
-            UCenterDomain, api);
+            http_url = string.Format("{0}/api/account/{1}", UCenterDomain, api);
         }
 
         return http_url;
