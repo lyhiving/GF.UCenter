@@ -18,7 +18,7 @@
         [DefaultValue(true)]
         public bool EnableTcpKeepAlives { get; set; }
 
-        [DefaultValue(1000*60*60)]
+        [DefaultValue(1000 * 60 * 60)]
         public uint TcpKeepAliveTime { get; set; }
 
         [DefaultValue(1000)]
@@ -37,6 +37,8 @@
         public int PoolSendTimeout { get; set; }
 
         public string UCStorageConnectionString { get; set; }
+
+        public string SecondaryStorageConnectionString { get; set; }
 
         [DefaultValue("images")]
         public string ImageContainerName { get; set; }

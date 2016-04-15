@@ -1,1 +1,0 @@
-msbuild UCenter.sln /p:DeployOnBuild=true /p:PublishProfile=ucenterhk.pubxml /p:Configuration=Release
