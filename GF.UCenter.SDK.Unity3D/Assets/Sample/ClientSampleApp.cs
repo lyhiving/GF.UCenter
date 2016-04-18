@@ -31,10 +31,10 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         AccountLoginInfo login_request = new AccountLoginInfo();
         login_request.AccountName = "aaaaabbbb";
         login_request.Password = "123456";
-        co_ucentersdk.login(login_request, _onUCenterLogin);
+        //co_ucentersdk.login(login_request, _onUCenterLogin);
 
         // 游客登录
-        //co_ucentersdk.guest(_onUCenterGuestLogin);
+        co_ucentersdk.guest(_onUCenterGuestLogin);
 
         // 游客帐号转正
         AccountConvertInfo convert_info = new AccountConvertInfo();
@@ -60,7 +60,7 @@ public class ClientSampleApp<TDef> : Component<TDef> where TDef : DefSampleApp, 
         string account_id = "1111";
         byte[] buffer = new byte[100];
         MemoryStream ms = new MemoryStream(buffer);
-        co_ucentersdk.uploadProfileImage(account_id, ms, _onUCenterUploadProfileImage);
+        //co_ucentersdk.uploadProfileImage(account_id, ms, _onUCenterUploadProfileImage);
     }
 
     //-------------------------------------------------------------------------

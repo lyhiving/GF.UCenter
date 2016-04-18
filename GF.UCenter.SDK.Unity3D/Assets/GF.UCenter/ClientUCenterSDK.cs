@@ -143,7 +143,7 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         form.AddField("Accept", "application/x-www-form-urlencoded");
         form.AddField("Content-Type", "application/json; charset=utf-8");
         form.AddField("Content-Length", 0);
-        form.AddField("Host", UCenterDomain);
+        form.AddField("Host", _getHostName());
         form.AddField("User-Agent", "");
 
         WWWGuestLogin = new WWW(http_url, form);
@@ -215,10 +215,25 @@ public class ClientUCenterSDK<TDef> : Component<TDef> where TDef : DefUCenterSDK
         headers["Accept"] = "application/x-www-form-urlencoded";
         headers["Content-Type"] = "application/json; charset=utf-8";
         headers["Content-Length"] = content_len.ToString();
-        headers["Host"] = UCenterDomain;
+        headers["Host"] = _getHostName();
         headers["User-Agent"] = "";
 
         return headers;
+    }
+
+    //-------------------------------------------------------------------------
+    string _getHostName()
+    {
+        string host = UCenterDomain;
+        host = host.Replace("https://", "");
+        host = host.Replace("http://", "");
+
+        if (host.EndsWith("/"))
+        {
+            host = host.TrimEnd('/');
+        }
+
+        return host;
     }
 
     //-------------------------------------------------------------------------
