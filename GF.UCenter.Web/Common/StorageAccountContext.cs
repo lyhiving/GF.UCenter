@@ -21,6 +21,7 @@
             var account = CloudStorageAccount.Parse(settings.UCStorageConnectionString);
             var client = account.CreateCloudBlobClient();
             this.container = client.GetContainerReference(settings.ImageContainerName);
+            this.container.CreateIfNotExistsAsync();
 
             if (!string.IsNullOrEmpty(settings.SecondaryStorageConnectionString))
             {
